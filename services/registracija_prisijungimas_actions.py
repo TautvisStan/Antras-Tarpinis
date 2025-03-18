@@ -13,7 +13,7 @@ def user_loader(id):
     return prisijunges
 
 @login_manager.request_loader
-def request_loader(request):
+def request_loader(request): #TODO
     email = request.form.get('email')
     vartotojas = db.session.execute(db.select(Vartotojas).filter(Vartotojas.el_pastas == email)).scalars().one_or_none()
     if vartotojas is None:
