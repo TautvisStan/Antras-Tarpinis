@@ -10,3 +10,8 @@ class Vartotojas(db.Model):
     vaidmuo = db.Column(db.String(50), nullable=False)
     studiju_programa_id = db.Column(db.Integer, db.ForeignKey('studiju_programos.id'), nullable=True)
     grupe_id = db.Column(db.Integer, db.ForeignKey('grupes.id'), nullable=True)
+
+
+    studiju_programa = db.relationship('StudijuPrograma',back_populates='studentai', foreign_keys=[studiju_programa_id])
+
+    grupe = db.relationship('Grupe',back_populates='studentai', foreign_keys=[grupe_id])

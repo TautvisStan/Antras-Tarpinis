@@ -7,3 +7,6 @@ class Atsiskaitymas(db.Model):
     aprasymas = db.Column(db.String(50), nullable=False)
 
     modulis_id = db.Column(db.Integer, db.ForeignKey('moduliai.id'), nullable=True)
+
+
+    modulis = db.relationship('Modulis',back_populates='atsiskaitymai', foreign_keys=[modulis_id])

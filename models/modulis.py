@@ -10,3 +10,8 @@ class Modulis(db.Model):
 
     studiju_programa_id = db.Column(db.Integer, db.ForeignKey('studiju_programos.id'), nullable=True)
     destytojas_id = db.Column(db.Integer, db.ForeignKey('vartotojai.id'), nullable=True)
+
+
+    atsiskaitymai = db.relationship('Atsiskaitymas',back_populates='modulis', foreign_keys='Atsiskaitymas.modulis_id')
+
+    paskaitos = db.relationship('Paskaita',back_populates='modulis', foreign_keys='Paskaita.modulis_id')
