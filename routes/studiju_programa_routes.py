@@ -1,7 +1,7 @@
 from flask import flash, render_template, request, url_for
 import services.studiju_programa_actions as sp_act
 from forms.studijuProgramaForma import StudijuProgramaForma
-def init_modulis_routes(app):
+def init_studiju_programa_routes(app):
     @app.route('/studiju_programos')
     def studiju_programos():
         return render_template('studiju_programos.html', studiju_programos = sp_act.view_studiju_programa())
