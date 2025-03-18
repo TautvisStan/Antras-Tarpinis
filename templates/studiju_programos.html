@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Perziureti studiju programas{% endblock %}
+
+{% block content %}
+    <div class="header-container">
+        <h2>Studiju programos</h2>
+        <a href="{{ url_for('st_pr_create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Sukurti studiju programa
+        </a>
+    </div>
+
+
+    <table class="studiju_programos-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Pavadinimas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for st_pr in studiju_programos %}
+            <tr>
+                <td>{{ st_pr.id }}</td>
+                <td>{{ st_pr.pavadinimas }}</td>
+                <td>
+                    <a href="{{ url_for('st_pr_update', id=st_pr.id) }}" class="action-icon">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{{ url_for('st_pr_delete', id=st_pr.id) }}" class="action-icon danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
