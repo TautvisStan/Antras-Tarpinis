@@ -1,6 +1,6 @@
-# from models.student import Student
-# from extensions import db
+from models.vartotojas import Vartotojas
+from extensions import db
 
-# def view_students():
-#     students = db.session.execute(db.select(Student)).scalars().all()
-#     return students
+def view_vartotojas():
+    vartotojai = db.session.execute(db.select(Vartotojas)).scalars().all()
+    return vartotojai
