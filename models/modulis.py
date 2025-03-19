@@ -15,3 +15,6 @@ class Modulis(db.Model):
     atsiskaitymai = db.relationship('Atsiskaitymas',back_populates='modulis', foreign_keys='Atsiskaitymas.modulis_id')
 
     paskaitos = db.relationship('Paskaita',back_populates='modulis', foreign_keys='Paskaita.modulis_id')
+    studentai_moduliai = db.relationship('StudentasModulis', back_populates = 'modulis')
+
+    
