@@ -10,7 +10,7 @@ class Vartotojas(db.Model):
     vaidmuo = db.Column(db.String(50), nullable=False)
     studiju_programa_id = db.Column(db.Integer, db.ForeignKey('studiju_programos.id'), nullable=True)
     grupe_id = db.Column(db.Integer, db.ForeignKey('grupes.id'), nullable=True)
-    paveiksleliai = db.Column(db.JSON, nullable=True)    # JSON masyvas su nuorodomis į paveikslėlius
+    profilio_pav = db.Column(db.String(50), nullable=True)    # JSON masyvas su nuorodomis į paveikslėlius
 
 
     studiju_programa = db.relationship('StudijuPrograma',back_populates='studentai', foreign_keys=[studiju_programa_id])
