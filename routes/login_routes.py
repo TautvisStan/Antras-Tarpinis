@@ -8,7 +8,7 @@ import re
 
 
 def init_login_routes(app):
-    el_pasto_regex = r"^\S+@\S+\.\S+$"  #TODO regex patikrinimas slaptazodziui
+    el_pasto_regex = r"^\S+@\S+\.\S+$" 
     pass_regex = r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
     
     @login_manager.unauthorized_handler
@@ -31,7 +31,8 @@ def init_login_routes(app):
                     prisijunges = Prisijunges(vartotojas.vaidmuo)
                     prisijunges.id = vartotojas.id
                     flask_login.login_user(prisijunges)
-                    return redirect(url_for('protected'))   #TODO
+                    flash("Sėkmingai prisijungta")
+                    return redirect(url_for('protected'))   #TODO paskirstyti pagal roles (studentas.html, destytojas.html, admin.html)
                 
             flash("Blogas prisijungimas!")
         
@@ -49,32 +50,29 @@ def init_login_routes(app):
                 slaptazodis = form.slaptazodis.data
                 if re.match(pass_regex, slaptazodis):
                     slaptazodis_hash = reg_pr.gauti_slapt_hash(slaptazodis)
-                    vaidmuo = form.vaidmuo.data #TODO
-                    print(vaidmuo)
-                    reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo)
-                    return "uzregistruotas"  #TODO
-                
-                flash("Blogas slaptažodis! Turi būti bent: 1 mažoji, 1 didžioji, 1 skaičius, 8 viso")
-            
-            flash("Blogas el. pašto adresas!")
+                    vaidmuo = form.vaidmuo.data 
+                    studiju_programa = form.studiju_programa.data.id
+                    reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo, studiju_programa)
+                    flash("Užregistruota!")
+                    return redirect(url_for("index"))  #TODO
+                else:
+                    flash("Blogas slaptažodis! Turi būti bent: 1 mažoji, 1 didžioji, 1 skaičius, 8 viso")
+            else:
+
+                flash("Blogas el. pašto adresas!")
         
         return render_template("register_forma.html", form=form)
 
 
-    @app.route("/test")
-    def test():
-        if flask_login.current_user.is_authenticated:
-            return str(flask_login.current_user.vaidmuo) 
-        return "neprisijunges"
-
     @app.route('/protected')    #TODO
     @flask_login.login_required
     def protected():
-        return 'Logged in as: ' + str(flask_login.current_user.id) + " " + str(flask_login.current_user.vaidmuo)
+        return 'Logged in as: ' + str(flask_login.current_user.id) + " " + flask_login.current_user.vaidmuo
 
 
-    @app.route('/logout')   #TODO
+    @app.route('/logout')   
     @flask_login.login_required
     def logout():
         flask_login.logout_user()
-        return 'Logged out'
+        flash("Atsijungta!")
+        return redirect(url_for('index'))

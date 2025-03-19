@@ -1,3 +1,4 @@
+import flask_login
 from extensions import login_manager, db
 from models.vartotojas import Vartotojas
 from sqlalchemy import select
@@ -26,8 +27,8 @@ def prijungti_vartotoja(vartotojas):
     prisijunges.id = vartotojas.id
     return prisijunges
 
-def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo):
-    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo)
+def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo, studiju_programa):
+    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa)
     db.session.add(vartotojas)
     db.session.commit()
 
@@ -49,4 +50,9 @@ def patikrinti_slapt_hash(slaptazodis, slaptazodis_hash):
     return pbkdf2_sha256.verify(slaptazodis, slaptazodis_hash)
 
 def ar_prisijunges():
-    return 
+    return flask_login.current_user.is_authenticated
+
+def gauti_prisijungusio_vaidmeni():
+    if ar_prisijunges():
+        return flask_login.current_user.vaidmuo
+    return "Neprisijungęs"
