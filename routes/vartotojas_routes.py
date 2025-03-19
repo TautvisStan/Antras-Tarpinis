@@ -9,3 +9,8 @@ def init_student_routes(app):
     @app.route('/create', methods=['GET', 'POST'])
     def create():
         return
+    
+    @app.route('/studentas_view/<id>', methods=['GET', 'POST'])
+    def view(id):
+        studentas = st_act.gauti_studenta(id)
+        return render_template('studento_perziura.html',studentas = studentas)
