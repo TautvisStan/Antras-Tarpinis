@@ -21,8 +21,8 @@ def salinti_moduli(id):
     db.session.delete(modulis)
     db.session.commit()
 
-def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija):
-    modulis = Modulis(pavadinimas=pavadinimas, aprasymas=aprasymas, kreditai=kreditai, semestro_informacija=semestro_informacija)
+def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa):
+    modulis = Modulis(pavadinimas=pavadinimas, aprasymas=aprasymas, kreditai=kreditai, semestro_informacija=semestro_informacija, destytojas_id=destytojas_id, studiju_programa=studiju_programa)
     db.session.add(modulis)
     db.session.commit()
 
