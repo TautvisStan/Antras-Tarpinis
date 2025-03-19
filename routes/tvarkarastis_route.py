@@ -13,17 +13,17 @@ def init_tvarkarastis(app):
         savaites_pabaiga = savaites_pradzia + timedelta(days=4)  # Tik darbo dienos
 
         # Filtruojame paskaitas šiai savaitei
-        stmt_paskaitos = db.session.execute(db.select(Paskaita).where(
+        stmt_paskaitos = db.select(Paskaita).where(
             Paskaita.laikas_nuo >= savaites_pradzia,
             Paskaita.laikas_iki <= savaites_pabaiga
-        ))
+        )
         paskaitos = db.session.execute(stmt_paskaitos).scalars().all()    
     
         # Filtruojame šventines/išeigines dienas
-        stmt_sventines_dienos = db.session.execute(db.select(Kalendorius).where(
+        stmt_sventines_dienos = db.select(Kalendorius).where(
             Kalendorius.data >= savaites_pradzia.date(),
             Kalendorius.data <= savaites_pabaiga.date()
-        ))
+        )
         sventines_dienos = db.session.execute(stmt_sventines_dienos).scalars().all() 
 
         # Grupuojame paskaitas pagal dieną ir laiką
@@ -52,11 +52,11 @@ def init_tvarkarastis(app):
     # sventiniu, iseiginiu dienu patikrinimas
 
     def ar_darbo_diena(data):
-        stmt_sventine_diena = db.session.execute(db.select(Kalendorius).where(Kalendorius.data == data.date))
+        stmt_sventine_diena = db.select(Kalendorius).where(Kalendorius.data == data.date)
         sventine_diena = db.session.execute(stmt_sventine_diena).scalars().first()
         return sventine_diena is None
 
-    # pakaitos pridejimas su tikrinimu
+    # paskaitos pridejimas su tikrinimu
     # Prieš įtraukiant paskaitą į tvarkaraštį, reikia patikrinti, ar diena nėra šventinė/išeiginė:
 
     @app.route('/prideti_paskaita', methods=['POST'])
