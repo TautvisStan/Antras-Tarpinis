@@ -47,3 +47,6 @@ def gauti_slapt_hash(slaptazodis):
 
 def patikrinti_slapt_hash(slaptazodis, slaptazodis_hash):
     return pbkdf2_sha256.verify(slaptazodis, slaptazodis_hash)
+
+def ar_prisijunges():
+    return 

@@ -9,10 +9,14 @@ import re
 
 def init_login_routes(app):
     el_pasto_regex = r"^\S+@\S+\.\S+$"  #TODO regex patikrinimas slaptazodziui
-
-    @app.route('/401')
+    pass_regex = r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+    
     @login_manager.unauthorized_handler
     def neprisijunges():
+        return redirect(url_for("error_401"))
+    
+    @app.route('/401')
+    def error_401():
         return render_template('401.html')
     
     @app.route('/login', methods=['GET', 'POST'])
@@ -28,7 +32,8 @@ def init_login_routes(app):
                     prisijunges.id = vartotojas.id
                     flask_login.login_user(prisijunges)
                     return redirect(url_for('protected'))   #TODO
-            return 'Bad login'  #TODO
+                
+            flash("Blogas prisijungimas!")
         
         return render_template("login_forma.html", form=form)
     
@@ -42,17 +47,25 @@ def init_login_routes(app):
             
             if re.match(el_pasto_regex, el_pastas) and reg_pr.patikrinti_ar_nera(el_pastas):
                 slaptazodis = form.slaptazodis.data
-                slaptazodis_hash = reg_pr.gauti_slapt_hash(slaptazodis)
-                vaidmuo = form.vaidmuo.data #TODO
-                print(vaidmuo)
-                reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo)
-                return "uzregistruotas"  #TODO
+                if re.match(pass_regex, slaptazodis):
+                    slaptazodis_hash = reg_pr.gauti_slapt_hash(slaptazodis)
+                    vaidmuo = form.vaidmuo.data #TODO
+                    print(vaidmuo)
+                    reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo)
+                    return "uzregistruotas"  #TODO
+                
+                flash("Blogas slaptažodis! Turi būti bent: 1 mažoji, 1 didžioji, 1 skaičius, 8 viso")
             
-            flash("Neteisinga registracija!")
-            return render_template("register_forma.html", form=form)
+            flash("Blogas el. pašto adresas!")
         
         return render_template("register_forma.html", form=form)
 
+
+    @app.route("/test")
+    def test():
+        if flask_login.current_user.is_authenticated:
+            return str(flask_login.current_user.vaidmuo) 
+        return "neprisijunges"
 
     @app.route('/protected')    #TODO
     @flask_login.login_required
