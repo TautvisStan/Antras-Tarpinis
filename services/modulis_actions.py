@@ -25,3 +25,4 @@ def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija):
     modulis = Modulis(pavadinimas=pavadinimas, aprasymas=aprasymas, kreditai=kreditai, semestro_informacija=semestro_informacija)
     db.session.add(modulis)
     db.session.commit()
+

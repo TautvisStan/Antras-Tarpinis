@@ -50,3 +50,8 @@ def init_modulis_routes(app):
         flash("Sekmingai pasalinta")
         return app.redirect(url_for('moduliai'))
     
+    @app.route('/moduliai_view/<id>', methods=['GET', 'POST'])
+    def view(id):
+        modulis = mo_act.gauti_moduli(id)
+        return render_template('modulio_perziura.html',modulis=modulis)
+    
