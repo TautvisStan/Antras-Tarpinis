@@ -1,6 +1,9 @@
+from datetime import datetime
 from flask import flash, redirect, render_template, request, url_for
 import flask_login
 from extensions import login_manager, Prisijunges
+from services.dekoratoriai import turi_buti_atsijunges
+from services.mail_patvirtinimas import confirm_token, generate_token
 import services.registracija_prisijungimas_actions as reg_pr
 from forms.loginForma import LoginForma
 from forms.registerForma import RegisterForma
@@ -25,7 +28,12 @@ def init_login_routes(app):
         return render_template('401.html')
     
     @app.route('/login', methods=['GET', 'POST'])
+    @turi_buti_atsijunges
     def login():
+        # if flask_login.current_user.is_authenticated:
+        #     flash("Jūs jau prisijungęs.", "info")
+        #     return redirect(url_for("index"))
+        print("ISKVIESTA")
         form = LoginForma()
         if form.validate_on_submit():
             el_pastas = form.el_pastas.data
@@ -44,7 +52,12 @@ def init_login_routes(app):
         return render_template("login_forma.html", form=form)
     
     @app.route('/register', methods=['GET', 'POST'])
+    @turi_buti_atsijunges
     def register():
+        # if flask_login.current_user.is_authenticated:
+        #     flash("Jūs jau prisijungęs.", "info")
+        #     return redirect(url_for("index"))
+        
         form = RegisterForma()
         if form.validate_on_submit():
             vardas = form.vardas.data
@@ -57,9 +70,12 @@ def init_login_routes(app):
                     slaptazodis_hash = reg_pr.gauti_slapt_hash(slaptazodis)
                     vaidmuo = form.vaidmuo.data 
                     studiju_programa = form.studiju_programa.data.id
+                    
                     reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo, studiju_programa)
                     flash("Užregistruota!")
-                    return redirect(url_for("index"))  #TODO
+                    token = generate_token(el_pastas)
+
+                    return redirect(url_for("index"))
                 else:
                     flash("Blogas slaptažodis! Turi būti bent: 1 mažoji, 1 didžioji, 1 skaičius, 8 viso")
             else:
@@ -81,3 +97,19 @@ def init_login_routes(app):
         flask_login.logout_user()
         flash("Atsijungta!")
         return redirect(url_for('index'))
+    
+
+    @app.route("/confirm/<token>")
+    @flask_login.login_required
+    def confirm_email(token):
+        if flask_login.current_user.is_confirmed:
+            flash("Account already confirmed.", "success")
+            return redirect(url_for("index"))
+        email = confirm_token(token)
+        user = reg_pr.gauti_vartotoja_email(email)
+        if user.email == email:
+            reg_pr.patvirtinti_vartotojo_mail(user)
+            flash("You have confirmed your account. Thanks!", "success")
+        else:
+            flash("The confirmation link is invalid or has expired.", "danger")
+        return redirect(url_for("index"))

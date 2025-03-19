@@ -10,8 +10,11 @@ class Vartotojas(db.Model):
     vaidmuo = db.Column(db.String(50), nullable=False)
     studiju_programa_id = db.Column(db.Integer, db.ForeignKey('studiju_programos.id'), nullable=True)
     grupe_id = db.Column(db.Integer, db.ForeignKey('grupes.id'), nullable=True)
-    profilio_pav = db.Column(db.String(50), nullable=True)    # JSON masyvas su nuorodomis į paveikslėlius
-
+    profilio_pav = db.Column(db.String(50), nullable=True)    #Nuoroda i profilio nuotrauka
+    el_pat = db.Column(db.Boolean, nullable=False, default=False) #El patvirtintas
+    el_pat_data = db.Column(db.DateTime, nullable=True)
+    dest_pat = db.Column(db.Boolean, nullable=True) #Admin turi patvirtinti dest
+    dest_pat_data = db.Column(db.DateTime, nullable=True)
 
     studiju_programa = db.relationship('StudijuPrograma',back_populates='studentai', foreign_keys=[studiju_programa_id])
 
