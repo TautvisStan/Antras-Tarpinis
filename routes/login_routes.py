@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, url_for
 import flask_login
 from extensions import login_manager, Prisijunges
 from services.dekoratoriai import turi_buti_atsijunges
-from services.mail_patvirtinimas import confirm_token, generate_token
+from services.mail_patvirtinimas import confirm_token, generate_token, send_email
 import services.registracija_prisijungimas_actions as reg_pr
 from forms.loginForma import LoginForma
 from forms.registerForma import RegisterForma
@@ -70,10 +70,18 @@ def init_login_routes(app):
                     slaptazodis_hash = reg_pr.gauti_slapt_hash(slaptazodis)
                     vaidmuo = form.vaidmuo.data 
                     studiju_programa = form.studiju_programa.data.id
-                    
+
+
+
+                    # Dėl pilno bonus balo neverta ten ieškoti pašto provider'ių kurie leistų paprastai be domaino siųsti laiškus
+                    # token = generate_token(el_pastas)
+                    # confirm_url = url_for("confirm_email", token=token, _external=True)
+                    # html = render_template("confirm_email.html", confirm_url=confirm_url)
+                    # subject = "Please confirm your email"
+                    # send_email(el_pastas, subject, html)
+
                     reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo, studiju_programa)
                     flash("Užregistruota!")
-                    token = generate_token(el_pastas)
 
                     return redirect(url_for("index"))
                 else:
