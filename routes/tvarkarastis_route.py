@@ -1,8 +1,11 @@
 from datetime import datetime, timedelta
-from flask import render_template
-from .models import Paskaita, Kalendorius
+from flask import render_template, request, redirect, url_for, flash
+from models import Paskaita, Kalendorius, Vartotojas
+from flask_login import login_required
+from extensions import db
 
-def init_tvarkarastis():
+
+def init_tvarkarastis(app):
     @app.route('/tvarkarastis')
     def tvarkarastis():
         savaites_shift = int(request.args.get('savaites_shift', 0))  # Savaitės poslinkis
@@ -57,7 +60,7 @@ def init_tvarkarastis():
     @app.route('/prideti_paskaita', methods=['POST'])
     @login_required
     def prideti_paskaita():
-        if current_user.vaidmuo != 'Dėstytojas':
+        if Vartotojas.vaidmuo != 'Dėstytojas':
             flash('Neturite teisių pridėti paskaitų', 'danger')
             return redirect(url_for('tvarkarastis'))
 
@@ -81,7 +84,7 @@ def init_tvarkarastis():
     @app.route('/salinti_paskaita/<int:id>', methods=['POST'])
     @login_required
     def salinti_paskaita(id):
-        if current_user.vaidmuo != 'Dėstytojas':
+        if Vartotojas.vaidmuo != 'Dėstytojas':
             flash('Neturite teisių šalinti paskaitų', 'danger')
             return redirect(url_for('tvarkarastis'))
 
