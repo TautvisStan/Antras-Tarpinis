@@ -16,3 +16,5 @@ class Vartotojas(db.Model):
     studiju_programa = db.relationship('StudijuPrograma',back_populates='studentai', foreign_keys=[studiju_programa_id])
 
     grupe = db.relationship('Grupe',back_populates='studentai', foreign_keys=[grupe_id])
+    studentai_moduliai = db.relationship('StudentasModulis', back_populates = 'studentas')
+    
