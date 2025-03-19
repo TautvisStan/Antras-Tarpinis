@@ -56,3 +56,7 @@ def gauti_prisijungusio_vaidmeni():
     if ar_prisijunges():
         return flask_login.current_user.vaidmuo
     return "Neprisijungęs"
+
+def patikrinti_roles(roles : list[str]):
+    return flask_login.current_user.vaidmuo in roles
+        
