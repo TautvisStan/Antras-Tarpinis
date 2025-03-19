@@ -15,6 +15,11 @@ def init_login_routes(app):
     def neprisijunges():
         return redirect(url_for("error_401"))
     
+    @app.route('/403')
+    @flask_login.login_required
+    def error_403():
+        return render_template('403.html')
+
     @app.route('/401')
     def error_401():
         return render_template('401.html')

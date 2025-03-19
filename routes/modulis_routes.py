@@ -1,13 +1,18 @@
 from flask import flash, render_template, request, url_for
 import services.modulis_actions as mo_act
 from forms.modulisForma import ModulisForma
+from services.registracija_prisijungimas_actions import patikrinti_roles
 def init_modulis_routes(app):
+
     @app.route('/moduliai')
     def moduliai():
         return render_template('moduliai.html', moduliai = mo_act.view_modulis())
-
+    
     @app.route('/moduliai_create', methods=['GET', 'POST'])
     def create():
+        if patikrinti_roles(["Dėstytojas", "Admin"]) is False:
+            return app.redirect(url_for('error_403'))
+        
         form = ModulisForma()
         if request.method == 'GET':
             return render_template("moduliai_forma.html", form=form)
