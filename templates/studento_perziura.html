@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Studento peržiūra{% endblock %}
+
+{% block content %}
+    <div class="header-container">
+        <h2>Studento informacija</h2>
+    </div>
+
+
+    <table class="vartotojai-table">
+            <tr>
+                <th>ID</th>
+                <td>{{ vartotojas.id }}</td>
+            </tr>
+            <tr>
+                <th>Vardas</th>
+                <td>{{ vartotojas.vardas }}</td>
+            </tr>
+            <tr>
+                <th>Pavardė</th>
+                <td>{{ vartotojas.pavarde }}</td>
+            </tr>
+            <tr>
+                <th>Studijų programa</th>
+                <td>{{ vartotojas.studiju_programa.pavadinimas }}</td>
+            </tr>
+            <tr>
+                <th>Grupė</th>
+                <td>{{ vartotojas.grupe.pavadinimas }}</td>
+            </tr>
+        </table>
+
+        <h3>Studento moduliai</h3>
+        <table class="moduliai-table">
+            <thead>
+                <tr>
+                    <th>Pavadinimas</th>
+                    <th>Aprašymas</th>
+                    <th>Kreditai</th>
+                    <th>Semestro informacija</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for modulis in moduliai %}
+                <tr>
+                    <td>{{ modulis.pavadinimas }}</td>
+                    <td>{{ modulis.aprasymas }}</td>
+                    <td>{{ modulis.kreditai }}</td>
+                    <td>{{ modulis.semestro_informacija }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+{% endblock %}
+    
