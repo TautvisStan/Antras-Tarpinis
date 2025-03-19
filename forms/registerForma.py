@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, IntegerField, DateTimeLocalField, SubmitField, validators, PasswordField, EmailField
+from wtforms import SelectField, StringField, IntegerField, DateTimeLocalField, SubmitField, validators, PasswordField, EmailField, RadioField
 from wtforms_sqlalchemy import fields
 
 class RegisterForma(FlaskForm):
@@ -7,5 +7,5 @@ class RegisterForma(FlaskForm):
     pavarde = StringField("Pavarde", [validators.InputRequired()])
     el_pastas = EmailField("El. Paštas", [validators.InputRequired()])
     slaptazodis = PasswordField("Slaptažodis", [validators.InputRequired()])
-    vaidmuo = StringField("Vaidmuo")
+    vaidmuo = RadioField("Vaidmuo", [validators.InputRequired()], choices=["Studentas", "Dėstytojas"], )
     submit = SubmitField("Prisijungti")

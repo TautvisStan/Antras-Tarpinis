@@ -24,7 +24,7 @@ def init_login_routes(app):
                 slaptazodis = form.slaptazodis.data
                 vartotojas = reg_pr.rasti_vartotoja(el_pastas, slaptazodis) 
                 if vartotojas:
-                    prisijunges = Prisijunges()
+                    prisijunges = Prisijunges(vartotojas.vaidmuo)
                     prisijunges.id = vartotojas.id
                     flask_login.login_user(prisijunges)
                     return redirect(url_for('protected'))   #TODO
@@ -44,6 +44,7 @@ def init_login_routes(app):
                 slaptazodis = form.slaptazodis.data
                 slaptazodis_hash = reg_pr.gauti_slapt_hash(slaptazodis)
                 vaidmuo = form.vaidmuo.data #TODO
+                print(vaidmuo)
                 reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo)
                 return "uzregistruotas"  #TODO
             
