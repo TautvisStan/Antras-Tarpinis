@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Tvarkaraštis{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Mokslo tvarkaraštis</h2>
+    <div class="text-center mb-3">
+        <a href="{{ url_for('tvarkarastis', savaites_shift=-1) }}" class="btn btn-secondary">Praėjusi savaitė</a>
+        <span class="mx-3">{{ savaites_pradzia }} - {{ savaites_pabaiga }}</span>
+        <a href="{{ url_for('tvarkarastis', savaites_shift=1) }}" class="btn btn-secondary">Kita savaitė</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Laikas</th>
+                <th>Pirmadienis</th>
+                <th>Antradienis</th>
+                <th>Trečiadienis</th>
+                <th>Ketvirtadienis</th>
+                <th>Penktadienis</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for laikas in laiko_intervalai %}
+            <tr>
+                <td>{{ laikas }}</td>
+                {% for diena in ['pirmadienis', 'antradienis', 'trečiadienis', 'ketvirtadienis', 'penktadienis'] %}
+                <td>
+                    {% for paskaita in tvarkarastis[diena][laikas] %}
+                    <div class="paskaita">
+                        <strong>{{ paskaita.modulis.pavadinimas }}</strong><br>
+                        {{ paskaita.vieta }}<br>
+                        {{ paskaita.pradzia.strftime('%H:%M') }} - {{ paskaita.pabaiga.strftime('%H:%M') }}
+                    </div>
+                    {% endfor %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
