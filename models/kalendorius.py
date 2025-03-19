@@ -1,4 +1,4 @@
-import extensions as db
+from extensions import db
 
 class Kalendorius(db.Model):
     __tablename__ = 'kalendorius'
