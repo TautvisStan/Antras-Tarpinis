@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Statistika{% endblock %}
+
+{% block content %}
+
+<h2>Statistinė informacija</h2>
+
+<div class="statistika-container">
+    <div class="statistika-item">
+        <h3>Vartotojų skaičius</h3>
+        <p>{{ vartotoju_skaicius }}</p>
+    </div>
+    <div class="statistika-item">
+        <h3>Modulių skaičius</h3>
+        <p>{{ moduliu_skaicius }}</p>
+    </div>
+    <div class="statistika-item">
+        <h3>Studijų programų skaičius</h3>
+        <p>{{ studiju_programu_skaicius }}</p>
+    </div>
+    <div class="statistika-item">
+        <h3>Grupių skaičius</h3>
+        <p>{{ grupiu_skaicius }}</p>
+    </div>
+
+{% endblock %}
+
+
+
+
+
+
