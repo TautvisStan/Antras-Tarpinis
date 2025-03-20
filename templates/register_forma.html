@@ -6,7 +6,7 @@
 <div class="card">
     <h3 class="card-title">Registracija</h3>
     
-    <form method="POST" action="{{ url_for('register') }}">
+    <form method="POST" action="{{ url_for('register') }}", enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.vardas.label(class="form-label") }}
@@ -64,6 +64,19 @@
                 </div>
             {% endif %}
         </div>
+
+        <div class="form-group">
+            {{ form.profilio_pav.label(class="form-label") }}
+            {{ form.profilio_pav(class="form-control") }}
+            {% if form.profilio_pav.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.profilio_pav.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
         <div class="form-group">
             {{ form.studiju_programa.label(class="form-label") }}
             {{ form.studiju_programa(class="form-control") }}
