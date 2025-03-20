@@ -13,8 +13,8 @@ class Tvarkarastis(db.Model):
     modulis_id = db.Column(db.Integer, db.ForeignKey('moduliai.id'), nullable=True)
 
 
-    modulis = db.relationship('Modulis',back_populates='tvarkarasciai', foreign_keys=[modulis_id])
-    atsiskaitymas = db.relationship('Atsiskaitymas', back_populates='tvarkarasciai', foreign_keys=[atsiskaitymas_id])
-    uzduotis = db.relationship('Uzduotis', back_populates='tvarkarasciai', foreign_keys=[uzduotis_id])
+    #TODO modulis = db.relationship('Modulis',back_populates='tvarkarasciai', foreign_keys=[modulis_id])
+    #TODO atsiskaitymas = db.relationship('Atsiskaitymas', back_populates='tvarkarasciai', foreign_keys=[atsiskaitymas_id])
+    #TODO uzduotis = db.relationship('Uzduotis', back_populates='tvarkarasciai', foreign_keys=[uzduotis_id])
     
     

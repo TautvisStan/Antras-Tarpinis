@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from config import Config
 from extensions import db, migrate, login_manager, mail
-from models import atsiskaitymas, grupes, modulis, paskaita, studentai_moduliai, studiju_programa, vartotojas
+from models import atsiskaitymas, grupes, modulis, paskaita, studentai_moduliai, studiju_programa, vartotojas, kalendorius, tvarkarastis, uzduotys
 # from routes import student_routes
 from routes import grupes_routes
 from routes import login_routes, modulis_routes, studiju_programa_routes, vartotojas_routes

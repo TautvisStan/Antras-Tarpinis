@@ -1,7 +1,7 @@
 
 from flask import flash, render_template, request, url_for
 import services.grupes_actions as gr_act
-from forms.grupesForma import GrupesForma
+from forms.GrupesForma import GrupesForma
 def init_grupes_routes(app):
     @app.route('/grupes')
     def grupes():
