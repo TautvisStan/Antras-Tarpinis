@@ -1,3 +1,4 @@
+from datetime import datetime
 from extensions import db
 from models.vartotojas import Vartotojas
 from models.modulis import Modulis
@@ -32,3 +33,9 @@ def uzblokuoti_vartotoja(vartotojas):
     except Exception as e:
         db.session.rollback()  
         raise Exception(f"Klaida užblokuojant vartotoją: {e}")
+
+def patvirtinti_destytoja(id):
+    destytojas = db.session.get(Vartotojas, id)
+    destytojas.dest_pat = True
+    destytojas.dest_pat_data = datetime.now()
+    db.session.commit()

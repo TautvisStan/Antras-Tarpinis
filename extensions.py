@@ -10,5 +10,6 @@ mail = Mail()
 
 
 class Prisijunges(UserMixin):
-    def __init__(self, vaidmuo):
+    def __init__(self, vaidmuo, studiju_programa_id):
         self.vaidmuo = vaidmuo
+        self.studiju_programa_id = studiju_programa_id
