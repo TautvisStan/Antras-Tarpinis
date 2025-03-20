@@ -1,4 +1,5 @@
 from extensions import db
+import datetime
 
 class Vartotojas(db.Model):
     __tablename__ = 'vartotojai'
@@ -11,6 +12,7 @@ class Vartotojas(db.Model):
     studiju_programa_id = db.Column(db.Integer, db.ForeignKey('studiju_programos.id'), nullable=True)
     grupe_id = db.Column(db.Integer, db.ForeignKey('grupes.id'), nullable=True)
     profilio_pav = db.Column(db.String(50), nullable=True)    #Nuoroda i profilio nuotrauka
+    ikelimo_data = db.Column(db.DateTime, nullable=True) # foto ikelimo data
     el_pat = db.Column(db.Boolean, nullable=False, default=False) #El patvirtintas
     el_pat_data = db.Column(db.DateTime, nullable=True)
     dest_pat = db.Column(db.Boolean, nullable=True) #Admin turi patvirtinti dest
@@ -21,4 +23,7 @@ class Vartotojas(db.Model):
 
     grupe = db.relationship('Grupe',back_populates='studentai', foreign_keys=[grupe_id])
     studentai_moduliai = db.relationship('StudentasModulis', back_populates = 'studentas')
+
+    def __repr__(self):
+        return f"Vartotojas('{self.vardas} {self.pavarde}')"
     

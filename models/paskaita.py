@@ -1,3 +1,4 @@
+from datetime import datetime
 from extensions import db
 
 class Paskaita(db.Model):
@@ -7,6 +8,7 @@ class Paskaita(db.Model):
     savaites_diena = db.Column(db.Integer, nullable=False)
     laikas_nuo = db.Column(db.Time, nullable=False)
     laikas_iki = db.Column(db.Time, nullable=False)
+    tipas = db.Column(db.String(50), nullable=False) # paskaita, atsiskaitymas, egzaminas 
 
     modulis_id = db.Column(db.Integer, db.ForeignKey('moduliai.id'), nullable=True)
 
