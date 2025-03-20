@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from config import Config
-from extensions import db, migrate, login_manager
+from extensions import db, migrate, login_manager, mail
 from models import atsiskaitymas, grupes, modulis, paskaita, studentai_moduliai, studiju_programa, vartotojas
 # from routes import student_routes
 from routes import grupes_routes
@@ -12,6 +12,7 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate.init_app(app, db)
 login_manager.init_app(app)
+mail.init_app(app)
 
 # student_routes.init_student_routes(app)
 login_routes.init_login_routes(app)
