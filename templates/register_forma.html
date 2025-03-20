@@ -42,142 +42,91 @@
 
 {% endblock %} -->
 
-<html lang="lt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registracijos forma - Code Academy</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-image: url('https://lietuva.lt/wp-content/uploads/2023/01/5280_26243f6c21b26e6350c7867609dde68c-650x364.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        .header {
-            position: absolute;
-            top: 20px;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .header h1 {
-            color: white;
-            font-size: 32px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 10px 20px;
-            border-radius: 8px;
-            display: inline-block;
-        }
-        
-        .container {
-            text-align: center;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 90%;
-            margin-top: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        .btn {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 10px 0;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: #45a049;
-        }
-        
-        .back-link {
-            margin-top: 15px;
-        }
-        
-        .back-link a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-        
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Sveiki atvykę į Code Academy!</h1>
-    </div>
-    <div class="container">
-        <h2>Registracija</h2>
-        <form action="{{url_for('register')}}" method="POST">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.vardas.label() }}
-                {{ form.vardas() }}
-            </div>
-            <div class="form-group">
-                {{ form.pavarde.label() }}
-                {{ form.pavarde() }}
-            </div>
-            <div class="form-group">
-                {{ form.vaidmuo.label() }}
-                {{ form.vaidmuo() }}
-            </div>
-            <div class="form-group">
-                {{ form.el_pastas.label() }}
-                {{ form.el_pastas() }}
-            </div>
-            <div class="form-group">
-                {{ form.slaptazodis.label() }}
-                {{ form.slaptazodis() }}
-            </div>
-            <br>
-            <div class="form-group">
-                {{form.submit()}}
-            </div>
-        </form>
-        <div class="back-link">
-            <a href="index.html">Grįžti atgal</a>
+{% extends "base.html" %}
+
+{% block title %}Registracija - Code Academy{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h3 class="card-title">Registracija</h3>
+    
+    <form method="POST" action="{{ url_for('register') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.vardas.label(class="form-label") }}
+            {{ form.vardas(class="form-control") }}
+            {% if form.vardas.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.vardas.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
+        <div class="form-group">
+            {{ form.pavarde.label(class="form-label") }}
+            {{ form.pavarde(class="form-control") }}
+            {% if form.pavarde.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.pavarde.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.el_pastas.label(class="form-label") }}
+            {{ form.el_pastas(class="form-control") }}
+            {% if form.el_pastas.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.el_pastas.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.slaptazodis.label(class="form-label") }}
+            {{ form.slaptazodis(class="form-control") }}
+            {% if form.slaptazodis.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.slaptazodis.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <small style="display: block; margin-top: 5px; color: #666;">Slaptažodis turi būti bent 8 simbolių ilgio, turėti bent vieną didžiąją, mažąją raidę ir skaičių.</small>
+        </div>
+        <div class="form-group">
+            {{ form.vaidmuo.label(class="form-label") }}
+            {{ form.vaidmuo(class="form-control") }}
+            {% if form.vaidmuo.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.vaidmuo.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.studiju_programa.label(class="form-label") }}
+            {{ form.studiju_programa(class="form-control") }}
+            {% if form.studiju_programa.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.studiju_programa.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="buttons-container">
+            {{ form.submit(class="btn-primary") }}
+            <a href="{{ url_for('index') }}" class="btn-secondary">Grįžti</a>
+        </div>
+    </form>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <p>Jau turite paskyrą? <a href="{{ url_for('login') }}">Prisijunkite</a></p>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

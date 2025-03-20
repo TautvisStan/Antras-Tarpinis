@@ -1,4 +1,4 @@
-<!-- {% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Prisijungimas{% endblock %}
 
@@ -9,202 +9,26 @@
             <div class="card-header">
                 <h3 class="text-center">Prisijungimas</h3>
             </div>
-            <div class="card-body">!-->
-
-<html lang="lt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prisijungimo forma - Code Academy</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-image: url('https://lietuva.lt/wp-content/uploads/2023/01/5280_26243f6c21b26e6350c7867609dde68c-650x364.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        .header {
-            position: absolute;
-            top: 20px;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .header h1 {
-            color: white;
-            font-size: 32px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 10px 20px;
-            border-radius: 8px;
-            display: inline-block;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-        
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            padding: 25px;
-        }
-        
-        .card-title {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 24px;
-            text-align: center;
-            color: #2196F3;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        /* Navigacijos meniu stilius */
-        .nav-menu {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-        }
-        
-        .nav-button {
-            margin: 0 10px;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            color: white;
-        }
-        
-        .nav-button.primary {
-            background-color: #2196F3;
-        }
-        
-        .nav-button.primary:hover {
-            background-color: #0d8aee;
-        }
-        
-        .nav-button.active {
-            background-color: #0d47a1;
-        }
-        
-        .nav-button.secondary {
-            background-color: #4CAF50;
-        }
-        
-        .nav-button.secondary:hover {
-            background-color: #45a049;
-        }
-        
-        .nav-button.neutral {
-            background-color: #6c757d;
-        }
-        
-        .nav-button.neutral:hover {
-            background-color: #5a6268;
-        }
-        
-        .buttons-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-        }
-        
-        .btn-primary {
-            color: #fff;
-            background-color: #2196F3;
-            border: none;
-            border-radius: 4px;
-            padding: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            flex: 1;
-            transition: background-color 0.3s;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0d8aee;
-        }
-        
-        .btn-secondary {
-            color: #fff;
-            background-color: #6c757d;
-            border: none;
-            border-radius: 4px;
-            padding: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            flex: 1;
-            transition: background-color 0.3s;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Sveiki atvykę į Code Academy!</h1>
-    </div>
-    
-    <div class="container">
-        <!-- Prisijungimo forma -->
-        <div class="card">
-            <h3 class="card-title">Prisijungimas</h3>
-            
-            <form method="POST" action="{{ url_for('login') }}">
-                <div class="form-group">
+            <div class="card-body">
+              <!-- Prisijungimo forma -->
+              <form method="POST" action="{{ url_for('login') }}">
+                <div class="mb-3">
                     <label for="el_pastas" class="form-label">El. paštas</label>
                     <input type="email" class="form-control" id="el_pastas" name="el_pastas" required>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="slaptazodis" class="form-label">Slaptažodis</label>
                     <input type="password" class="form-control" id="slaptazodis" name="slaptazodis" required>
                 </div>
-                <div class="buttons-container">
-                    <button type="submit" class="btn-primary">Prisijungti</button>
-                    <button type="button" class="btn-secondary" onclick="window.location.href='index.html'">Grįžti</button>
-                </div>
+                <button type="submit" class="btn btn-primary w-100">Prisijungti</button>
             </form>
+
+            <!-- Nuoroda į registracijos puslapį -->
+            <div class="mt-3 text-center">
+                <p>Neturite paskyros? <a href="{{ url_for('registracija') }}">Užsiregistruokite</a></p>
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+</div>
+{% endblock %}
