@@ -1,3 +1,4 @@
+from datetime import datetime
 import flask_login
 from extensions import login_manager, db
 from models.vartotojas import Vartotojas
@@ -11,16 +12,6 @@ def user_loader(id):
     if vartotojas is None:
         return
     return prijungti_vartotoja(vartotojas)
-
-@login_manager.request_loader
-def request_loader(request): #TODO
-    email = request.form.get('el_pastas')
-    password = request.form.get('slaptazodis')
-    vartotojas = rasti_vartotoja(email, password)
-    if vartotojas:
-        return prijungti_vartotoja(vartotojas)
-    else:
-        return
     
 def prijungti_vartotoja(vartotojas):
     prisijunges = Prisijunges(vartotojas.vaidmuo)
@@ -43,6 +34,14 @@ def rasti_vartotoja(email, pwd):
             return vartotojas
     return None
 
+def gauti_vartotoja_email(email):
+    return db.session.execute(db.select(Vartotojas).filter(Vartotojas.el_pastas==email)).scalars().one_or_none()
+
+def patvirtinti_vartotojo_mail(vartotojas):
+    vartotojas.el_pat = True
+    vartotojas.el_pat_data = datetime.now()
+    db.session.commit()
+
 def gauti_slapt_hash(slaptazodis):
     return pbkdf2_sha256.hash(slaptazodis)
 
@@ -56,3 +55,7 @@ def gauti_prisijungusio_vaidmeni():
     if ar_prisijunges():
         return flask_login.current_user.vaidmuo
     return "Neprisijungęs"
+
+def patikrinti_roles(roles : list[str]):
+    return flask_login.current_user.vaidmuo in roles
+        

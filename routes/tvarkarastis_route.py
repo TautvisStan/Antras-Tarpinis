@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, select
 from models import Paskaita, Kalendorius, Vartotojas
 from flask_login import login_required
 from extensions import db
@@ -13,16 +13,18 @@ def init_tvarkarastis(app):
         savaites_pabaiga = savaites_pradzia + timedelta(days=4)  # Tik darbo dienos
 
         # Filtruojame paskaitas šiai savaitei
-        paskaitos = Paskaita.query.filter(
-            Paskaita.pradzia >= savaites_pradzia,
-            Paskaita.pabaiga <= savaites_pabaiga
-        ).all()
-
+        stmt_paskaitos = db.select(Paskaita).where(
+            Paskaita.laikas_nuo >= savaites_pradzia,
+            Paskaita.laikas_iki <= savaites_pabaiga
+        )
+        paskaitos = db.session.execute(stmt_paskaitos).scalars().all()    
+    
         # Filtruojame šventines/išeigines dienas
-        sventines_dienos = Kalendorius.query.filter(
+        stmt_sventines_dienos = db.select(Kalendorius).where(
             Kalendorius.data >= savaites_pradzia.date(),
             Kalendorius.data <= savaites_pabaiga.date()
-        ).all()
+        )
+        sventines_dienos = db.session.execute(stmt_sventines_dienos).scalars().all() 
 
         # Grupuojame paskaitas pagal dieną ir laiką
         tvarkarastis = {
@@ -31,8 +33,8 @@ def init_tvarkarastis(app):
         laiko_intervalai = set()
 
         for paskaita in paskaitos:
-            diena = paskaita.pradzia.strftime('%A').lower()  # Gauti dieną (pvz., 'pirmadienis')
-            laikas = paskaita.pradzia.strftime('%H:%M')  # Paskaitos pradžios laikas
+            diena = paskaita.savaites_diena.strftime('%A').lower()  # Gauti dieną (pvz., 'pirmadienis')
+            laikas = paskaita.laikas_nuo.strftime('%H:%M')  # Paskaitos pradžios laikas
 
             if diena in tvarkarastis:
                 if laikas not in tvarkarastis[diena]:
@@ -50,11 +52,11 @@ def init_tvarkarastis(app):
     # sventiniu, iseiginiu dienu patikrinimas
 
     def ar_darbo_diena(data):
-        sventine_diena = Kalendorius.query.filter_by(data=data.date()).first()
+        stmt_sventine_diena = db.select(Kalendorius).where(Kalendorius.data == data.date)
+        sventine_diena = db.session.execute(stmt_sventine_diena).scalars().first()
         return sventine_diena is None
 
-    # pakaitos pridejimas su tikrinimu
-
+    # paskaitos pridejimas su tikrinimu
     # Prieš įtraukiant paskaitą į tvarkaraštį, reikia patikrinti, ar diena nėra šventinė/išeiginė:
 
     @app.route('/prideti_paskaita', methods=['POST'])
@@ -88,7 +90,7 @@ def init_tvarkarastis(app):
             flash('Neturite teisių šalinti paskaitų', 'danger')
             return redirect(url_for('tvarkarastis'))
 
-        paskaita = Paskaita.query.get_or_404(id)
+        paskaita = db.session.get(Paskaita, id)
         db.session.delete(paskaita)
         db.session.commit()
         flash('Paskaita sėkmingai pašalinta', 'success')
