@@ -9,11 +9,18 @@ def gauti_moduli(id):
     modulis = db.session.get(Modulis, id)
     return modulis
 
-def atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_informacija):
+def atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_informacija, studiju_programa, destytojas):
     modulis.pavadinimas = pavadinimas
     modulis.aprasymas = aprasymas
     modulis.kreditai = kreditai
     modulis.semestro_informacija = semestro_informacija
+    db.session.commit()
+    if studiju_programa:
+        modulis.studiju_programa_id = studiju_programa.id
+
+    if destytojas:
+        modulis.destytojas_id = destytojas.id
+
     db.session.commit()
 
 def salinti_moduli(id):

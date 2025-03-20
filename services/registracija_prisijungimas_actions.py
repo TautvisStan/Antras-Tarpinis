@@ -14,12 +14,12 @@ def user_loader(id):
     return prijungti_vartotoja(vartotojas)
     
 def prijungti_vartotoja(vartotojas):
-    prisijunges = Prisijunges(vartotojas.vaidmuo)
+    prisijunges = Prisijunges(vartotojas.vaidmuo, vartotojas.studiju_programa_id)
     prisijunges.id = vartotojas.id
     return prisijunges
 
-def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo, studiju_programa):
-    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa)
+def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo, studiju_programa, dest_pat):
+    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa, dest_pat=dest_pat)
     db.session.add(vartotojas)
     db.session.commit()
 

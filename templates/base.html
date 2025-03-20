@@ -1,38 +1,213 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Employee Management{% endblock %}</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <title>{% block title %}Code Academy{% endblock %}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: url('https://lietuva.lt/wp-content/uploads/2023/01/5280_26243f6c21b26e6350c7867609dde68c-650x364.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        
+        /* Navigacijos stilius */
+        nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-container h1 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin-left: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Flash žinučių stilius */
+        .flash-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .flash-message {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+        }
+        
+        .alert-danger {
+            background-color: rgba(244, 67, 54, 0.9);
+            color: white;
+        }
+        
+        .alert-warning {
+            background-color: rgba(255, 152, 0, 0.9);
+            color: white;
+        }
+        
+        .alert-info {
+            background-color: rgba(33, 150, 243, 0.9);
+            color: white;
+        }
+        
+        .flash-message i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Pagrindinio turinio stilius */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-height: 300px;
+        }
+
+        /* Papildomos klasės, kurios gali būti naudojamos content blokuose */
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #2196F3;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #0d8aee;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-success {
+            background-color: #4CAF50;
+        }
+        
+        .btn-success:hover {
+            background-color: #45a049;
+        }
+        
+        .btn-danger {
+            background-color: #f44336;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        /* Formų stiliai */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <!-- Navigation Menu -->
+    <!-- Navigacija -->
     <nav>
         <div class="nav-container">
-            <h1>Employee Management</h1>
+            <h1>Code Academy</h1>
             <ul class="nav-links">
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('index') }}">Pagrindinis</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Prisijungti</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('register') }}">Registruotis</a>
-                        </li>
-                    </ul>
-
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('index') }}">View Data</a></li>
+                <li><a href="{{ url_for('index') }}">Pagrindinis</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('protected') }}">Profilis</a></li>
+                    <li><a href="{{ url_for('logout') }}">Atsijungti</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Prisijungti</a></li>
+                    <li><a href="{{ url_for('register') }}">Registruotis</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
 
+    <!-- Flash žinutės -->
     <div class="flash-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -40,6 +215,12 @@
                     <div class="alert alert-{{ category }} flash-message">
                         {% if category == "success" %}
                             <i class="fas fa-check-circle"></i>
+                        {% elif category == "danger" %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% elif category == "warning" %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                        {% elif category == "info" %}
+                            <i class="fas fa-info-circle"></i>
                         {% endif %}
                         {{ message }}
                     </div>
@@ -48,9 +229,12 @@
         {% endwith %}
     </div>
 
+    <!-- Pagrindinis turinys -->
     <div class="container">
         {% block content %}{% endblock %}
     </div>
 
+    <!-- JavaScript -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -18,7 +18,7 @@ def init_modulis_routes(app):
         return render_template('moduliai.html', moduliai = mo_act.view_modulis())
     
     @app.route('/moduliai_create', methods=['GET', 'POST'])
-    # @Roles_Patikrinimas(["Dėstytojas", "Admin", "Studentas"])
+    @Roles_Patikrinimas(["Dėstytojas", "Admin", "Studentas"])
     def create():
         # if patikrinti_roles(["Dėstytojas", "Admin"]) is False:
         #     return app.redirect(url_for('error_403'))
