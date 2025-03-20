@@ -16,3 +16,19 @@ def gauti_statistika():
     grupiu_skaicius = grupiu_skaicius if grupiu_skaicius is not None else 0
 
     return vartotoju_skaicius,moduliu_skaicius,studiju_programu_skaicius,grupiu_skaicius 
+
+def istrinti_vartotoja(vartotojas):
+    try:
+        db.session.delete(vartotojas)
+        db.session.commit()  
+    except Exception as e:
+        db.session.rollback()  
+        raise Exception(f"Klaida trinant vartotoją: {e}")
+    
+def uzblokuoti_vartotoja(vartotojas):
+    try:
+        vartotojas.aktyvumas = False
+        db.session.commit()  
+    except Exception as e:
+        db.session.rollback()  
+        raise Exception(f"Klaida užblokuojant vartotoją: {e}")

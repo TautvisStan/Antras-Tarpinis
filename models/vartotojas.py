@@ -15,6 +15,7 @@ class Vartotojas(db.Model):
     el_pat_data = db.Column(db.DateTime, nullable=True)
     dest_pat = db.Column(db.Boolean, nullable=True) #Admin turi patvirtinti dest
     dest_pat_data = db.Column(db.DateTime, nullable=True)
+    aktyvumas = db.Column(db.Boolean, default=True)
 
     studiju_programa = db.relationship('StudijuPrograma',back_populates='studentai', foreign_keys=[studiju_programa_id])
 
