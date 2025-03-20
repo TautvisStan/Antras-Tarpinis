@@ -1,3 +1,4 @@
+from datetime import datetime
 from extensions import db
 from models.vartotojas import Vartotojas
 from models.modulis import Modulis
@@ -16,3 +17,10 @@ def gauti_statistika():
     grupiu_skaicius = grupiu_skaicius if grupiu_skaicius is not None else 0
 
     return vartotoju_skaicius,moduliu_skaicius,studiju_programu_skaicius,grupiu_skaicius 
+
+
+def patvirtinti_destytoja(id):
+    destytojas = db.session.get(Vartotojas, id)
+    destytojas.dest_pat = True
+    destytojas.dest_pat_data = datetime.now()
+    db.session.commit()

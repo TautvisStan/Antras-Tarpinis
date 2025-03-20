@@ -30,18 +30,14 @@ def init_login_routes(app):
     @app.route('/login', methods=['GET', 'POST'])
     @turi_buti_atsijunges
     def login():
-        # if flask_login.current_user.is_authenticated:
-        #     flash("Jūs jau prisijungęs.", "info")
-        #     return redirect(url_for("index"))
-        print("ISKVIESTA")
         form = LoginForma()
         if form.validate_on_submit():
             el_pastas = form.el_pastas.data
             if re.match(el_pasto_regex, el_pastas):
                 slaptazodis = form.slaptazodis.data
                 vartotojas = reg_pr.rasti_vartotoja(el_pastas, slaptazodis) 
-                if vartotojas and vartotojas.el_pat:
-                    prisijunges = Prisijunges(vartotojas.vaidmuo)
+                if vartotojas and vartotojas.el_pat and vartotojas.dest_pat is not False:
+                    prisijunges = Prisijunges(vartotojas.vaidmuo, vartotojas.studiju_programa_id)
                     prisijunges.id = vartotojas.id
                     flask_login.login_user(prisijunges)
                     flash("Sėkmingai prisijungta")
@@ -65,6 +61,9 @@ def init_login_routes(app):
                 if re.match(pass_regex, slaptazodis):
                     slaptazodis_hash = reg_pr.gauti_slapt_hash(slaptazodis)
                     vaidmuo = form.vaidmuo.data 
+                    dest_pat = None
+                    if vaidmuo == "Dėstytojas":             #destytojams bus reikalingas papildomas admin patvirtinimas
+                        dest_pat = False
                     studiju_programa = form.studiju_programa.data.id
 
                     token = generate_token(el_pastas)
@@ -73,7 +72,7 @@ def init_login_routes(app):
                     subject = "Please confirm your email"
                     send_email(el_pastas, subject, html)
 
-                    reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo, studiju_programa)
+                    reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo, studiju_programa, dest_pat)
                     flash("Užregistruota!")
 
                     return redirect(url_for("index"))
