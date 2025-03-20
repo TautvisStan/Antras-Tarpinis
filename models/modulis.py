@@ -15,7 +15,7 @@ class Modulis(db.Model):
 
 
     atsiskaitymai = db.relationship('Atsiskaitymas',back_populates='modulis', foreign_keys='Atsiskaitymas.modulis_id')
-    tvarkarasciai = db.relationship('Tvarkarastis',back_populates='moduliai', foreign_keys='Tvarkarastis.atsiskaitymas_id') # tvarkaraštis
+    #TODO tvarkarasciai = db.relationship('Tvarkarastis',back_populates='moduliai', foreign_keys='Tvarkarastis.atsiskaitymas_id') # tvarkaraštis
 
 
     paskaitos = db.relationship('Paskaita',back_populates='modulis', foreign_keys='Paskaita.modulis_id')

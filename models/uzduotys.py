@@ -10,4 +10,4 @@ class Uzduotis(db.Model):
 
     modulis_id = db.Column(db.Integer, db.ForeignKey('moduliai.id'), nullable=True)
 
-    modulis = db.relationship('Modulis',back_populates='uzduotys', foreign_keys=[modulis_id])
+    #TODO modulis = db.relationship('Modulis',back_populates='uzduotys', foreign_keys=[modulis_id])
