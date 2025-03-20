@@ -28,6 +28,6 @@ def send_email(to, subject, template):
         subject,
         recipients=[to],
         html=template,
-        sender="tautvisstan@outlook.com"
+        sender=Config.MAIL_USERNAME
     )
     mail.send(msg)

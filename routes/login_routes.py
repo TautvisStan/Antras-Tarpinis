@@ -40,7 +40,7 @@ def init_login_routes(app):
             if re.match(el_pasto_regex, el_pastas):
                 slaptazodis = form.slaptazodis.data
                 vartotojas = reg_pr.rasti_vartotoja(el_pastas, slaptazodis) 
-                if vartotojas:
+                if vartotojas and vartotojas.el_pat:
                     prisijunges = Prisijunges(vartotojas.vaidmuo)
                     prisijunges.id = vartotojas.id
                     flask_login.login_user(prisijunges)
@@ -54,10 +54,6 @@ def init_login_routes(app):
     @app.route('/register', methods=['GET', 'POST'])
     @turi_buti_atsijunges
     def register():
-        # if flask_login.current_user.is_authenticated:
-        #     flash("Jūs jau prisijungęs.", "info")
-        #     return redirect(url_for("index"))
-        
         form = RegisterForma()
         if form.validate_on_submit():
             vardas = form.vardas.data
@@ -71,14 +67,11 @@ def init_login_routes(app):
                     vaidmuo = form.vaidmuo.data 
                     studiju_programa = form.studiju_programa.data.id
 
-
-
-                    # Dėl pilno bonus balo neverta ten ieškoti pašto provider'ių kurie leistų paprastai be domaino siųsti laiškus
-                    # token = generate_token(el_pastas)
-                    # confirm_url = url_for("confirm_email", token=token, _external=True)
-                    # html = render_template("confirm_email.html", confirm_url=confirm_url)
-                    # subject = "Please confirm your email"
-                    # send_email(el_pastas, subject, html)
+                    token = generate_token(el_pastas)
+                    confirm_url = url_for("confirm_email", token=token, _external=True)
+                    html = render_template("confirm_email.html", confirm_url=confirm_url)
+                    subject = "Please confirm your email"
+                    send_email(el_pastas, subject, html)
 
                     reg_pr.registruoti_vartotoja(vardas, pavarde, el_pastas, slaptazodis_hash, vaidmuo, studiju_programa)
                     flash("Užregistruota!")
@@ -108,14 +101,10 @@ def init_login_routes(app):
     
 
     @app.route("/confirm/<token>")
-    @flask_login.login_required
     def confirm_email(token):
-        if flask_login.current_user.is_confirmed:
-            flash("Account already confirmed.", "success")
-            return redirect(url_for("index"))
         email = confirm_token(token)
         user = reg_pr.gauti_vartotoja_email(email)
-        if user.email == email:
+        if user.el_pastas == email:
             reg_pr.patvirtinti_vartotojo_mail(user)
             flash("You have confirmed your account. Thanks!", "success")
         else:
