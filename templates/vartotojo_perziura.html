@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Vartotojo peržiūra{% endblock %}
+
+{% block content %}
+<h2>Vartotojo informacija</h2>
+
+<p><strong>Vardas:</strong> {{ vartotojas.vardas }}</p>
+<p><strong>Pavardė:</strong> {{ vartotojas.pavarde }}</p>
+<p><strong>Vaidmuo:</strong> {{ vartotojas.vaidmuo }}</p>
+
+<a href="{{ url_for('redaguoti_vartotoja', id=vartotojas.id) }}" class="btn">Redaguoti</a>
+<a href="{{ url_for('vartotojai') }}" class="btn">Grįžti</a>
+{% endblock %}
+

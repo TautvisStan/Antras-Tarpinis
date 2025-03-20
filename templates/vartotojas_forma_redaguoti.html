@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Redaguoti vartotoją{% endblock %}
+
+{% block content %}
+<h2>Vartotojo redagavimas</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <label for="vardas">Vardas:</label>
+    {{ form.vardas() }}
+    
+    <label for="pavarde">Pavardė:</label>
+    {{ form.pavarde() }}
+    
+    <label for="vaidmuo">Vaidmuo:</label>
+    {{ form.vaidmuo() }}
+    
+    <button type="submit">Atnaujinti</button>
+</form>
+
+<a href="{{ url_for('vartotojai') }}">Grįžti</a>
+{% endblock %}
+

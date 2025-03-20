@@ -16,3 +16,30 @@ def gauti_statistika():
     grupiu_skaicius = grupiu_skaicius if grupiu_skaicius is not None else 0
 
     return vartotoju_skaicius,moduliu_skaicius,studiju_programu_skaicius,grupiu_skaicius 
+
+def gauti_vartotojus():
+    vartotojai = db.session.execute(db.select(Vartotojas)).scalars().all()
+    return vartotojai
+
+def sukurti_vartotoja(vardas,pavarde,el_pastas,password_hash,vaidmuo,studiju_programa):
+    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=password_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa)
+    db.session.add(vartotojas)
+    db.session.commit()
+
+def gauti_vartotoja(id):
+    vartotojas = db.session.get(Vartotojas, id)
+    return vartotojas
+
+def redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo):
+    vartotojas.vardas = vardas
+    vartotojas.pavarde = pavarde
+    vartotojas.vaidmuo = vaidmuo
+    db.session.commit()
+
+def istrinti_vartotoja(id):
+    vartotojas = db.session.get(Vartotojas, id)
+    db.session.delete(vartotojas)
+    db.session.commit()
+
+   
+
