@@ -1,8 +1,8 @@
 {% extends "base.html" %} {% block title %}Sukurti vartotoją{% endblock %} {%
 block content %}
-<h2>Sukurti naują vartotoją</h2>
+<h2 class="text-center">Sukurti naują vartotoją</h2>
 
-<form method="POST" class="container mt-4">
+<form method="POST">
   {{ form.hidden_tag() }}
 
   <div class="mb-3">
@@ -20,7 +20,9 @@ block content %}
     form.vaidmuo(class="form-select") }}
   </div>
 
-  <button type="submit" class="btn btn-primary">Sukurti</button>
-  <a href="{{ url_for('vartotojai') }}" class="btn btn-secondary">Grįžti</a>
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary">Sukurti</button>
+    <a href="{{ url_for('vartotojai') }}" class="btn btn-secondary">Grįžti</a>
+  </div>
 </form>
 {% endblock %}

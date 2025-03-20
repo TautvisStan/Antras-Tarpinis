@@ -1,6 +1,6 @@
 from flask import request, flash, redirect, url_for, render_template
-from models import Vartotojas, db
-from services import isaugoti_paveiksleli
+from models.vartotojas import Vartotojas, db
+from services.issaugoti_paveiksleli import issaugoti_profilio_paveiksleli
 from datetime import datetime
 from forms import registerForma
 
@@ -26,7 +26,7 @@ def inicijuoti_marsrutus(app):
                     db.session.add(vartotojas)
                     db.session.commit()
                 
-                failo_pavadinimas = isaugoti_paveiksleli(failas, vartotojas)
+                failo_pavadinimas = issaugoti_profilio_paveiksleli(failas, vartotojas)
                 if failo_pavadinimas:
                     vartotojas.profilio_pav = failo_pavadinimas
                     vartotojas.ikelimo_data = datetime.utcnow()
@@ -62,7 +62,7 @@ def inicijuoti_marsrutus(app):
 
                 # Jei įkeltas paveikslėlis, išsaugome jį
                 if forma.profilio_pav.data:
-                    failo_pavadinimas = isaugoti_paveiksleli(forma.profilio_pav.data, naujas_vartotojas)
+                    failo_pavadinimas = issaugoti_profilio_paveiksleli(forma.profilio_pav.data, naujas_vartotojas)
                     if failo_pavadinimas:
                         naujas_vartotojas.profilio_pav = failo_pavadinimas
                         naujas_vartotojas.ikelimo_data = datetime.utcnow()

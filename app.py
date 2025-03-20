@@ -4,7 +4,7 @@ from extensions import db, migrate, login_manager, mail
 from models import atsiskaitymas, grupes, modulis, paskaita, studentai_moduliai, studiju_programa, vartotojas, kalendorius, tvarkarastis, uzduotys
 # from routes import student_routes
 from routes import grupes_routes
-from routes import login_routes, modulis_routes, studiju_programa_routes, vartotojas_routes,administratorius_routes, paveiksleliu_route
+from routes import login_routes, modulis_routes, studiju_programa_routes, vartotojas_routes,administratorius_routes, paveiksleliu_routes
 import services.registracija_prisijungimas_actions
 app = Flask(__name__)
 app.config.from_object(Config)
