@@ -16,9 +16,13 @@ class Vartotojas(db.Model):
     dest_pat = db.Column(db.Boolean, nullable=True) #Admin turi patvirtinti dest
     dest_pat_data = db.Column(db.DateTime, nullable=True)
     aktyvumas = db.Column(db.Boolean, default=True)
+    nesekmingi_bandymai = db.Column(db.Integer, default = 0)
+    blokavimo_laikas = db.Column(db.DateTime, nullable = True)
 
     studiju_programa = db.relationship('StudijuPrograma',back_populates='studentai', foreign_keys=[studiju_programa_id])
 
     grupe = db.relationship('Grupe',back_populates='studentai', foreign_keys=[grupe_id])
     studentai_moduliai = db.relationship('StudentasModulis', back_populates = 'studentas')
+    
+    
     
