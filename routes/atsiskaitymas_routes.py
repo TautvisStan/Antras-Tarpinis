@@ -73,8 +73,6 @@ def init_atsiskaitymas_routes(app):
                 flash("Sekmingai atnaujinta", "success")
                 return redirect(url_for('atsiskaitymai'))
             except Exception as e:
-                flash(f"Klaida atnaujinant atsiskaityma: {str(e)}", "error")
-        return render_template("atsiskaitymas_forma_update.html", form=form, id=id)
                 flash(str(e), "danger")
         return render_template("atsiskaitymas_forma_update.html", form=form, id=id)
     
