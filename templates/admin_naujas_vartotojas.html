@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Redaguoti vartotoją - Code Academy{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h2>Redaguoti vartotoją: {{ vartotojas.vardas }} {{ vartotojas.pavarde }}</h2>
+    <a href="{{ url_for('admin_vartotojai') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Grįžti į vartotojų sąrašą
+    </a>
+</div>
+
+<div class="form-container">
+    <form method="POST" action="{{ url_for('admin_redaguoti_vartotoja', id=vartotojas.id) }}">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.vardas.label(class="form-label") }}
+                {{ form.vardas(class="form-control") }}
+                {% if form.vardas.errors %}
+                    <div class="alert alert-danger form-error">
+                        {% for error in form.vardas.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group col-md-6">
+                {{ form.pavarde.label(class="form-label") }}
+                {{ form.pavarde(class="form-control") }}
+                {% if form.pavarde.errors %}
+                    <div class="alert alert-danger form-error">
+                        {% for error in form.pavarde.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            {{ form.el_pastas.label(class="form-label") }}
+            {{ form.el_pastas(class="form-control", readonly=true) }}
+            <div class="form-text">El. pašto adreso keisti negalima.</div>
+        </div>
+        
+        <div class="form-group">
+            {{ form.vaidmuo.label(class="form-label") }}
+            {{ form.vaidmuo(class="form-control") }}
+            {% if form.vaidmuo.errors %}
+                <div class="alert alert-danger form-error">
+                    {% for error in form.vaidmuo.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.studiju_programa.label(class="form-label") }}
+            {{ form.studiju_programa(class="form-control") }}
+            {% if form.studiju_programa.errors %}
+                <div class="alert alert-danger form-error">
+                    {% for error in form.studiju_programa.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Vartotojo būsenos informacija -->
+        <div class="status-info">
+            <div class="status-item">
+                <span class="status-label">El. paštas patvirtintas:</span>
+                <span class="status-value {% if vartotojas.el_pat %}text-success{% else %}text-danger{% endif %}">
+                    {% if vartotojas.el_pat %}
+                        <i class="fas fa-check-circle"></i> Taip
+                    {% else %}
+                        <i class="fas fa-times-circle"></i> Ne
+                    {% endif %}
+                </span>
+            </div>
+            
+            {% if vartotojas.vaidmuo == 'Dėstytojas' %}
+            <div class="status-item">
+                <span class="status-label">Dėstytojas patvirtintas:</span>
+                <span class="status-value {% if vartotojas.dest_pat %}text-success{% else %}text-danger{% endif %}">
+                    {% if vartotojas.dest_pat %}
+                        <i class="fas fa-check-circle"></i> Taip
+                    {% else %}
+                        <i class="fas fa-times-circle"></i> Ne
+                    {% endif %}
+                </span>
+            </div>
+            {% endif %}
+            
+            <div class="status-item">
+                <span class="status-label">Aktyvumas:</span>
+                <span class="status-value {% if vartotojas.aktyvumas %}text-success{% else %}text-danger{% endif %}">
+                    {% if vartotojas.aktyvumas %}
+                        <i class="fas fa-check-circle"></i> Aktyvus
+                    {% else %}
+                        <i class="fas fa-ban"></i> Užblokuotas
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="status-item">
+                <span class="status-label">Registracijos data:</span>
+                <span class="status-value">{{ vartotojas.registration_date.strftime('%Y-%m-%d %H:%M') if vartotojas.registration_date else '-' }}</span>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Išsaugoti pakeitimus</button>
+            <a href="{{ url_for('admin_vartotojai') }}" class="btn btn-secondary">Atšaukti</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -10px;
+        margin-left: -10px;
+    }
+    
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-right: 10px;
+        padding-left: 10px;
+        box-sizing: border-box;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    
+    .form-text {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .form-error {
+        padding: 8px;
+        margin-top: 5px;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+    
+    .status-info {
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+    }
+    
+    .status-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .status-item:last-child {
+        border-bottom: none;
+    }
+    
+    .status-label {
+        font-weight: bold;
+    }
+    
+    .text-success {
+        color: #4CAF50;
+    }
+    
+    .text-danger {
+        color: #f44336;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .btn-primary {
+        background-color: #2196F3;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0d8aee;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}

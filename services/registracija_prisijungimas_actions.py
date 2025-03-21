@@ -18,8 +18,8 @@ def prijungti_vartotoja(vartotojas):
     prisijunges.id = vartotojas.id
     return prisijunges
 
-def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo, studiju_programa, dest_pat):
-    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa, dest_pat=dest_pat)
+def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo, studiju_programa, dest_pat, profilio_pav, ikelimo_data):
+    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa, dest_pat=dest_pat, profilio_pav=profilio_pav, ikelimo_data=ikelimo_data)
     db.session.add(vartotojas)
     db.session.commit()
 
@@ -63,20 +63,22 @@ def patikrinti_roles(roles : list[str]):
         
 
 def patikrinti_blokavima(vartotojas):
-    if vartotojas.blokavimo_laikas and vartotojas.blokavimo_laikas > datetime.now():
-        return True
-    else:
-        vartotojas.nesekmingi_bandymai = 0
-        vartotojas.blokavimo_laikas = None
+    return vartotojas.blokavimo_laikas and vartotojas.blokavimo_laikas > datetime.now()
+
+def isvalyti_blokavimus(vartotojas):
+    vartotojas.nesekmingi_bandymai = 0
+    vartotojas.blokavimo_laikas = None
+    db.session.commit()
+
+def nesekmingu_prisijungimu_skaicius(el_pastas):
+    vartotojas = db.session.execute(db.select(Vartotojas).filter(Vartotojas.el_pastas==el_pastas)).scalars().one_or_none()
+    if vartotojas:
+        vartotojas.nesekmingi_bandymai += 1
         db.session.commit()
-        return False
-    
-def nesekmingu_prisijungimu_skaicius(vartotojas):
-    vartotojas.nesekmingi_bandymai += 1
-    if vartotojas.nesekmingi_bandymai >= 3:
-        vartotojas.blokavimo_laikas = datetime.now() + timedelta(minutes=1)
-        db.session.commit()
-        return True
+        if vartotojas.nesekmingi_bandymai >= 3:
+            vartotojas.blokavimo_laikas = datetime.now() + timedelta(minutes=1)
+            db.session.commit()
+            return True
     return False
 
 

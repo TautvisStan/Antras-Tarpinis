@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Dėstytojų patvirtinimas - Code Academy{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h2>Dėstytojų patvirtinimas</h2>
+    <a href="{{ url_for('protected') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Grįžti į valdymo pultą
+    </a>
+</div>
+
+{% if destytojai|length > 0 %}
+<div class="info-alert">
+    <i class="fas fa-info-circle"></i>
+    <div>
+        <p>Patvirtinkite dėstytojus, kad jie galėtų prisijungti ir naudoti sistemą. Tik patvirtinti dėstytojai gali dėstyti kursus.</p>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Vardas</th>
+                <th>Pavardė</th>
+                <th>El. paštas</th>
+                <th>Registracijos data</th>
+                <th>El. paštas patvirtintas</th>
+                <th>Veiksmai</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for destytojas in destytojai %}
+            <tr>
+                <td>{{ destytojas.id }}</td>
+                <td>{{ destytojas.vardas }}</td>
+                <td>{{ destytojas.pavarde }}</td>
+                <td>{{ destytojas.el_pastas }}</td>
+                <td>{{ destytojas.registration_date.strftime('%Y-%m-%d %H:%M') if destytojas.registration_date else '-' }}</td>
+                <td class="text-center">
+                    {% if destytojas.el_pat %}
+                    <i class="fas fa-check-circle text-success"></i>
+                    {% else %}
+                    <i class="fas fa-times-circle text-danger"></i>
+                    {% endif %}
+                </td>
+                <td class="actions-cell">
+                    <a href="{{ url_for('admin_patvirtinti_destytoja', id=destytojas.id) }}" class="btn btn-success">
+                        <i class="fas fa-user-check"></i> Patvirtinti
+                    </a>
+                    <a href="{{ url_for('admin_redaguoti_vartotoja', id=destytojas.id) }}" class="btn-icon" title="Redaguoti">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">
+        <i class="fas fa-user-check"></i>
+    </div>
+    <h3>Nėra nepatvirtintų dėstytojų</h3>
+    <p>Šiuo metu nėra dėstytojų, laukiančių patvirtinimo.</p>
+    <a href="{{ url_for('protected') }}" class="btn btn-primary">Grįžti į valdymo pultą</a>
+</div>
+{% endif %}
+
+<style>
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .info-alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        background-color: rgba(33, 150, 243, 0.1);
+        border-left: 4px solid #2196F3;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    
+    .info-alert i {
+        font-size: 24px;
+        color: #2196F3;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .data-table th {
+        background-color: #2196F3;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .data-table th:first-child {
+        border-top-left-radius: 8px;
+    }
+    
+    .data-table th:last-child {
+        border-top-right-radius: 8px;
+    }
+    
+    .data-table tr:last-child td:first-child {
+        border-bottom-left-radius: 8px;
+    }
+    
+    .data-table tr:last-child td:last-child {
+        border-bottom-right-radius: 8px;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .text-success {
+        color: #4CAF50;
+    }
+    
+    .text-danger {
+        color: #f44336;
+    }
+    
+    .actions-cell {
+        white-space: nowrap;
+    }
+    
+    .btn-success {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-right: 10px;
+    }
+    
+    .btn-success:hover {
+        background-color: #45a049;
+    }
+    
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-icon:hover {
+        background-color: #0d8aee;
+    }
+    
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-icon {
+        font-size: 48px;
+        color: #2196F3;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h3 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .empty-state p {
+        color: #666;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
