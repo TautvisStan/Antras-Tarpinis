@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block title %}Sukurti vartotoją{% endblock %} {%
+block content %}
+<h2 class="text-center">Sukurti naują vartotoją</h2>
+
+<form method="POST">
+  {{ form.hidden_tag() }}
+
+  <div class="mb-3">
+    {{ form.vardas.label(class="form-label") }} {{
+    form.vardas(class="form-control") }}
+  </div>
+
+  <div class="mb-3">
+    {{ form.pavarde.label(class="form-label") }} {{
+    form.pavarde(class="form-control") }}
+  </div>
+
+  <div class="mb-3">
+    {{ form.vaidmuo.label(class="form-label") }} {{
+    form.vaidmuo(class="form-select") }}
+  </div>
+  <div class="mb-3">
+    {{ form.el_pastas.label(class="form-label") }}
+    {{ form.el_pastas(class="form-control") }}
+  </div>
+
+  <div class="mb-3">
+    {{ form.password.label(class="form-label") }}
+    {{ form.password(class="form-control", type="password") }}
+  </div>
+
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary">Sukurti</button>
+    <a href="{{ url_for('vartotojai') }}" class="btn btn-secondary">Grįžti</a>
+  </div>
+</form>
+{% endblock %}

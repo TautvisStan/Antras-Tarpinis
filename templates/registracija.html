@@ -1,9 +1,65 @@
-{% extends 'base.html' %}
-
-{% block title %}Registracija{% endblock %}
-
-{% block content %}
-  
-    <div></div>
-
-{% endblock %}
+{% extends "base.html" %} {% block pavadinimas %}Registracija{% endblock %} {%
+    block antraste %}Registruotis{% endblock %} {% block turinys %}
+    <form method="post" enctype="multipart/form-data">
+      {{ forma.hidden_tag() }}
+    
+      <p>
+        {{ forma.vardas.label }}<br />
+        {{ forma.vardas(size=32) }}<br />
+        {% for error in forma.vardas.errors %}
+        <span style="color: red">{{ error }}</span><br />
+        {% endfor %}
+      </p>
+    
+      <p>
+        {{ forma.pavarde.label }}<br />
+        {{ forma.pavarde(size=32) }}<br />
+        {% for error in forma.pavarde.errors %}
+        <span style="color: red">{{ error }}</span><br />
+        {% endfor %}
+      </p>
+    
+      <p>
+        {{ forma.el_pastas.label }}<br />
+        {{ forma.el_pastas(size=32) }}<br />
+        {% for error in forma.el_pastas.errors %}
+        <span style="color: red">{{ error }}</span><br />
+        {% endfor %}
+      </p>
+    
+      <p>
+        {{ forma.slaptazodis.label }}<br />
+        {{ forma.slaptazodis(size=32) }}<br />
+        {% for error in forma.slaptazodis.errors %}
+        <span style="color: red">{{ error }}</span><br />
+        {% endfor %}
+      </p>
+    
+      <p>
+        {{ forma.vaidmuo.label }}<br />
+        {{ forma.vaidmuo }}<br />
+        {% for error in forma.vaidmuo.errors %}
+        <span style="color: red">{{ error }}</span><br />
+        {% endfor %}
+      </p>
+    
+      <p>
+        {{ forma.studiju_programa.label }}<br />
+        {{ forma.studiju_programa }}<br />
+        {% for error in forma.studiju_programa.errors %}
+        <span style="color: red">{{ error }}</span><br />
+        {% endfor %}
+      </p>
+    
+      <p>
+        {{ forma.profilio_pav.label }}<br />
+        {{ forma.profilio_pav }}<br />
+        {% for error in forma.profilio_pav.errors %}
+        <span style="color: red">{{ error }}</span><br />
+        {% endfor %}
+      </p>
+    
+      <p>{{ forma.submit() }}</p>
+    </form>
+    {% endblock %}
+    

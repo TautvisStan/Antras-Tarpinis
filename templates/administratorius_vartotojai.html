@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block title %}Vartotojai{% endblock %} {% block
+content %}
+<h2>Vartotojų sąrašas</h2>
+<a href="{{ url_for('sukurti_nauja_vartotoja') }}" class="btn btn-primary"
+  >Sukurti naują vartotoją</a
+>
+
+<table>
+  <tr>
+    <th>Vardas</th>
+    <th>Pavardė</th>
+    <th>Vaidmuo</th>
+  </tr>
+  {% for vartotojas in vartotojai %}
+  <tr>
+    <td>{{ vartotojas.vardas }}</td>
+    <td>{{ vartotojas.pavarde }}</td>
+    <td>{{ vartotojas.vaidmuo }}</td>
+    <td>
+      <a
+        href="{{ url_for('perziureti_vartotoja', id=vartotojas.id) }}"
+        class="btn btn-info"
+        role="button"
+        >Peržiūrėti</a
+      >
+      <a
+        href="{{ url_for('redaguoti_vartotoja', id=vartotojas.id) }}"
+        class="btn btn-warning"
+        role="button"
+        >Redaguoti</a
+      >
+      <form
+        action="{{ url_for('panaikinti_vartotoja', id=vartotojas.id) }}"
+        method="POST"
+        style="display: inline"
+      >
+        <button
+          type="submit"
+          class="btn btn-danger"
+          onclick="return confirm('Ar tikrai norite ištrinti?')"
+        >
+          Ištrinti
+        </button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

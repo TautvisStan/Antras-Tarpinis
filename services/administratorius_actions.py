@@ -18,13 +18,44 @@ def gauti_statistika():
 
     return vartotoju_skaicius,moduliu_skaicius,studiju_programu_skaicius,grupiu_skaicius 
 
-def istrinti_vartotoja(vartotojas):
-    try:
-        db.session.delete(vartotojas)
-        db.session.commit()  
-    except Exception as e:
-        db.session.rollback()  
-        raise Exception(f"Klaida trinant vartotoją: {e}")
+def gauti_vartotojus():
+    vartotojai = db.session.execute(db.select(Vartotojas)).scalars().all()
+    return vartotojai
+
+def sukurti_vartotoja(vardas,pavarde,vaidmuo,el_pastas,password_hash):
+    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, vaidmuo=vaidmuo, el_pastas=el_pastas, password_hash=password_hash)
+    db.session.add(vartotojas)
+    db.session.commit()
+
+def gauti_vartotoja(id):
+    vartotojas = db.session.get(Vartotojas, id)
+    return vartotojas
+
+def redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo):
+    vartotojas.vardas = vardas
+    vartotojas.pavarde = pavarde
+    vartotojas.vaidmuo = vaidmuo
+    db.session.commit()
+
+def istrinti_vartotoja(id):
+    vartotojas = db.session.get(Vartotojas, id)
+    db.session.delete(vartotojas)
+    db.session.commit()
+
+   
+
+
+
+
+
+
+# def istrinti_vartotoja(vartotojas):
+#     try:
+#         db.session.delete(vartotojas)
+#         db.session.commit()  
+#     except Exception as e:
+#         db.session.rollback()  
+#         raise Exception(f"Klaida trinant vartotoją: {e}")
     
 def uzblokuoti_vartotoja(vartotojas):
     try:

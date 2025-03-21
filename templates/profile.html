@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block pavadinimas %}Profilis{% endblock %} {% block
+antraste %}Ikleti Profilio Paveiksleli{% endblock %} {% block turinys %}
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="profilio_pav" accept="image/*" />
+  <input type="submit" value="Ikleti" />
+</form>
+
+<h2>Vartotojai</h2>
+{% for vartotojas in vartotojai %}
+<div>
+  <p>{{ vartotojas.vardas }} {{ vartotojas.pavarde }}</p>
+  <img
+    src="{{ url_for('static', filename='uploads/' + vartotojas.profilio_pav) }}"
+    alt="Profilio Paveikslelis"
+    style="max-width: 200px"
+  />
+  <p>
+    Ikelta: {{ vartotojas.ikelimo_data.strftime('%Y-%m-%d %H:%M:%S') if
+    vartotojas.ikelimo_data else 'Dar neikelta' }}
+  </p>
+  <br />
+  <a href="{{ url_for('perziureti_paveiksleli', vartotojo_id=vartotojas.id) }}"
+    >Perziureti Visa Paveiksleli</a
+  >
+</div>
+{% endfor %} {% endblock %}
