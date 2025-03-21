@@ -15,7 +15,12 @@ def init_modulis_routes(app):
 
     @app.route('/moduliai')
     def moduliai():
-        return render_template('moduliai.html', moduliai = mo_act.view_modulis())
+        try:
+            moduliai = mo_act.view_modulis()
+            return render_template('moduliai.html', moduliai = moduliai)
+        except Exception as e:
+            flash(str(e), "danger")
+            return render_template('moduliai.html', moduliai=[])
     
     @app.route('/moduliai_create', methods=['GET', 'POST'])
     @Roles_Patikrinimas(["Dėstytojas", "Admin", "Studentas"])
@@ -37,16 +42,21 @@ def init_modulis_routes(app):
                 studiju_programa = db.session.get(Vartotojas.id).studiju_programa_id
 
                 mo_act.sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa)
-                flash("Sekmingai sukurta")
+                flash("Sekmingai sukurta", "success")
                 return app.redirect(url_for('moduliai'), 302)
             except Exception as e:
-                zinute = e
+                flash(str(e), "danger")
             return render_template("moduliai_forma.html", form=form)  
      
     @app.route('/moduliai_edit/<id>', methods=['GET', 'POST'])
     def update(id):
-        modulis = mo_act.gauti_moduli(id)
-        form = ModulisForma(obj=modulis)
+        try:
+            modulis = mo_act.gauti_moduli(id)
+            form = ModulisForma(obj=modulis)
+        except Exception as e:
+            flash(str(e), "danger")
+            return app.redirect(url_for('moduliai'))
+        
         if request.method == 'GET':
             return render_template("moduliai_forma_update.html", form=form, id=id)
         else:    
@@ -55,25 +65,32 @@ def init_modulis_routes(app):
                 aprasymas = form.aprasymas.data
                 kreditai = form.kreditai.data
                 semestro_informacija = form.semestro_informacija.data
+
                 mo_act.atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_informacija)
-                flash("Sekmingai atnaujinta")
+                flash("Sekmingai atnaujinta", "success")
                 return app.redirect(url_for('moduliai'))
             except Exception as e:
-                zinute = e
-                flash(e)
+                flash(str(e), "danger")
             return render_template("moduliai_forma_update.html", form=form, id=id)  
     
     @app.route('/moduliai_delete/<id>', methods=['GET', 'POST'])
     def delete(id):
-        mo_act.salinti_moduli(id)
-        flash("Sekmingai pasalinta")
+        try:
+            mo_act.salinti_moduli(id)
+            flash("Sekmingai pasalinta","success")
+            return app.redirect(url_for('moduliai'))
+        except Exception as e:
+            flash(str(e), "danger")
         return app.redirect(url_for('moduliai'))
-    
+        
     @app.route('/moduliai_view/<id>', methods=['GET', 'POST'])
     def view(id):
-        modulis = mo_act.gauti_moduli(id)
-        return render_template('modulio_perziura.html',modulis=modulis)
-    
+        try:
+            modulis = mo_act.gauti_moduli(id)
+            return render_template('modulio_perziura.html',modulis=modulis)
+        except Exception as e:
+            flash(str(e), "danger")
+            return app.redirect(url_for('moduliai'))
 
 
     
