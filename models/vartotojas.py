@@ -24,8 +24,10 @@ class Vartotojas(db.Model):
     # Ryšiai
     studiju_programa = db.relationship('StudijuPrograma', back_populates='studentai', foreign_keys=[studiju_programa_id])
     grupe = db.relationship('Grupe', back_populates='studentai', foreign_keys=[grupe_id])
-    moduliai = db.relationship('Modulis', secondary='studentu_moduliai', back_populates='studentai')
+    moduliai = db.relationship('Modulis', secondary='studentai_moduliai', back_populates='studentai')
     destomi_moduliai = db.relationship('Modulis', back_populates='destytojas', foreign_keys='Modulis.destytojas_id')
+    studentai_moduliai = db.relationship('StudentasModulis', back_populates='studentas', foreign_keys='StudentasModulis.studentas_id')
+
     
     def __repr__(self):
         return f"Vartotojas('{self.vardas} {self.pavarde}')"

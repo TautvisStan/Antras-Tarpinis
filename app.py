@@ -28,8 +28,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 migrate.init_app(app, db)
-login_manager = LoginManager()
-login_manager.init_app(app)
 mail.init_app(app)
 
 # Flask-Login inicializacija
@@ -46,7 +44,7 @@ def load_user(user_id):
 init_paskaita_routes(app)
 init_atsiskaitymas_routes(app)
 init_vartotojas_routes(app)
-init_login_routes(app)
+
 
 login_routes.init_login_routes(app)
 modulis_routes.init_modulis_routes(app)

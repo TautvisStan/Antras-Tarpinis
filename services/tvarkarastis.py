@@ -12,7 +12,7 @@ def gauti_vartotoja(id):
 
 def gauti_vartotojo_tvarkarasti(vartotojas):
     """Grąžina studento tvarkaraštį: paskaitas, atsiskaitymus, egzaminus ir šventes."""
-    if not vartotojas or vartotojas.vaidmuo != 'studentas':
+    if not vartotojas or vartotojas.vaidmuo != 'Studentas':
         raise ValueError("Studentas nerastas arba neturi studento vaidmens")
     
     # Semestro datos iš konfiguracijos
