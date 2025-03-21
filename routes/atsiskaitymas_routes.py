@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 from flask import render_template, redirect, url_for, flash, request
 from extensions import db
 from models.atsiskaitymas import Atsiskaitymas
+=======
+from flask import render_template,redirect, url_for, flash
+from flask_login import login_required
+>>>>>>> c972aac4716b1f25f06274e317813cffc231769b
 from forms.atsiskaitymasForma import AtsiskaitymasForma
 import services.atsiskaitymas_actions as ats_act
 
@@ -66,3 +71,20 @@ def init_atsiskaitymas_routes(app):
             except Exception as e:
                 flash(f"Klaida atnaujinant atsiskaityma: {str(e)}", "error")
         return render_template("atsiskaitymas_forma_update.html", form=form, id=id)
+    def create_atsiskaitymas():
+        form = AtsiskaitymasForma()
+        if form.validate_on_submit():
+            try:
+            
+                data = form.data.data
+                aprasymas = form.aprasymas.data
+                modulis_id = form.modulis.data.id  
+
+            
+                atsiskaitymas = ats_act.priskirti_atsiskaityma_moduliui(data, aprasymas, modulis_id)
+                flash("Atsiskaitymas sėkmingai sukurtas!")
+                return redirect(url_for('atsiskaitymai'))  
+            except Exception as e:
+                flash(e)
+
+        return render_template('atsiskaitymas_forma.html', form=form)
