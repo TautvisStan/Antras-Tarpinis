@@ -7,61 +7,62 @@ import services.paskaita_actions as pas_act
 def init_paskaita_routes(app):
     @app.route('/paskaitos')
     def paskaitos():
-        return render_template('paskaitos.html', paskaitos = pas_act.view_paskaitos())
+        return render_template('paskaitos.html', paskaitos=pas_act.view_paskaitos())
 
     @app.route('/paskaita_create', methods=['GET', 'POST'])
     def paskaita_create():
         form = PaskaitaForma()
-        if request.method == 'GET':
-            return render_template("paskaita_forma.html", form=form)
-        else:
-            try:
-               pavadinimas = form.pavadinimas.data
-               savaites_diena = form.savaites_diena.data
-               laikas_nuo = form.laikas_nuo.data
-               laikas_iki = form.laikas_iki.data
-               modulis_id = form.modulis_id.data
-
-               pas_act.sukurti_paskaita(pavadinimas, savaites_diena, laikas_nuo, laikas_iki, modulis_id)
-               flash("Sekmingai sukurta")
-               return redirect(url_for('paskaitos'))
-            except Exception as e:
-                zinute = e
-                flash(e)
-            return render_template('paskaita_forma.html', form=form)
-
-    @app.route('/paskaita_view/<id>', methods=['GET', 'POST'])
-    def paskaita_view(id):
-        paskaita = pas_act.gauti_paskaita(id)
-        return render_template('paskaita_perziura.html', paskaita = paskaita)
-    
-    @app.route('/paskaita_delete/<id>', methods=['GET', 'POST'])
-    def paskaita_delete(id):
-        pas_act.salinti_paskaita(id)
-        flash("Sekmingai pasalinta")
-        return app.redirect(url_for('paskaitos'))
-
-    @app.route('paskaita_edit/<id>', methods=['GET', 'POST'])
-    def paskaita_update(id):
-        paskaita = pas_act.gauti_paskaita(id)
-        form = PaskaitaForma(obj = paskaita)
-        if request.method == 'GET':
-            return render_template('paskaita_forma_update.html', form = form, id = id)
-        else:
+        if request.method == 'POST' and form.validate_on_submit():
             try:
                 pavadinimas = form.pavadinimas.data
                 savaites_diena = form.savaites_diena.data
                 laikas_nuo = form.laikas_nuo.data
                 laikas_iki = form.laikas_iki.data
-                modulis_id = form.modulis_id.data
-                pas_act.atnaujinti_paskaita(paskaita, savaites_diena, laikas_nuo, laikas_iki, modulis_id)
-                flash("Sekmingai atnaujinta")
-                return app.redirect(url_for('paskaitos'))
-            except Exception as e:
-                zinute = e
-                flash(e)
-            return render_template("paskaita_forma_update.html", form=form, id=id)  
-    
+                modulis_id = form.modulis_id.data.id if form.modulis_id.data else None
 
-    
-  
+                pas_act.sukurti_paskaita(pavadinimas, savaites_diena, laikas_nuo, laikas_iki, modulis_id)
+                flash("Sekmingai sukurta", "success")
+                return redirect(url_for('paskaitos'))
+            except Exception as e:
+                flash(f"Klaida kuriant paskaita: {str(e)}", "error")
+        return render_template('paskaita_forma.html', form=form)
+
+    @app.route('/paskaita_view/<id>')
+    def paskaita_view(id):
+        paskaita = pas_act.gauti_paskaita(id)
+        if paskaita is None:
+            flash("Paskaita nerasta", "error")
+            return redirect(url_for('paskaitos'))
+        return render_template('paskaita_perziura.html', paskaita=paskaita)
+
+    @app.route('/paskaita_delete/<id>', methods=['POST'])
+    def paskaita_delete(id):
+        try:
+            pas_act.salinti_paskaita(id)
+            flash("Sekmingai pasalinta", "success")
+        except Exception as e:
+            flash(f"Klaida salinant paskaita: {str(e)}", "error")
+        return redirect(url_for('paskaitos'))
+
+    @app.route('/paskaita_edit/<id>', methods=['GET', 'POST'])
+    def paskaita_update(id):
+        paskaita = pas_act.gauti_paskaita(id)
+        if paskaita is None:
+            flash("Paskaita nerasta", "error")
+            return redirect(url_for('paskaitos'))
+
+        form = PaskaitaForma(obj=paskaita)
+        if request.method == 'POST' and form.validate_on_submit():
+            try:
+                pavadinimas = form.pavadinimas.data
+                savaites_diena = form.savaites_diena.data
+                laikas_nuo = form.laikas_nuo.data
+                laikas_iki = form.laikas_iki.data
+                modulis_id = form.modulis_id.data.id if form.modulis_id.data else None
+
+                pas_act.atnaujinti_paskaita(paskaita, pavadinimas, savaites_diena, laikas_nuo, laikas_iki, modulis_id)
+                flash("Sekmingai atnaujinta", "success")
+                return redirect(url_for('paskaitos'))
+            except Exception as e:
+                flash(f"Klaida atnaujinant paskaita: {str(e)}", "error")
+        return render_template("paskaita_forma_update.html", form=form, id=id)
