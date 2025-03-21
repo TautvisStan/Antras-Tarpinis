@@ -45,10 +45,10 @@ def init_administratorius_routes(app):
                 password_hash = generate_password_hash(password)
 
                 ad_act.sukurti_vartotoja(vardas,pavarde,vaidmuo,el_pastas,password_hash)
-                flash("Sekmingai sukurta")
+                flash("Vartotojas sukurtas sėkmingai.","success")
                 return redirect('/administratorius/vartotojai')
             except Exception:
-                pass
+                flash("Klaida kuriant vartotoją.", "danger")
             return render_template("vartotojas_forma.html", form=form)  
 
     @app.route('/administratorius/vartotojai/redaguoti/<id>', methods=['GET', 'POST'])
@@ -64,16 +64,16 @@ def init_administratorius_routes(app):
                 pavarde = form.pavarde.data
                 vaidmuo = form.vaidmuo.data
                 ad_act.redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo)
-                flash("Sekmingai atnaujinta")
+                flash("Vartotojas sėkmingai atnaujintas", "success")
                 return redirect(url_for('vartotojai'))
-            except Exception as e:
-                pass
+            except Exception:
+                flash ("Klaida redaguojant vartotoją", "danger")
             return render_template('vartotojas_forma_redaguoti.html', form=form, id=id)   
        
     @app.route('/administratorius/vartotojai/istrinti/<id>', methods=['GET', 'POST'])
     def panaikinti_vartotoja(id):
         ad_act.istrinti_vartotoja(id)
-        flash("Sekmingai pasalinta")
+        flash("Vartotojas sėkmingai pašalintas","success")
         return redirect(url_for('vartotojai'))
 
 
