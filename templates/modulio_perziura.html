@@ -1,73 +1,42 @@
-{% extends 'base.html' %}
-
-{% block title %}Modulio peržiūra{% endblock %}
-
-{% block content %}
-    <div class="header-container">
-        <h2>Modulio informacija</h2>
-        <!-- <a href="{{ url_for('view', id=modulis.id) }}" class="btn btn-primary"> -->
-            <!-- <i class="fas fa-plus"></i> Sukurti modulį -->
-        </a>
-    </div>
-
-
-    <table class="moduliai-table">
-            <tr>
-                <th>ID</th>
-                <td>{{ modulis.id }}</td>
-            </tr>
-            <tr>
-                <th>Pavadinimas</th>
-                <td>{{ modulis.pavadinimas }}</td>
-            </tr>
-            <tr>
-                <th>Aprašymas</th>
-                <td>{{ modulis.aprasymas }}</td>
-            </tr>
-            <tr>
-                <th>Kreditai</th>
-                <td>{{ modulis.kreditai }}</td>
-            </tr>
-            <tr>
-                <th>Semestro informacija</th>
-                <td>{{ modulis.semestro_informacija }}</td>
-            </tr>
-        </table>
-
-        <h3>Susiję dėstytojai</h3>
-
-        <ul>{% for destytojas in modulis.destytojai %}</ul>
-        <li>{{ destytojas }}</li>
+{% extends "base.html" %} {% block title %}Modulio peržiūra{% endblock %} {%
+    block content %}
+    <h1>Modulio peržiūra</h1>
+    <p><strong>Pavadinimas:</strong> {{ modulis.pavadinimas }}</p>
+    <p><strong>Aprašymas:</strong> {{ modulis.aprasymas }}</p>
+    <p><strong>Kreditai:</strong> {{ modulis.kreditai }}</p>
+    <p><strong>Semestras:</strong> {{ modulis.semestro_informacija }}</p>
+    <p>
+      <strong>Egzamino data:</strong> {{ modulis.egzaminas_data.strftime('%Y-%m-%d
+      %H:%M') }}
+    </p>
+    <p>
+      <strong>Studijų programa:</strong> {{ modulis.studiju_programa.pavadinimas }}
+    </p>
+    <h3>Paskaitos</h3>
+    {% if modulis.paskaitos %}
+    <table>
+      <thead>
+        <tr>
+          <th>Pavadinimas</th>
+          <th>Savaitės diena</th>
+          <th>Laikas nuo</th>
+          <th>Laikas iki</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for paskaita in modulis.paskaitos %}
+        <tr>
+          <td>{{ paskaita.pavadinimas }}</td>
+          <td>{{ paskaita.savaites_diena }}</td>
+          <td>{{ paskaita.laikas_nuo }}</td>
+          <td>{{ paskaita.laikas_iki }}</td>
+        </tr>
         {% endfor %}
-
-        <h3>Studentų sąrašas</h3>
-
-        <ul>{% for studentas in studentai_moduliai.studentai %}</ul>
-        <li>{{ studentas }}</li>
-        {% endfor %}
-
-        <h3>Paskaitų Tvarkaraštis</h3>
-    <table class="paskaitos-table">
-        <thead>
-            <tr>
-                <th>Pavadinimas</th>
-                <th>Diena</th>
-                <th>Paskaitos pradžia</th>
-                <th>Paskaitos pabaiga</th>
-                <th>Modulis</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for paskaita in tvarkarastis %}
-            <tr>
-                <td>{{ paskaita.pavadinimas }}</td>
-                <td>{{ paskaita.savaites_diena }}</td>
-                <td>{{ paskaita.laikas_nuo }}</td>
-                <td>{{ paskaita.laikas_iki }}</td>
-                <td>{{ paskaita. }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      </tbody>
     </table>
-
-{% endblock %}
+    {% else %}
+    <p>Nėra susietų paskaitų.</p>
+    {% endif %}
+    <p><a href="{{ url_for('moduliai') }}">Grįžti į sąrašą</a></p>
+    {% endblock %}
+    

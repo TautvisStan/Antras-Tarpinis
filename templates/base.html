@@ -203,6 +203,9 @@
                     {% if current_user.vaidmuo == 'admin' %}
                         <a href="{{ url_for('kalendorius') }}">Kalendorius</a>
                     {% endif %}
+                    {% if current_user.vaidmuo == 'destytojas' %}
+                        <a href="{{ url_for('moduliai') }}">Moduliai</a>
+                    {% endif %}
                 {% else %}
                     <li><a href="{{ url_for('login') }}">Prisijungti</a></li>
                     <li><a href="{{ url_for('register') }}">Registruotis</a></li>

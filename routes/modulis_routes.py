@@ -1,96 +1,135 @@
-from flask import flash, render_template, request, url_for
-from flask_login import current_user
-from services.dekoratoriai import Roles_Patikrinimas
-import services.modulis_actions as mo_act
-from forms.modulisForma import ModulisForma
-
-from services.registracija_prisijungimas_actions import patikrinti_roles
-
-from extensions import db   #TODO
+from flask import flash, render_template, url_for, redirect, request
+from flask_login import current_user, login_required
+from extensions import db
 from sqlalchemy import select
-from models.vartotojas import Vartotojas
 
+from models.modulis import Modulis
+from models.paskaita import Paskaita
+from forms.modulisForma import ModulisForma
+from forms.paskaitaForma import PaskaitaForma
+import services.modulis_actions as mo_act
 
 def init_modulis_routes(app):
-
     @app.route('/moduliai')
+    @login_required
     def moduliai():
-        try:
-            moduliai = mo_act.view_modulis()
-            return render_template('moduliai.html', moduliai = moduliai)
-        except Exception as e:
-            flash(str(e), "danger")
-            return render_template('moduliai.html', moduliai=[])
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali valdyti modulius', 'error')
+            return redirect(url_for('index'))
+        
+        destytojo_moduliai = db.session.execute(select(Modulis).where(Modulis.destytojas_id == current_user.id)).scalars().all()
+        return render_template('modulis_list.html', moduliai=destytojo_moduliai)
     
     @app.route('/moduliai_create', methods=['GET', 'POST'])
-    @Roles_Patikrinimas(["Dėstytojas", "Admin", "Studentas"])
+    @login_required
     def create():
-        # if patikrinti_roles(["Dėstytojas", "Admin"]) is False:
-        #     return app.redirect(url_for('error_403'))
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali kurti modulius', 'error')
+            return redirect(url_for('index'))
         
         form = ModulisForma()
-        if request.method == 'GET':
-            return render_template("moduliai_forma.html", form=form)
-        else:    
+        if form.validate_on_submit():
             try:
-                pavadinimas = form.pavadinimas.data
-                aprasymas = form.aprasymas.data
-                kreditai = form.kreditai.data
-                semestro_informacija = form.semestro_informacija.data
-
-                destytojas_id = current_user.id
-                studiju_programa = db.session.get(Vartotojas.id).studiju_programa_id
-
-                mo_act.sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa)
-                flash("Sekmingai sukurta", "success")
-                return app.redirect(url_for('moduliai'), 302)
+                paskaita_data_list = [
+                    {
+                        'pavadinimas': paskaita.pavadinimas.data,
+                        'savaites_diena': paskaita.savaites_diena.data,
+                        'laikas_nuo': paskaita.laikas_nuo.data,
+                        'laikas_iki': paskaita.laikas_iki.data
+                    } for paskaita in form.paskaitos
+                ]
+                mo_act.sukurti_moduli(
+                    pavadinimas=form.pavadinimas.data,
+                    aprasymas=form.aprasymas.data,
+                    kreditai=form.kreditai.data,
+                    semestro_informacija=form.semestro_informacija.data,
+                    destytojas_id=current_user.id,
+                    studiju_programa_id=form.studiju_programa.data.id,
+                    egzaminas_data=form.egzaminas_data.data,
+                    paskaita_data_list=paskaita_data_list
+                )
+                flash("Sėkmingai sukurta", "success")
+                return redirect(url_for('moduliai'))
             except Exception as e:
-                flash(str(e), "danger")
-            return render_template("moduliai_forma.html", form=form)  
+                flash(f"Klaida kuriant modulį: {str(e)}", "error")
+        return render_template("moduliai_forma.html", form=form)
      
-    @app.route('/moduliai_edit/<id>', methods=['GET', 'POST'])
+    @app.route('/moduliai_edit/<int:id>', methods=['GET', 'POST'])
+    @login_required
     def update(id):
-        try:
-            modulis = mo_act.gauti_moduli(id)
-            form = ModulisForma(obj=modulis)
-        except Exception as e:
-            flash(str(e), "danger")
-            return app.redirect(url_for('moduliai'))
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali redaguoti modulius', 'error')
+            return redirect(url_for('index'))
         
+        modulis = mo_act.gauti_moduli(id)
+        if not modulis or modulis.destytojas_id != current_user.id:
+            flash('Modulis nerastas arba neturite teisių jį redaguoti', 'error')
+            return redirect(url_for('moduliai'))
+        
+        form = ModulisForma(obj=modulis)
         if request.method == 'GET':
-            return render_template("moduliai_forma_update.html", form=form, id=id)
-        else:    
+            form.paskaitos.entries.clear()
+            for paskaita in modulis.paskaitos:
+                paskaita_form = PaskaitaForma()
+                paskaita_form.pavadinimas.data = paskaita.pavadinimas
+                paskaita_form.savaites_diena.data = paskaita.savaites_diena
+                paskaita_form.laikas_nuo.data = paskaita.laikas_nuo
+                paskaita_form.laikas_iki.data = paskaita.laikas_iki
+                form.paskaitos.append_entry(paskaita_form)
+
+        if form.validate_on_submit():
             try:
-                pavadinimas = form.pavadinimas.data
-                aprasymas = form.aprasymas.data
-                kreditai = form.kreditai.data
-                semestro_informacija = form.semestro_informacija.data
-
-                mo_act.atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_informacija)
-                flash("Sekmingai atnaujinta", "success")
-                return app.redirect(url_for('moduliai'))
+                paskaita_data_list = [
+                    {
+                        'pavadinimas': paskaita.pavadinimas.data,
+                        'savaites_diena': paskaita.savaites_diena.data,
+                        'laikas_nuo': paskaita.laikas_nuo.data,
+                        'laikas_iki': paskaita.laikas_iki.data
+                    } for paskaita in form.paskaitos
+                ]
+                mo_act.atnaujinti_moduli(
+                    modulis=modulis,
+                    pavadinimas=form.pavadinimas.data,
+                    aprasymas=form.aprasymas.data,
+                    kreditai=form.kreditai.data,
+                    semestro_informacija=form.semestro_informacija.data,
+                    egzaminas_data=form.egzaminas_data.data,
+                    paskaita_data_list=paskaita_data_list
+                )
+                flash("Sėkmingai atnaujinta", "success")
+                return redirect(url_for('moduliai'))
             except Exception as e:
-                flash(str(e), "danger")
-            return render_template("moduliai_forma_update.html", form=form, id=id)  
+                flash(f"Klaida redaguojant modulį: {str(e)}", "error")
+        return render_template("moduliai_forma_update.html", form=form, id=id)
     
-    @app.route('/moduliai_delete/<id>', methods=['GET', 'POST'])
+    @app.route('/moduliai_delete/<int:id>', methods=['GET', 'POST'])
+    @login_required
     def delete(id):
-        try:
-            mo_act.salinti_moduli(id)
-            flash("Sekmingai pasalinta","success")
-            return app.redirect(url_for('moduliai'))
-        except Exception as e:
-            flash(str(e), "danger")
-        return app.redirect(url_for('moduliai'))
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali šalinti modulius', 'error')
+            return redirect(url_for('index'))
         
-    @app.route('/moduliai_view/<id>', methods=['GET', 'POST'])
+        modulis = mo_act.gauti_moduli(id)
+        if modulis and modulis.destytojas_id == current_user.id:
+            try:
+                mo_act.salinti_moduli(id)
+                flash("Sėkmingai pašalinta", "success")
+            except Exception as e:
+                flash(f"Klaida šalinant modulį: {str(e)}", "error")
+        else:
+            flash("Modulis nerastas arba neturite teisių jį pašalinti", "error")
+        return redirect(url_for('moduliai'))
+    
+    @app.route('/moduliai_view/<int:id>', methods=['GET', 'POST'])
+    @login_required
     def view(id):
-        try:
-            modulis = mo_act.gauti_moduli(id)
-            return render_template('modulio_perziura.html',modulis=modulis)
-        except Exception as e:
-            flash(str(e), "danger")
-            return app.redirect(url_for('moduliai'))
-
-
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali peržiūrėti modulius', 'error')
+            return redirect(url_for('index'))
+        
+        modulis = mo_act.gauti_moduli(id)
+        if not modulis or modulis.destytojas_id != current_user.id:
+            flash("Modulis nerastas arba neturite teisių jį peržiūrėti", "error")
+            return redirect(url_for('moduliai'))
+        return render_template('modulio_perziura.html', modulis=modulis)
     

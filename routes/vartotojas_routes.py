@@ -1,31 +1,12 @@
-from flask import render_template,flash,redirect,url_for
-import services.studentas_actions as st_act
-
-def init_student_routes(app):
-    @app.route('/studentai')
-    def studentai():
-        try:
-            vartotojai=st_act.perziureti_studentus()
-            return render_template('studentas.html', vartotojai= vartotojai)
-        except Exception as e:
-            flash(str(e), "danger")
-            return render_template('studentas.html', vartotojai=[])
-    
-    @app.route('/studentas_perziureti/<id>', methods=['GET', 'POST'])
-    def perziureti_studenta(id):
-        try:
-            studentas = st_act.gauti_studenta(id)
-            return render_template('studento_perziura.html',vartotojas = studentas)
-        except Exception as e:
-            flash(str(e), "danger")
-            return redirect(url_for('studentai'))
-
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
-import services.tvarkarastis as tvarkarastis  # Pakeistas importas
 from flask_wtf import FlaskForm
+from sqlalchemy import select
 from wtforms import DateField, StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired\
+    
+# import from services. models, extensions
+import services.tvarkarastis as tvarkarastis  
 from models.kalendorius import Kalendorius
 from extensions import db
 
@@ -72,5 +53,5 @@ def init_vartotojas_routes(app):
                 db.session.rollback()
                 flash(f'Klaida pridedant šventę: {str(e)}', 'error')
         
-        sventes = db.session.execute(db.select(Kalendorius)).scalars().all()
+        sventes = db.session.execute(select(Kalendorius)).scalars().all()
         return render_template('kalendorius.html', form=form, sventes=sventes)
