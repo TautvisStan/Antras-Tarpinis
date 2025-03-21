@@ -1,5 +1,10 @@
 from extensions import db
 
+studentu_moduliai = db.Table('studentu_moduliai',
+    db.Column('vartotojas_id', db.Integer, db.ForeignKey('vartotojai.id'), primary_key=True),
+    db.Column('modulis_id', db.Integer, db.ForeignKey('moduliai.id'), primary_key=True)
+)
+
 class Modulis(db.Model):
     __tablename__ = 'moduliai'
     id = db.Column(db.Integer, primary_key = True, autoincrement = True, unique=True)
@@ -7,18 +12,19 @@ class Modulis(db.Model):
     aprasymas = db.Column(db.String(50), nullable=False)
     kreditai = db.Column(db.Integer, nullable=False)
     semestro_informacija = db.Column(db.String(50), nullable=False)
-    egzaminas_data = db.Column(db.DateTime(50), nullable=False) #prideta egzamino data, kuri tures rysi su tvarkarasciu
+    egzaminas_data = db.Column(db.DateTime(50), nullable=False) 
 
     studiju_programa_id = db.Column(db.Integer, db.ForeignKey('studiju_programos.id'), nullable=True)
     destytojas_id = db.Column(db.Integer, db.ForeignKey('vartotojai.id'), nullable=True)
     
+    # Ryšiai
+    studiju_programa = db.relationship('StudijuPrograma', back_populates='moduliai')
+    destytojas = db.relationship('Vartotojas', back_populates='destomi_moduliai', foreign_keys=[destytojas_id])
+    paskaitos = db.relationship('Paskaita', back_populates='modulis', foreign_keys='Paskaita.modulis_id')
+    atsiskaitymai = db.relationship('Atsiskaitymas', back_populates='modulis', foreign_keys='Atsiskaitymas.modulis_id')
+    studentai = db.relationship('Vartotojas', secondary=studentu_moduliai, back_populates='moduliai')
 
-
-    atsiskaitymai = db.relationship('Atsiskaitymas',back_populates='modulis', foreign_keys='Atsiskaitymas.modulis_id')
-    #TODO tvarkarasciai = db.relationship('Tvarkarastis',back_populates='moduliai', foreign_keys='Tvarkarastis.atsiskaitymas_id') # tvarkaraštis
-
-
-    paskaitos = db.relationship('Paskaita',back_populates='modulis', foreign_keys='Paskaita.modulis_id')
-    studentai_moduliai = db.relationship('StudentasModulis', back_populates = 'modulis')
+    def __repr__(self):
+        return f'<Modulis {self.pavadinimas}>'
 
   

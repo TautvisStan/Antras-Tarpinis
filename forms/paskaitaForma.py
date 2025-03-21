@@ -16,7 +16,7 @@ class PaskaitaForma(FlaskForm):
     Originalus kodas: query_factory=lambda: db.session.execute(select(Modulis)).scalar().all() turėjo kelias problemas:
     execute(select(Modulis)) grąžina Result objektą, o .scalar() grąžina tik vieną reikšmę (ne sąrašą), todėl .all() po .scalar() sukeltų klaidą.
     Teisingas būdas: db.session.scalars(select(Modulis)).all() – scalars() grąžina objektų sąrašą (pvz., visus Modulis įrašus), o .all() paverčia tai Python sąrašu.
-    Pridėtas allow_blank=True, kad būtų galimybė palikti lauką tuščią (jei tai leidžiama tavo logikoje; jei ne, galima pašalinti).
+    Pridėtas allow_blank=True, kad būtų galimybė palikti lauką tuščią (jei tai leidžiama Jusu logikoje; jei ne, galima pašalinti).
 """   
    
     modulis_id = QuerySelectField(

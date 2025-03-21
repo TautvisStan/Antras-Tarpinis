@@ -21,13 +21,31 @@ class Vartotojas(db.Model):
     nesekmingi_bandymai = db.Column(db.Integer, default = 0)
     blokavimo_laikas = db.Column(db.DateTime, nullable = True)
 
-    studiju_programa = db.relationship('StudijuPrograma',back_populates='studentai', foreign_keys=[studiju_programa_id])
-
-    grupe = db.relationship('Grupe',back_populates='studentai', foreign_keys=[grupe_id])
-    studentai_moduliai = db.relationship('StudentasModulis', back_populates = 'studentas')
+    # Ryšiai
+    studiju_programa = db.relationship('StudijuPrograma', back_populates='studentai', foreign_keys=[studiju_programa_id])
+    grupe = db.relationship('Grupe', back_populates='studentai', foreign_keys=[grupe_id])
+    moduliai = db.relationship('Modulis', secondary='studentu_moduliai', back_populates='studentai')
+    destomi_moduliai = db.relationship('Modulis', back_populates='destytojas', foreign_keys='Modulis.destytojas_id')
     
+    def __repr__(self):
+        return f"Vartotojas('{self.vardas} {self.pavarde}')"
     
-
+    # Flask-Login reikalavimai
+    @property
+    def is_active(self):
+        return True
+    
+    @property
+    def is_authenticated(self):
+        return True
+    
+    @property
+    def is_anonymous(self):
+        return False
+    
+    def get_id(self):
+        return str(self.id)
+    
     def __repr__(self):
         return f"Vartotojas('{self.vardas} {self.pavarde}')"
     

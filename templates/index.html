@@ -120,7 +120,13 @@
                 
                 <div class="cta-buttons" style="margin-top: 50px;">
                     {% if current_user.is_authenticated %}
+                        <p>Sveiki, {{ current_user.vardas }} {{ current_user.pavarde }}!</p>
                         <a href="{{ url_for('protected') }}" class="btn">Mano profilis</a>
+                        <a href="{{ url_for('studento_tvarkarastis') }}">Peržiūrėti tvarkaraštį</a>
+                        <br /><a href="{{ url_for('logout') }}">Atsijungti</a>
+                        {% if current_user.vaidmuo == 'admin' %}
+                        <br /><a href="{{ url_for('kalendorius') }}">Valdyti kalendorių</a>
+                        {% endif %}
                     {% else %}
                         <a href="{{ url_for('login') }}" class="btn">Prisijungti</a>
                         <a href="{{ url_for('register') }}" class="btn btn-success" style="margin-left: 15px;">Registruotis</a>

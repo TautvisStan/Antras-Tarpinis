@@ -11,6 +11,9 @@ class Grupe(db.Model):
 
     studentai = db.relationship('Vartotojas',back_populates='grupe', foreign_keys='Vartotojas.grupe_id')
 
+    def __repr__(self):
+        return f'<Grupe {self.pavadinimas}>'
+
 
 
 

@@ -1,0 +1,80 @@
+{% extends "base.html" %} {% block content %}
+<h1>{{ studentas.vardas }} {{ studentas.pavarde }} Tvarkaraštis</h1>
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-{{ message.category }}">{{ message }}</div>
+{% endfor %}
+
+<h2>Paskaitos</h2>
+<table>
+  <tr>
+    <th>Pavadinimas</th>
+    <th>Data</th>
+    <th>Laikas nuo</th>
+    <th>Laikas iki</th>
+    <th>Modulis</th>
+  </tr>
+  {% for paskaita in paskaitos %}
+  <tr>
+    <td>{{ paskaita.pavadinimas }}</td>
+    <td>{{ paskaita.data.strftime('%Y-%m-%d') }}</td>
+    <td>{{ paskaita.laikas_nuo }}</td>
+    <td>{{ paskaita.laikas_iki }}</td>
+    <td>{{ paskaita.modulis }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>Atsiskaitymai</h2>
+<table>
+  <tr>
+    <th>Pavadinimas</th>
+    <th>Data</th>
+    <th>Laikas nuo</th>
+    <th>Laikas iki</th>
+    <th>Aprašymas</th>
+    <th>Modulis</th>
+  </tr>
+  {% for atsiskaitymas in atsiskaitymai %}
+  <tr>
+    <td>{{ atsiskaitymas.pavadinimas }}</td>
+    <td>{{ atsiskaitymas.data.strftime('%Y-%m-%d') }}</td>
+    <td>{{ atsiskaitymas.data_nuo }}</td>
+    <td>{{ atsiskaitymas.data_iki }}</td>
+    <td>{{ atsiskaitymas.aprasymas }}</td>
+    <td>
+      {{ atsiskaitymas.modulis.pavadinimas if atsiskaitymas.modulis else
+      "Nenurodyta" }}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>Egzaminai</h2>
+<table>
+  <tr>
+    <th>Modulis</th>
+    <th>Data ir laikas</th>
+  </tr>
+  {% for egzaminas in egzaminai %}
+  <tr>
+    <td>{{ egzaminas.modulis }}</td>
+    <td>{{ egzaminas.data.strftime('%Y-%m-%d %H:%M') }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>Šventinės dienos</h2>
+<table>
+  <tr>
+    <th>Data</th>
+    <th>Aprašas</th>
+  </tr>
+  {% for svente in sventes %}
+  <tr>
+    <td>{{ svente.data.strftime('%Y-%m-%d') }}</td>
+    <td>{{ svente.aprasas if svente.aprasas else "Išeiginė diena" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
