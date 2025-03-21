@@ -22,16 +22,14 @@ def gauti_statistika():
                 studiju_programu_skaicius or 0,
                 grupiu_skaicius or 0)
     except Exception:
-        print("Klaida bandant gauti statistiką:")
-        return 0,0,0,0
+        raise Exception("Klaida bandant gauti statistiką:")
 
 def gauti_vartotojus():
     try:
         vartotojai = db.session.execute(db.select(Vartotojas)).scalars().all()
         return vartotojai
     except Exception:
-        print("Klaida bandant gauti vartotojus:")
-        return[]
+        raise Exception("Klaida bandant gauti vartotojus:")
 
 def sukurti_vartotoja(vardas,pavarde,vaidmuo,el_pastas,password_hash):
     try:
@@ -40,15 +38,14 @@ def sukurti_vartotoja(vardas,pavarde,vaidmuo,el_pastas,password_hash):
         db.session.commit()
     except Exception:
         db.session.rollback()
-        print("Klaida bandant sukurti vartotoją:")
+        raise Exception("Klaida bandant sukurti vartotoją:")
 
 def gauti_vartotoja(id):
     try:
         vartotojas = db.session.get(Vartotojas, id)
         return vartotojas
     except Exception:
-        print("Klaida bandant gauti vartotoją:")
-        return None
+        raise Exception("Klaida bandant gauti vartotoją:")
 
 def redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo):
     try:
@@ -60,7 +57,7 @@ def redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo):
         db.session.rollback()
         print("Klaida redaguojant vartotoją:")
 
-def istrinti_vartotoja(id):
+def pasalinti_vartotoja(id):
     try:
         vartotojas = db.session.get(Vartotojas, id)
         if vartotojas:
@@ -69,24 +66,25 @@ def istrinti_vartotoja(id):
         else:
             raise Exception("Vartotojas nerastas.")
     except Exception:
-        print("Klaida bandant ištrinti vartotoją.")
+        db.session.rollback()
+        raise Exception("Klaida bandant ištrinti vartotoją.")
 
 
-# def istrinti_vartotoja(vartotojas):
-#     try:
-#         db.session.delete(vartotojas)
-#         db.session.commit()  
-#     except Exception as e:
-#         db.session.rollback()  
-#         raise Exception(f"Klaida trinant vartotoją: {e}")
+def istrinti_vartotoja(vartotojas):
+    try:
+        db.session.delete(vartotojas)
+        db.session.commit()  
+    except Exception as e:
+        db.session.rollback()  
+        raise Exception("Klaida trinant vartotoją.")
     
 def uzblokuoti_vartotoja(vartotojas):
     try:
         vartotojas.aktyvumas = False
         db.session.commit()  
-    except Exception as e:
+    except Exception:
         db.session.rollback()  
-        raise Exception(f"Klaida užblokuojant vartotoją: {e}")
+        raise Exception("Klaida užblokuojant vartotoją:")
 
 def patvirtinti_destytoja(id):
     try:
@@ -99,4 +97,4 @@ def patvirtinti_destytoja(id):
             raise Exception ("Dėstytojas nerastas.")
     except Exception:
         db.session.rollback()
-        print("Klaida bandant patvirtinti dėstytoją.")
+        raise Exception("Klaida bandant patvirtinti dėstytoją.")
