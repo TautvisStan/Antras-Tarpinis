@@ -1,20 +1,14 @@
-
-
 from functools import wraps
-
 from flask import flash, redirect, url_for
 from flask_login import current_user
-
 
 def turi_buti_atsijunges(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         if current_user.is_authenticated:
             flash("Jūs jau prisijungę.", "info")
-            print("PRISIJUNGES")
             return redirect(url_for("index"))
         return func(*args, **kwargs)
-
     return decorated_function
 
 def Roles_Patikrinimas(roles : list[str]):

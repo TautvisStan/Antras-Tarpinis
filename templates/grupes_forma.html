@@ -6,14 +6,20 @@
    
     <form action="{{url_for('gr_create')}}" method="POST">
         {{ form.hidden_tag() }}
-        <div class="form-group">
-          {{ form.pavadinimas.label() }}
-          {{ form.pavadinimas() }}
+
+        <h2 class="text-center">Sukurti naują grupę</h2>
+
+        <div class="mb-3">
+          {{ form.pavadinimas.label(class="form-label") }}
+          {{ form.pavadinimas(class="form-control") }}
         </div>
         <br>
-        <div class="form-group">
-          {{form.submit()}}
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">Sukurti</button>
         </div>
     </form>
-
+    <div class="d-flex gap-2 mt-3">
+      <a href="{{ url_for('grupes') }}" class="btn btn-secondary">Grįžti</a>
+      </form>
+  </div>
 {% endblock %}
