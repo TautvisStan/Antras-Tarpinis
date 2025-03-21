@@ -18,8 +18,8 @@ def prijungti_vartotoja(vartotojas):
     prisijunges.id = vartotojas.id
     return prisijunges
 
-def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo, studiju_programa, dest_pat):
-    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa, dest_pat=dest_pat)
+def registruoti_vartotoja(vardas, pavarde, el_pastas, slapt_hash, vaidmuo, studiju_programa, dest_pat, profilio_pav, ikelimo_data):
+    vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, el_pastas=el_pastas, password_hash=slapt_hash, vaidmuo=vaidmuo, studiju_programa_id=studiju_programa, dest_pat=dest_pat, profilio_pav=profilio_pav, ikelimo_data=ikelimo_data)
     db.session.add(vartotojas)
     db.session.commit()
 

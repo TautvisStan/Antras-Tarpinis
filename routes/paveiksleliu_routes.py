@@ -1,6 +1,8 @@
 from flask import request, flash, redirect, url_for, render_template
 from models.vartotojas import Vartotojas, db
-from services.issaugoti_paveiksleli import issaugoti_profilio_paveiksleli
+
+from services import issaugoti_paveiksleli
+
 from datetime import datetime
 from forms import registerForma
 
@@ -26,7 +28,9 @@ def inicijuoti_marsrutus(app):
                     db.session.add(vartotojas)
                     db.session.commit()
                 
-                failo_pavadinimas = issaugoti_profilio_paveiksleli(failas, vartotojas)
+
+                failo_pavadinimas = issaugoti_paveiksleli(failas, vartotojas)
+
                 if failo_pavadinimas:
                     vartotojas.profilio_pav = failo_pavadinimas
                     vartotojas.ikelimo_data = datetime.utcnow()
@@ -60,16 +64,7 @@ def inicijuoti_marsrutus(app):
                 db.session.add(naujas_vartotojas)
                 db.session.commit()
 
-                # Jei įkeltas paveikslėlis, išsaugome jį
-                if forma.profilio_pav.data:
-                    failo_pavadinimas = issaugoti_profilio_paveiksleli(forma.profilio_pav.data, naujas_vartotojas)
-                    if failo_pavadinimas:
-                        naujas_vartotojas.profilio_pav = failo_pavadinimas
-                        naujas_vartotojas.ikelimo_data = datetime.utcnow()
-                        db.session.commit()
-                        flash('Profilio paveikslelis sekmingai ikeltas')
-                    else:
-                        flash('Netinkamas paveikslelio formatas arba dydis')
+
 
                 flash('Registracija sekminga')
                 return redirect(url_for('profilis'))
@@ -86,4 +81,4 @@ def inicijuoti_marsrutus(app):
     @app.route('/perziureti_paveiksleli/<int:vartotojo_id>')
     def perziureti_paveiksleli(vartotojo_id):
         vartotojas = Vartotojas.query.get_or_404(vartotojo_id)
-        return render_template('image_view.html', vartotojas=vartotojas)
+        return render_template('profile.html', vartotojas=vartotojas)
