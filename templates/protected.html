@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}Profilis - Code Academy{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <h2>Sveiki atvykę, {{ current_user.vardas if current_user.vardas else current_user.id }}</h2>
+    <div class="profile-meta">
+        <span class="badge badge-role">{{ current_user.vaidmuo }}</span>
+    </div>
+</div>
+
+{% if current_user.vaidmuo == 'Administratorius' %}
+<!-- Administratoriaus valdymo panelis -->
+<div class="admin-dashboard">
+    <!-- Statistikos kortelės -->
+    <div class="stats-section">
+        <h3 class="section-title">Sistemos statistika</h3>
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Vartotojai</h4>
+                    <div class="stat-number">{{ statistika[0] }}</div>
+                </div>
+                <a href="{{ url_for('admin_vartotojai') }}" class="stat-action">Valdyti</a>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Moduliai</h4>
+                    <div class="stat-number">{{ statistika[1] }}</div>
+                </div>
+                <a href="{{ url_for('admin_moduliai') }}" class="stat-action">Valdyti</a>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Studijų programos</h4>
+                    <div class="stat-number">{{ statistika[2] }}</div>
+                </div>
+                <a href="{{ url_for('admin_studiju_programos') }}" class="stat-action">Valdyti</a>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Grupės</h4>
+                    <div class="stat-number">{{ statistika[3] }}</div>
+                </div>
+                <a href="{{ url_for('admin_grupes') }}" class="stat-action">Valdyti</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Greitos nuorodos -->
+    <div class="quick-actions-section">
+        <h3 class="section-title">Greiti veiksmai</h3>
+        <div class="quick-actions">
+            <a href="{{ url_for('admin_vartotojai') }}" class="action-card">
+                <div class="action-icon"><i class="fas fa-user-cog"></i></div>
+                <div class="action-title">Vartotojų valdymas</div>
+                <div class="action-description">Pridėti, redaguoti ir administruoti sistemos vartotojus</div>
+            </a>
+            
+            <a href="{{ url_for('admin_destytoju_patvirtinimas') }}" class="action-card">
+                <div class="action-icon"><i class="fas fa-user-check"></i></div>
+                <div class="action-title">Dėstytojų patvirtinimas</div>
+                <div class="action-description">Patvirtinti naujų dėstytojų registraciją</div>
+            </a>
+            
+            <a href="{{ url_for('admin_moduliai') }}" class="action-card">
+                <div class="action-icon"><i class="fas fa-book-open"></i></div>
+                <div class="action-title">Modulių valdymas</div>
+                <div class="action-description">Kurti ir redaguoti mokymo modulius</div>
+            </a>
+            
+            <a href="{{ url_for('admin_studiju_programos') }}" class="action-card">
+                <div class="action-icon"><i class="fas fa-university"></i></div>
+                <div class="action-title">Studijų programos</div>
+                <div class="action-description">Valdyti studijų programas ir jų modulius</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% elif current_user.vaidmuo == 'Dėstytojas' %}
+<!-- Dėstytojo valdymo panelis -->
+<div class="instructor-dashboard">
+    <div class="actions-section">
+        <h3 class="section-title">Dėstytojo veiksmai</h3>
+        <div class="action-cards">
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                <div class="action-title">Mano dėstomi moduliai</div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-user-graduate"></i></div>
+                <div class="action-title">Studentų vertinimas</div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-tasks"></i></div>
+                <div class="action-title">Užduočių kūrimas</div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="action-title">Tvarkaraštis</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% elif current_user.vaidmuo == 'Studentas' %}
+<!-- Studento valdymo panelis -->
+<div class="student-dashboard">
+    <div class="actions-section">
+        <h3 class="section-title">Studento veiksmai</h3>
+        <div class="action-cards">
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-book"></i></div>
+                <div class="action-title">Mano moduliai</div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-tasks"></i></div>
+                <div class="action-title">Užduotys</div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="action-title">Mano pažangos</div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="action-title">Tvarkaraštis</div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="logout-section">
+    <a href="{{ url_for('logout') }}" class="btn btn-danger">
+        <i class="fas fa-sign-out-alt"></i> Atsijungti
+    </a>
+</div>
+
+<style>
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .badge-role {
+        background-color: #2196F3;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+    
+    .section-title {
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #333;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    
+    /* Statistikos kortelės */
+    .stats-section {
+        margin-bottom: 30px;
+    }
+    
+    .stats-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    
+    .stat-card {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-icon {
+        font-size: 24px;
+        color: #2196F3;
+        background-color: rgba(33, 150, 243, 0.1);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+    
+    .stat-content {
+        flex: 1;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .stat-action {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(33, 150, 243, 0.1);
+        color: #2196F3;
+        padding: 5px 10px;
+        font-size: 12px;
+        border-top-left-radius: 8px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+    
+    .stat-action:hover {
+        background-color: rgba(33, 150, 243, 0.2);
+    }
+    
+    /* Action cards */
+    .quick-actions-section,
+    .actions-section {
+        margin-bottom: 30px;
+    }
+    
+    .quick-actions,
+    .action-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .action-card {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        flex: 1;
+        min-width: 200px;
+        text-decoration: none;
+        color: #333;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .action-icon {
+        font-size: 24px;
+        color: #2196F3;
+        margin-bottom: 15px;
+    }
+    
+    .action-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .action-description {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    /* Atsijungimo mygtukas */
+    .logout-section {
+        margin-top: 40px;
+        text-align: center;
+    }
+    
+    .btn-danger {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-danger:hover {
+        background-color: #d32f2f;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-cards,
+        .quick-actions,
+        .action-cards {
+            flex-direction: column;
+        }
+        
+        .stat-card,
+        .action-card {
+            min-width: 100%;
+        }
+    }
+</style>
+{% endblock %}

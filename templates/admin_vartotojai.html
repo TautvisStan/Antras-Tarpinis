@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block title %}Vartotojų valdymas - Code Academy{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h2>Vartotojų valdymas</h2>
+    <a href="{{ url_for('protected') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Grįžti į valdymo pultą
+    </a>
+</div>
+
+<div class="admin-actions-toolbar">
+    <a href="{{ url_for('admin_naujas_vartotojas') }}" class="btn">
+        <i class="fas fa-user-plus"></i> Pridėti naują vartotoją
+    </a>
+    <div class="search-container">
+        <form method="GET" action="{{ url_for('admin_vartotojai') }}">
+            <input type="text" name="paieska" placeholder="Ieškoti pagal vardą, pavardę ar el. paštą" class="search-input" value="{{ request.args.get('paieska', '') }}">
+            <button type="submit" class="btn btn-search">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Vartotojų lentelė -->
+<div class="table-responsive">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Vardas</th>
+                <th>Pavardė</th>
+                <th>El. paštas</th>
+                <th>Vaidmuo</th>
+                <th>El. paštas patvirtintas</th>
+                <th>Dėstytojas patvirtintas</th>
+                <th>Aktyvumas</th>
+                <th>Veiksmai</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vartotojas in vartotojai %}
+            <tr>
+                <td>{{ vartotojas.id }}</td>
+                <td>{{ vartotojas.vardas }}</td>
+                <td>{{ vartotojas.pavarde }}</td>
+                <td>{{ vartotojas.el_pastas }}</td>
+                <td>{{ vartotojas.vaidmuo }}</td>
+                <td class="text-center">
+                    {% if vartotojas.el_pat %}
+                    <i class="fas fa-check-circle text-success"></i>
+                    {% else %}
+                    <i class="fas fa-times-circle text-danger"></i>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if vartotojas.vaidmuo == 'Dėstytojas' %}
+                        {% if vartotojas.dest_pat %}
+                        <i class="fas fa-check-circle text-success"></i>
+                        {% else %}
+                        <i class="fas fa-times-circle text-danger"></i>
+                        {% endif %}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if vartotojas.aktyvumas %}
+                    <span class="badge badge-success">Aktyvus</span>
+                    {% else %}
+                    <span class="badge badge-danger">Užblokuotas</span>
+                    {% endif %}
+                </td>
+                <td class="actions-cell">
+                    <a href="{{ url_for('admin_redaguoti_vartotoja', id=vartotojas.id) }}" class="btn-icon" title="Redaguoti">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    
+                    {% if vartotojas.vaidmuo == 'Dėstytojas' and not vartotojas.dest_pat %}
+                    <a href="{{ url_for('admin_patvirtinti_destytoja', id=vartotojas.id) }}" class="btn-icon btn-icon-success" title="Patvirtinti dėstytoją">
+                        <i class="fas fa-user-check"></i>
+                    </a>
+                    {% endif %}
+                    
+                    {% if vartotojas.aktyvumas %}
+                    <a href="{{ url_for('admin_uzblokuoti_vartotoja', id=vartotojas.id) }}" class="btn-icon btn-icon-warning" title="Užblokuoti vartotoją">
+                        <i class="fas fa-ban"></i>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('admin_atblokuoti_vartotoja', id=vartotojas.id) }}" class="btn-icon btn-icon-success" title="Atblokuoti vartotoją">
+                        <i class="fas fa-unlock"></i>
+                    </a>
+                    {% endif %}
+                    
+                    <button type="button" class="btn-icon btn-icon-danger" title="Ištrinti vartotoją" 
+                            onclick="confirmDelete('{{ vartotojas.id }}', '{{ vartotojas.vardas }} {{ vartotojas.pavarde }}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Ištrynimo patvirtinimo modalinis langas -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Patvirtinkite ištrynimą</h4>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Ar tikrai norite ištrinti vartotoją <span id="deleteUserName"></span>?</p>
+            <p class="text-danger">Šis veiksmas negrįžtamas!</p>
+        </div>
+        <div class="modal-footer">
+            <form id="deleteForm" method="POST" action="">
+                <button type="button" class="btn btn-secondary" id="cancelDelete">Atšaukti</button>
+                <button type="submit" class="btn btn-danger">Ištrinti</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .admin-actions-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .search-container {
+        display: flex;
+        flex: 1;
+        max-width: 500px;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px 0 0 4px;
+        font-size: 16px;
+    }
+    
+    .btn-search {
+        border-radius: 0 4px 4px 0;
+        padding: 8px 15px;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .data-table th {
+        background-color: #2196F3;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .data-table th:first-child {
+        border-top-left-radius: 8px;
+    }
+    
+    .data-table th:last-child {
+        border-top-right-radius: 8px;
+    }
+    
+    .data-table tr:last-child td:first-child {
+        border-bottom-left-radius: 8px;
+    }
+    
+    .data-table tr:last-child td:last-child {
+        border-bottom-right-radius: 8px;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .text-success {
+        color: #4CAF50;
+    }
+    
+    .text-danger {
+        color: #f44336;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .badge-success {
+        background-color: #4CAF50;
+    }
+    
+    .badge-danger {
+        background-color: #f44336;
+    }
+    
+    .actions-cell {
+        white-space: nowrap;
+    }
+    
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #2196F3;
+        color: white;
+        margin: 0 2px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-icon:hover {
+        background-color: #0d8aee;
+    }
+    
+    .btn-icon-success {
+        background-color: #4CAF50;
+    }
+    
+    .btn-icon-success:hover {
+        background-color: #45a049;
+    }
+    
+    .btn-icon-warning {
+        background-color: #ff9800;
+    }
+    
+    .btn-icon-warning:hover {
+        background-color: #e68a00;
+    }
+    
+    .btn-icon-danger {
+        background-color: #f44336;
+    }
+    
+    .btn-icon-danger:hover {
+        background-color: #d32f2f;
+    }
+    
+    /* Modal stiliai */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+        position: relative;
+        background-color: white;
+        margin: 15% auto;
+        padding: 0;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        width: 500px;
+        max-width: 90%;
+    }
+    
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-footer {
+        padding: 15px;
+        border-top: 1px solid #eee;
+        text-align: right;
+    }
+    
+    .close {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .close:hover {
+        color: black;
+    }
+</style>
+
+<script>
+    // Ištrynimo patvirtinimo modalinio lango logika
+    function confirmDelete(userId, userName) {
+        const modal = document.getElementById('deleteModal');
+        const span = document.getElementsByClassName('close')[0];
+        const cancelBtn = document.getElementById('cancelDelete');
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteUserNameSpan = document.getElementById('deleteUserName');
+        
+        deleteUserNameSpan.textContent = userName;
+        deleteForm.action = "{{ url_for('admin_istrinti_vartotoja', id=0) }}".replace("0", userId);
+        
+        modal.style.display = "block";
+        
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        cancelBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+</script>
+{% endblock %}

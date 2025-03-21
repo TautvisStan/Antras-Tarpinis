@@ -1,11 +1,48 @@
+# from flask import Flask, render_template
+# from config import Config
+# from extensions import db, migrate, login_manager, mail
+# from models import atsiskaitymas, grupes, modulis, paskaita, studentai_moduliai, studiju_programa, vartotojas, kalendorius, tvarkarastis, uzduotys
+# # from routes import student_routes
+# from routes import grupes_routes
+# from routes import login_routes, modulis_routes, studiju_programa_routes, vartotojas_routes,administratorius_routes, paveiksleliu_routes
+# import services.registracija_prisijungimas_actions
+# app = Flask(__name__)
+# app.config.from_object(Config)
+
+# db.init_app(app)
+# migrate.init_app(app, db)
+# login_manager.init_app(app)
+# mail.init_app(app)
+
+# # student_routes.init_student_routes(app)
+# login_routes.init_login_routes(app)
+# modulis_routes.init_modulis_routes(app)
+# studiju_programa_routes.init_studiju_programa_routes(app)
+# grupes_routes.init_grupes_routes(app)
+# vartotojas_routes.init_student_routes(app)
+# administratorius_routes.init_administratorius_routes(app)
+
+
+# # profilio foto
+# paveiksleliu_routes.inicijuoti_marsrutus(app)
+
+# @app.route('/')
+# def index():
+#     return render_template('index.html')
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
 from flask import Flask, render_template
 from config import Config
 from extensions import db, migrate, login_manager, mail
 from models import atsiskaitymas, grupes, modulis, paskaita, studentai_moduliai, studiju_programa, vartotojas, kalendorius, tvarkarastis, uzduotys
 # from routes import student_routes
 from routes import grupes_routes
-from routes import login_routes, modulis_routes, studiju_programa_routes, vartotojas_routes,administratorius_routes, paveiksleliu_routes
+from routes import login_routes, modulis_routes, studiju_programa_routes, vartotojas_routes, administratorius_routes, paveiksleliu_routes, admin_routes
 import services.registracija_prisijungimas_actions
+import services.administratorius_actions
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -14,16 +51,16 @@ migrate.init_app(app, db)
 login_manager.init_app(app)
 mail.init_app(app)
 
-# student_routes.init_student_routes(app)
+# Inicializuojame visus maršrutus
 login_routes.init_login_routes(app)
 modulis_routes.init_modulis_routes(app)
 studiju_programa_routes.init_studiju_programa_routes(app)
 grupes_routes.init_grupes_routes(app)
 vartotojas_routes.init_student_routes(app)
 administratorius_routes.init_administratorius_routes(app)
+admin_routes.init_admin_routes(app)  # Nauji administravimo maršrutai
 
-
-# profilio foto
+# profilio foto maršrutai
 paveiksleliu_routes.inicijuoti_marsrutus(app)
 
 @app.route('/')
