@@ -6,6 +6,7 @@ from services.dekoratoriai import turi_buti_atsijunges
 from services.grupe_actions import automatiskai_priskirti_grupe
 from services.mail_patvirtinimas import confirm_token, generate_token, send_email
 import services.registracija_prisijungimas_actions as reg_pr
+import services.administratorius_actions as admin_actions
 from forms.loginForma import LoginForma
 from forms.registerForma import RegisterForma
 import services.issaugoti_paveiksleli as iss_pav
@@ -108,10 +109,13 @@ def init_login_routes(app):
         return render_template("register_forma.html", form=form)
 
 
-    @app.route('/protected')    #TODO
+    @app.route('/protected')    
     @flask_login.login_required
     def protected():
-        return 'Logged in as: ' + str(flask_login.current_user.id) + " " + flask_login.current_user.vaidmuo
+        if flask_login.current_user.vaidmuo == "Administratorius":
+            statistika = admin_actions.gauti_statistika()
+            return render_template('protected.html', statistika=statistika)
+        return render_template('protected.html')
 
 
     @app.route('/logout')   
