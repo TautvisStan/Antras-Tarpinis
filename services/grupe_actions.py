@@ -27,8 +27,7 @@ def sukurti_grupes_pavadinima(id):
 
         return pavadinimas
     except Exception:
-        print("Klaida kuriant grupės pavadinimą.")
-        return None
+        raise Exception("Klaida kuriant grupės pavadinimą.")
 
 
 def automatiskai_priskirti_grupe(vartotojas):
@@ -73,31 +72,48 @@ def automatiskai_priskirti_grupe(vartotojas):
             db.session.commit()
         except Exception:
             db.session.rollback()
-            print("Klaida bandant priskirti grupę.")
-            return
+            raise Exception("Klaida bandant priskirti grupę.")
 
 
 def view_grupes():
-    grupes = db.session.execute(db.select(Grupe)).scalars().all()
-    return grupes
+    try:
+        grupes = db.session.execute(db.select(Grupe)).scalars().all()
+        return grupes
+    except Exception:
+        raise Exception ("Klaida bandant gauti grupių sąrašą")
 
 def gauti_grupe(id):
-    grupe = db.session.get(Grupe, id)
-    return grupe
+    try:
+        grupe = db.session.get(Grupe, id)
+        return grupe
+    except Exception:
+        raise Exception("Klaida gaunant grupę.")
 
 def atnaujinti_grupe(grupe, pavadinimas):
-    grupe.pavadinimas = pavadinimas
-    db.session.commit()
+    try:
+        grupe.pavadinimas = pavadinimas
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        raise Exception ("Klaida atnaujinant grupę.")
 
 def salinti_grupe(id):
-    grupe = db.session.get(Grupe, id)
-    db.session.delete(grupe)
-    db.session.commit()
+    try:
+        grupe = db.session.get(Grupe, id)
+        db.session.delete(grupe)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        raise Exception ("Klaida šalinant grupę.")
 
 def sukurti_grupe(pavadinimas):
-    grupe = Grupe(pavadinimas=pavadinimas)
-    db.session.add(grupe)
-    db.session.commit()
+    try:
+        grupe = Grupe(pavadinimas=pavadinimas)
+        db.session.add(grupe)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        raise Exception ("Klaida kuriant grupę.")
 
 
 
