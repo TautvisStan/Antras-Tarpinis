@@ -8,6 +8,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import select
 from models.vartotojas import Vartotojas
 from services.administratorius_actions import istrinti_vartotoja, uzblokuoti_vartotoja
+from werkzeug.security import generate_password_hash
 
 
 def init_administratorius_routes(app):
@@ -38,10 +39,14 @@ def init_administratorius_routes(app):
                 vardas = form.vardas.data
                 pavarde = form.pavarde.data
                 vaidmuo = form.vaidmuo.data
-               
-                ad_act.sukurti_vartotoja(vardas,pavarde,vaidmuo)
+                el_pastas = form.el_pastas.data
+                password = form.password.data
+
+                password_hash = generate_password_hash(password)
+
+                ad_act.sukurti_vartotoja(vardas,pavarde,vaidmuo,el_pastas,password_hash)
                 flash("Sekmingai sukurta")
-                return redirect(url_for('vartotojai'))
+                return redirect('/administratorius/vartotojai')
             except Exception:
                 pass
             return render_template("vartotojas_forma.html", form=form)  

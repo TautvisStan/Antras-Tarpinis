@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import flask_login
 from extensions import login_manager, db
 from models.vartotojas import Vartotojas
@@ -30,6 +30,8 @@ def patikrinti_ar_nera(email):
 def rasti_vartotoja(email, pwd):
     vartotojas = db.session.execute(db.select(Vartotojas).filter(Vartotojas.el_pastas==email)).scalars().one_or_none()
     if vartotojas:
+        if patikrinti_blokavima(vartotojas):
+            return None
         if patikrinti_slapt_hash(pwd, vartotojas.password_hash):
             return vartotojas
     return None
@@ -59,3 +61,23 @@ def gauti_prisijungusio_vaidmeni():
 def patikrinti_roles(roles : list[str]):
     return flask_login.current_user.vaidmuo in roles
         
+
+def patikrinti_blokavima(vartotojas):
+    if vartotojas.blokavimo_laikas and vartotojas.blokavimo_laikas > datetime.now():
+        return True
+    else:
+        vartotojas.nesekmingi_bandymai = 0
+        vartotojas.blokavimo_laikas = None
+        db.session.commit()
+        return False
+    
+def nesekmingu_prisijungimu_skaicius(vartotojas):
+    vartotojas.nesekmingi_bandymai += 1
+    if vartotojas.nesekmingi_bandymai >= 3:
+        vartotojas.blokavimo_laikas = datetime.now() + timedelta(minutes=1)
+        db.session.commit()
+        return True
+    return False
+
+
+

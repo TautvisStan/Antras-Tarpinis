@@ -39,16 +39,22 @@ def init_login_routes(app):
                 
                 slaptazodis = form.slaptazodis.data
                 vartotojas = reg_pr.rasti_vartotoja(el_pastas, slaptazodis) 
-
-                if vartotojas and vartotojas.el_pat and vartotojas.dest_pat is not False:
-                    
-                    prisijunges = Prisijunges(vartotojas.vaidmuo, vartotojas.studiju_programa_id)
-                    prisijunges.id = vartotojas.id
-                    flask_login.login_user(prisijunges)
-                    flash("Sėkmingai prisijungta")
-                    return redirect(url_for('protected'))   #TODO paskirstyti pagal roles (studentas.html, destytojas.html, admin.html)
                 
-            flash("Blogas prisijungimas!")
+                if vartotojas:
+
+                    if reg_pr.patikrinti_blokavima(vartotojas):
+                        flash("Jūsų paskyra blokuota, bandykite vėliau")
+                        return redirect(url_for('login'))
+
+                    if vartotojas and vartotojas.el_pat and vartotojas.dest_pat is not False:
+                        prisijunges = Prisijunges(vartotojas.vaidmuo, vartotojas.studiju_programa_id)
+                        prisijunges.id = vartotojas.id
+                        flask_login.login_user(prisijunges)
+                        flash("Sėkmingai prisijungta")
+                        return redirect(url_for('protected'))   #TODO paskirstyti pagal roles (studentas.html, destytojas.html, admin.html)
+            else:
+                reg_pr.nesekmingu_prisijungimu_skaicius(vartotojas) 
+                flash("Blogas prisijungimas!")
         
         return render_template("login_forma.html", form=form)
     
