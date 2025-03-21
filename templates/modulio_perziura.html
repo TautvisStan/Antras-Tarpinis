@@ -12,6 +12,7 @@
     <p>
       <strong>Studijų programa:</strong> {{ modulis.studiju_programa.pavadinimas }}
     </p>
+    
     <h3>Paskaitos</h3>
     {% if modulis.paskaitos %}
     <table>
@@ -37,6 +38,29 @@
     {% else %}
     <p>Nėra susietų paskaitų.</p>
     {% endif %}
+    
+    <h3>Atsiskaitymai</h3>
+    {% if modulis.atsiskaitymai %}
+    <table>
+      <thead>
+        <tr>
+          <th>Pavadinimas</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for atsiskaitymas in modulis.atsiskaitymai %}
+        <tr>
+          <td>{{ atsiskaitymas.pavadinimas }}</td>
+          <td>{{ atsiskaitymas.data.strftime('%Y-%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Nėra susietų atsiskaitymų.</p>
+    {% endif %}
+    
     <p><a href="{{ url_for('moduliai') }}">Grįžti į sąrašą</a></p>
     {% endblock %}
     

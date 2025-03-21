@@ -1,92 +1,61 @@
-from models.modulis import Modulis
-from models.paskaita import Paskaita
-from extensions import db
+from flask import render_template, redirect, url_for, flash
+from flask_login import login_required, current_user
+from flask_wtf import FlaskForm
 from sqlalchemy import select
+from wtforms import DateField, StringField, SubmitField
+from wtforms.validators import DataRequired\
+    
+# import from services. models, extensions
+import services.tvarkarastis as tvarkarastis  
+from models.kalendorius import Kalendorius
+from models.atsiskaitymas import Atsiskaitymas
+from extensions import db
 
-def view_modulis():
-    # Grąžina visų modulių sąrašą.
-    try:
-        moduliai = db.session.execute(select(Modulis)).scalars().all()
-        return moduliai
-    except Exception as e:
-        raise Exception(f"Klaida gaunant modulius: {str(e)}")
+class KalendoriusForma(FlaskForm):
+    data = DateField('Data', validators=[DataRequired()], format='%Y-%m-%d')
+    aprasas = StringField('Aprašas')
+    submit = SubmitField('Pridėti')
 
-def gauti_moduli(id):
-    # Grąžina modulį pagal ID.
-    try:
-        modulis = db.session.execute(select(Modulis).where(Modulis.id == id)).scalars().first()
-        if not modulis:
-            raise Exception(f"Modulis su ID {id} nerastas")
-        return modulis
-    except Exception as e:
-        raise Exception(f"Klaida gaunant modulį: {str(e)}")
+def init_vartotojas_routes(app):
+    @app.route('/tvarkarastis')
+    @login_required
+    def studento_tvarkarastis():
+        try:
+            tvarkarastis_data = tvarkarastis.gauti_vartotojo_tvarkarasti(current_user)
+            # Pridedame atsiskaitymus iš visų modulių
+            atsiskaitymai = db.session.execute(select(Atsiskaitymas)).scalars().all()
+            tvarkarastis_data['atsiskaitymai'] = sorted(atsiskaitymai, key=lambda x: x.data)
+            return render_template('studento_tvarkarastis.html',
+                                 studentas=current_user,
+                                 paskaitos=tvarkarastis_data['paskaitos'],
+                                 atsiskaitymai=tvarkarastis_data['atsiskaitymai'],
+                                 egzaminai=tvarkarastis_data['egzaminai'],
+                                 sventes=tvarkarastis_data['sventes'])
+        except ValueError as e:
+            flash(str(e), 'error')
+            return redirect(url_for('index'))
 
-def atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_informacija, egzaminas_data, paskaita_data_list):
-    # Atnaujina modulį ir susijusią paskaitą.
-    try:
-        modulis.pavadinimas = pavadinimas
-        modulis.aprasymas = aprasymas
-        modulis.kreditai = kreditai
-        modulis.semestro_informacija = semestro_informacija
-        modulis.egzaminas_data = egzaminas_data
+    @app.route('/kalendorius', methods=['GET', 'POST'])
+    @login_required
+    def kalendorius():
+        if current_user.vaidmuo != 'admin':
+            flash('Tik administratoriai gali valdyti kalendorių', 'error')
+            return redirect(url_for('studento_tvarkarastis'))
         
-        # Pašaliname senas paskaitas
-        for paskaita in modulis.paskaitos:
-            db.session.delete(paskaita)
+        form = KalendoriusForma()
+        if form.validate_on_submit():
+            try:
+                kalendorius = Kalendorius(
+                    data=form.data.data,
+                    aprasas=form.aprasas.data
+                )
+                db.session.add(kalendorius)
+                db.session.commit()
+                flash('Šventė sėkmingai pridėta!', 'success')
+                return redirect(url_for('kalendorius'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Klaida pridedant šventę: {str(e)}', 'error')
         
-        # Pridedame naujas paskaitas
-        for paskaita_data in paskaita_data_list:
-            paskaita = Paskaita(
-                pavadinimas=paskaita_data['pavadinimas'],
-                savaites_diena=paskaita_data['savaites_diena'],
-                laikas_nuo=paskaita_data['laikas_nuo'],
-                laikas_iki=paskaita_data['laikas_iki'],
-                modulis=modulis
-            )
-            db.session.add(paskaita)
-        
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        raise Exception(f"Modulio atnaujinimo klaida: {str(e)}")
-
-def salinti_moduli(id):
-    # Pašalina modulį pagal ID.
-    try:
-        modulis = db.session.execute(select(Modulis).where(Modulis.id == id)).scalars().first()
-        if modulis:
-            db.session.delete(modulis)
-            db.session.commit()
-        else:
-            raise Exception(f"Modulis su ID {id} nerastas")
-    except Exception as e:
-        db.session.rollback()
-        raise Exception(f"Modulio šalinimo klaida: {str(e)}")
-
-def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa_id, egzaminas_data, paskaita_data):
-    # Sukuria naują modulį ir susijusią paskaitą.
-    try:
-        modulis = Modulis(
-            pavadinimas=pavadinimas,
-            aprasymas=aprasymas,
-            kreditai=kreditai,
-            semestro_informacija=semestro_informacija,
-            destytojas_id=destytojas_id,
-            studiju_programa_id=studiju_programa_id,
-            egzaminas_data=egzaminas_data
-        )
-        paskaita = Paskaita(
-            pavadinimas=paskaita_data['pavadinimas'],
-            savaites_diena=paskaita_data['savaites_diena'],
-            laikas_nuo=paskaita_data['laikas_nuo'],
-            laikas_iki=paskaita_data['laikas_iki'],
-            modulis=modulis
-        )
-        db.session.add(modulis)
-        db.session.add(paskaita)
-        db.session.commit()
-        return modulis
-    except Exception as e:
-        db.session.rollback()
-        raise Exception(f"Modulio sukūrimo klaida: {str(e)}")
-
+        sventes = db.session.execute(select(Kalendorius)).scalars().all()
+        return render_template('kalendorius.html', form=form, sventes=sventes)

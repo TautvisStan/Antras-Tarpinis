@@ -85,6 +85,38 @@
       {% endfor %}
     </div>
     <button type="button" onclick="addPaskaita()">Pridėti paskaitą</button>
+  
+    <h3>Atsiskaitymai</h3>
+    <div id="atsiskaitymai">
+      {% for atsiskaitymas in form.atsiskaitymai %}
+      <div class="atsiskaitymas-entry">
+        {{ atsiskaitymas.hidden_tag() }}
+        <div>
+          {{ atsiskaitymas.pavadinimas.label }}<br />
+          {{ atsiskaitymas.pavadinimas() }}<br />
+          {% for error in atsiskaitymas.pavadinimas.errors %}<span
+            style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        </div>
+        <div>
+          {{ atsiskaitymas.data.label }}<br />
+          {{ atsiskaitymas.data() }}<br />
+          {% for error in atsiskaitymas.data.errors %}<span style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        </div>
+        <button type="button" onclick="removeAtsiskaitymas(this)">
+          Pašalinti
+        </button>
+        <hr />
+      </div>
+      {% endfor %}
+    </div>
+    <button type="button" onclick="addAtsiskaitymas()">
+      Pridėti atsiskaitymą
+    </button>
+  
     <div>{{ form.submit() }}</div>
   </form>
   <p><a href="{{ url_for('moduliai') }}">Grįžti į sąrašą</a></p>
@@ -122,6 +154,34 @@
     }
   
     function removePaskaita(button) {
+      button.parentElement.remove();
+    }
+  
+    function addAtsiskaitymas() {
+      const atsiskaitymaiDiv = document.getElementById("atsiskaitymai");
+      const entryCount = atsiskaitymaiDiv.getElementsByClassName(
+        "atsiskaitymas-entry"
+      ).length;
+      const newEntry = `
+                  <div class="atsiskaitymas-entry">
+                      <input type="hidden" name="atsiskaitymai-${entryCount}-csrf_token" value="${
+        document.querySelector("[name=csrf_token]").value
+      }">
+                      <div>
+                          <label>Atsiskaitymo pavadinimas</label><br>
+                          <input type="text" name="atsiskaitymai-${entryCount}-pavadinimas"><br>
+                      </div>
+                      <div>
+                          <label>Data</label><br>
+                          <input type="datetime-local" name="atsiskaitymai-${entryCount}-data"><br>
+                      </div>
+                      <button type="button" onclick="removeAtsiskaitymas(this)">Pašalinti</button>
+                      <hr>
+                  </div>`;
+      atsiskaitymaiDiv.insertAdjacentHTML("beforeend", newEntry);
+    }
+  
+    function removeAtsiskaitymas(button) {
       button.parentElement.remove();
     }
   </script>
