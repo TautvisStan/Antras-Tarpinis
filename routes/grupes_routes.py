@@ -7,10 +7,10 @@ def init_grupes_routes(app):
     def grupes():
         try:
             grupes = gr_act.view_grupes()
-            return render_template('grupes.html', moduliai = grupes)
+            return render_template('grupes.html', grupes = grupes)
         except Exception as e:
             flash(str(e), "danger")
-            return render_template('grupes.html', moduliai=[])
+            return render_template('grupes.html', grupes=[])
 
     @app.route('/grupes_create', methods=['GET', 'POST'])
     def gr_create():
@@ -32,22 +32,18 @@ def init_grupes_routes(app):
         try:
             grupe = gr_act.gauti_grupe(id)
             form = GrupesForma(obj=grupe)
-        except Exception as e:
-            flash(str(e), "danger")
-            return app.redirect(url_for('grupes'))
-        if request.method == 'GET':
-            return render_template("grupes_forma_update.html", form=form, id=id)
-        else:    
-            try:
+            
+            if request.method == 'GET':
+                return render_template("grupes_forma_update.html", form=form, id=id)
+            else:    
                 pavadinimas = form.pavadinimas.data
                 gr_act.atnaujinti_grupe(grupe, pavadinimas)
                 flash("Sekmingai atnaujinta","success")
                 return app.redirect(url_for('grupes'))
-            except Exception as e:
-                zinute = e
-                flash(str(e), "danger")
+        except Exception as e:
+            flash(str(e), "danger")
             return render_template("grupes_forma_update.html", form=form, id=id)  
-    
+
     @app.route('/grupes_delete/<id>', methods=['GET', 'POST'])
     def gr_delete(id):
         try:

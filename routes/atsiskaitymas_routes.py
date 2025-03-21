@@ -1,18 +1,20 @@
-<<<<<<< HEAD
 from flask import render_template, redirect, url_for, flash, request
 from extensions import db
 from models.atsiskaitymas import Atsiskaitymas
-=======
 from flask import render_template,redirect, url_for, flash
 from flask_login import login_required
->>>>>>> c972aac4716b1f25f06274e317813cffc231769b
 from forms.atsiskaitymasForma import AtsiskaitymasForma
 import services.atsiskaitymas_actions as ats_act
 
 def init_atsiskaitymas_routes(app):
     @app.route('/atsiskaitymai')
     def atsiskaitymai():
-        return render_template('atsiskaitymai.html', atsiskaitymai=ats_act.view_atsiskaitymai())
+        try:
+            atsiskaitymai=ats_act.view_atsiskaitymai()
+            return render_template('atsiskaitymai.html', atsiskaitymai=atsiskaitymai)
+        except Exception as e:
+            flash(str(e), "danger")
+            return render_template('atsiskaitymai.html', atsiskaitymai=[])
 
     @app.route('/atsiskaitymas_create', methods=['GET', 'POST'])
     def atsiskaitymas_create():
@@ -29,16 +31,17 @@ def init_atsiskaitymas_routes(app):
                 flash("Sekmingai sukurta", "success")
                 return redirect(url_for('atsiskaitymai'))
             except Exception as e:
-                flash(f"Klaida kuriant atsiskaityma: {str(e)}", "error")
+                flash(str(e), "danger")
         return render_template('atsiskaitymas_forma.html', form=form)
 
     @app.route('/atsiskaitymas_view/<id>')
     def atsiskaitymas_view(id):
-        atsiskaitymas = ats_act.gauti_atsiskaityma(id)
-        if atsiskaitymas is None:
-            flash("Atsiskaitymas nerastas", "error")
-            return redirect(url_for('atsiskaitymai'))
-        return render_template('atsiskaitymas_perziura.html', atsiskaitymas=atsiskaitymas)
+        try:
+            atsiskaitymas = ats_act.gauti_atsiskaityma(id)
+            return render_template('atsiskaitymas_perziura.html', atsiskaitymas=atsiskaitymas)
+        except Exception as e:
+            flash(str(e), "danger")
+            return redirect(url_for('atsiskaitymai'))           
 
     @app.route('/atsiskaitymas_delete/<id>', methods=['POST'])
     def atsiskaitymas_delete(id):
@@ -46,15 +49,16 @@ def init_atsiskaitymas_routes(app):
             ats_act.salinti_atsiskaityma(id)
             flash("Sekmingai pasalinta", "success")
         except Exception as e:
-            flash(f"Klaida salinant atsiskaityma: {str(e)}", "error")
+            flash(str(e), "danger")
         return redirect(url_for('atsiskaitymai'))
 
     @app.route('/atsiskaitymas_edit/<id>', methods=['GET', 'POST'])
     def atsiskaitymas_update(id):
-        atsiskaitymas = ats_act.gauti_atsiskaityma(id)
-        if atsiskaitymas is None:
-            flash("Atsiskaitymas nerastas", "error")
-            return redirect(url_for('atsiskaitymai'))
+        try:
+            atsiskaitymas = ats_act.gauti_atsiskaityma(id)
+        except Exception as e:
+                flash(str(e), "danger")
+                return redirect(url_for('atsiskaitymai'))
 
         form = AtsiskaitymasForma(obj=atsiskaitymas)
         if request.method == 'POST' and form.validate_on_submit():
@@ -69,22 +73,19 @@ def init_atsiskaitymas_routes(app):
                 flash("Sekmingai atnaujinta", "success")
                 return redirect(url_for('atsiskaitymai'))
             except Exception as e:
-                flash(f"Klaida atnaujinant atsiskaityma: {str(e)}", "error")
+                flash(str(e), "danger")
         return render_template("atsiskaitymas_forma_update.html", form=form, id=id)
+    
     def create_atsiskaitymas():
         form = AtsiskaitymasForma()
         if form.validate_on_submit():
             try:
-            
                 data = form.data.data
                 aprasymas = form.aprasymas.data
                 modulis_id = form.modulis.data.id  
-
-            
                 atsiskaitymas = ats_act.priskirti_atsiskaityma_moduliui(data, aprasymas, modulis_id)
-                flash("Atsiskaitymas sėkmingai sukurtas!")
+                flash("Atsiskaitymas sėkmingai sukurtas!","success")
                 return redirect(url_for('atsiskaitymai'))  
             except Exception as e:
-                flash(e)
-
+                flash(str(e), "danger")
         return render_template('atsiskaitymas_forma.html', form=form)

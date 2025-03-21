@@ -11,9 +11,12 @@
           {{ form.pavadinimas() }}
         </div>
         <br>
-        <div class="form-group">
-          {{form.submit()}}
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">Patvirtinti</button>
         </div>
     </form>
-
+    <div class="d-flex gap-2 mt-3">
+      <a href="{{ url_for('grupes') }}" class="btn btn-secondary">Grįžti</a>
+      </form>
+  </div>
 {% endblock %}

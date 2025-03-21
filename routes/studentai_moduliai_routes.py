@@ -11,31 +11,32 @@ def init_studento_moduliu_routes(app):
         form = ModuliuPasirinkimoForma()
 
         if form.validate_on_submit():
-            try:
-                
+            try: 
                 pasirinkti_moduliai = form.moduliai.data
                 if pasirinkti_moduliai:
-                    
                     sm_act.sukurti_studento_modulius(current_user.id, pasirinkti_moduliai)
-                    flash("Moduliai sėkmingai pasirinkti")
+                    flash("Moduliai sėkmingai pasirinkti","success")
                     return redirect(url_for('index'))  
                 else:
-                    flash("Pasirinkite bent vieną modulį")
+                    flash("Pasirinkite bent vieną modulį","warning")
             except Exception as e:
-               flash(e)
-
+               flash(str(e), "danger")
         return render_template('moduliu_pasirinkimas.html', form=form)
     
 
     @app.route('/atsiskaitymai', methods=['GET'])
     @login_required
     def atsiskaitymai():
-        studento_moduliai = sm_act.gauti_studento_modulius(current_user.id)
+        try:
+            studento_moduliai = sm_act.gauti_studento_modulius(current_user.id)
+            atsiskaitymai = []
 
-        atsiskaitymai = []
-        for modulis in studento_moduliai:
-            atsiskaitymai += ats_act.gauti_atsiskaitymus(modulis.modulis_id)
-        if not atsiskaitymai:
-            flash("Nėra atsiskaitymų jūsų pasirinktų modulių.")
-            
-        return render_template('atsiskaitymai.html', atsiskaitymai=atsiskaitymai)
+            for modulis in studento_moduliai:
+                atsiskaitymai += ats_act.gauti_atsiskaitymus(modulis.modulis_id)
+            if not atsiskaitymai:
+                flash("Nėra atsiskaitymų jūsų pasirinktų modulių.", "info")
+                
+            return render_template('atsiskaitymai.html', atsiskaitymai=atsiskaitymai)
+        
+        except Exception as e:
+            flash(str(e), "danger")

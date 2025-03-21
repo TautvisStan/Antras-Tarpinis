@@ -9,21 +9,24 @@ def leistinas_failas(failo_pavadinimas):
 
 def issaugoti_profilio_paveiksleli(failas, email):
     if failas and leistinas_failas(failas.filename):
-        # Gauname failo pratesima
-        pratesimas = failas.filename.rsplit('.', 1)[1].lower()
-        # Generuojame unikalu pavadinima: vardas_pavarde_data
-        data_str = datetime.now().strftime('%Y%m%d%H%M%S')
-        failo_pavadinimas = secure_filename(f"{email}_{data_str}.{pratesimas}")
-        
-        ikelimo_katalogas = current_app.config['UPLOAD_FOLDER']
-        failo_kelias = os.path.join(ikelimo_katalogas, failo_pavadinimas)
-        
-        os.makedirs(ikelimo_katalogas, exist_ok=True)
-        
-        failas.save(failo_kelias)
-        
-        if os.path.exists(failo_kelias):
-            return failo_pavadinimas
-        else:
-            raise Exception("Nepavyko issaugoti failo diske")
+        try:
+            # Gauname failo pratesima
+            pratesimas = failas.filename.rsplit('.', 1)[1].lower()
+            # Generuojame unikalu pavadinima: vardas_pavarde_data
+            data_str = datetime.now().strftime('%Y%m%d%H%M%S')
+            failo_pavadinimas = secure_filename(f"{email}_{data_str}.{pratesimas}")
+            
+            ikelimo_katalogas = current_app.config['UPLOAD_FOLDER']
+            failo_kelias = os.path.join(ikelimo_katalogas, failo_pavadinimas)
+            
+            os.makedirs(ikelimo_katalogas, exist_ok=True)
+            
+            failas.save(failo_kelias)
+            
+            if os.path.exists(failo_kelias):
+                return failo_pavadinimas
+            else:
+                raise Exception("Nepavyko issaugoti failo diske")
+        except Exception as e:
+            raise Exception(str(e))
     return None
