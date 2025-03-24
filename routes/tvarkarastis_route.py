@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 from flask import render_template, request, redirect, url_for, flash, select
 from models import Paskaita, Kalendorius, Vartotojas
-from flask_login import login_required
+from flask_login import current_user, login_required
 from extensions import db
+from routes.vartotojas_routes import KalendoriusForma
 
 
 def init_tvarkarastis(app):
@@ -105,3 +106,28 @@ def init_tvarkarastis(app):
         except Exception as e:
             flash(str(e), 'danger')
         return redirect(url_for('tvarkarastis'))
+    
+    @app.route('/kalendorius', methods=['GET', 'POST'])
+    @login_required
+    def kalendorius():
+        if current_user.vaidmuo != 'admin':
+            flash('Tik administratoriai gali valdyti kalendorių', 'error')
+            return redirect(url_for('studento_tvarkarastis'))
+        
+        form = KalendoriusForma()
+        if form.validate_on_submit():
+            try:
+                kalendorius = Kalendorius(
+                    data=form.data.data,
+                    aprasas=form.aprasas.data
+                )
+                db.session.add(kalendorius)
+                db.session.commit()
+                flash('Šventė sėkmingai pridėta!', 'success')
+                return redirect(url_for('kalendorius'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Klaida pridedant šventę: {str(e)}', 'error')
+        
+        sventes = db.session.execute(select(Kalendorius)).scalars().all()
+        return render_template('kalendorius.html', form=form, sventes=sventes)

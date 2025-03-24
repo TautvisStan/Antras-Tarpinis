@@ -50,7 +50,7 @@ login_routes.init_login_routes(app)
 modulis_routes.init_modulis_routes(app)
 studiju_programa_routes.init_studiju_programa_routes(app)
 grupes_routes.init_grupes_routes(app)
-vartotojas_routes.init_student_routes(app)
+# vartotojas_routes.init_vartotojas_routes(app)
 administratorius_routes.init_administratorius_routes(app)
 
 # profilio foto
