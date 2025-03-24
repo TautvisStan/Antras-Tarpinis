@@ -7,7 +7,10 @@ import services.paskaita_actions as pas_act
 def init_paskaita_routes(app):
     @app.route('/paskaitos')
     def paskaitos():
-        return render_template('paskaitos.html', paskaitos=pas_act.view_paskaitos())
+        try:
+            return render_template('paskaitos.html', paskaitos=pas_act.view_paskaitos())
+        except Exception as e:
+            flash(str(e), "danger")
 
     @app.route('/paskaita_create', methods=['GET', 'POST'])
     def paskaita_create():
@@ -24,16 +27,21 @@ def init_paskaita_routes(app):
                 flash("Sekmingai sukurta", "success")
                 return redirect(url_for('paskaitos'))
             except Exception as e:
-                flash(f"Klaida kuriant paskaita: {str(e)}", "error")
+                flash(str(e), "danger")
         return render_template('paskaita_forma.html', form=form)
 
     @app.route('/paskaita_view/<id>')
     def paskaita_view(id):
-        paskaita = pas_act.gauti_paskaita(id)
-        if paskaita is None:
-            flash("Paskaita nerasta", "error")
+        try:
+            paskaita = pas_act.gauti_paskaita(id)
+            if paskaita is None:
+                flash("Paskaita nerasta", "danger")
+                return redirect(url_for('paskaitos'))
+            return render_template('paskaita_perziura.html', paskaita=paskaita)
+        except Exception as e:
+            flash(str(e), "danger")
             return redirect(url_for('paskaitos'))
-        return render_template('paskaita_perziura.html', paskaita=paskaita)
+    
 
     @app.route('/paskaita_delete/<id>', methods=['POST'])
     def paskaita_delete(id):
@@ -41,14 +49,18 @@ def init_paskaita_routes(app):
             pas_act.salinti_paskaita(id)
             flash("Sekmingai pasalinta", "success")
         except Exception as e:
-            flash(f"Klaida salinant paskaita: {str(e)}", "error")
+            flash(str(e), "danger")
         return redirect(url_for('paskaitos'))
 
     @app.route('/paskaita_edit/<id>', methods=['GET', 'POST'])
     def paskaita_update(id):
-        paskaita = pas_act.gauti_paskaita(id)
-        if paskaita is None:
-            flash("Paskaita nerasta", "error")
+        try:
+            paskaita = pas_act.gauti_paskaita(id)
+            if paskaita is None:
+                flash("Paskaita nerasta", "danger")
+                return redirect(url_for('paskaitos'))
+        except Exception as e:
+            flash(str(e), "danger")
             return redirect(url_for('paskaitos'))
 
         form = PaskaitaForma(obj=paskaita)
@@ -64,5 +76,5 @@ def init_paskaita_routes(app):
                 flash("Sekmingai atnaujinta", "success")
                 return redirect(url_for('paskaitos'))
             except Exception as e:
-                flash(f"Klaida atnaujinant paskaita: {str(e)}", "error")
+                flash(str(e), "danger")
         return render_template("paskaita_forma_update.html", form=form, id=id)
