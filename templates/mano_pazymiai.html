@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block content %}
+<h1>Mano pažymiai</h1>
+<table>
+  <tr>
+    <th>Modulis</th>
+    <th>Pažymys</th>
+  </tr>
+  {% for pazymys in pazymiai %}
+  <tr>
+    <td>{{ pazymys.moduliai.pavadinimas }}</td>
+    <td>{{ pazymys.pazymys }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

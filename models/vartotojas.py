@@ -29,11 +29,7 @@ class Vartotojas(db.Model):
     studentai_moduliai = db.relationship('StudentasModulis', back_populates='studentai', foreign_keys='StudentasModulis.studentas_id')
     studento_pasiekimai = db.relationship('StudentoPasiekimai', back_populates='studentas')
 
-    
-    def __repr__(self):
-        return f"Vartotojas('{self.vardas} {self.pavarde}')"
-    
-    # Flask-Login reikalavimai
+     # Flask-Login reikalavimai
     @property
     def is_active(self):
         return True

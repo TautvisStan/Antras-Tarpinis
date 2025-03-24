@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block content %}
+<h1>Naujas testas</h1>
+<form method="POST" action="">
+  {{ form.hidden_tag() }}
+  <div>{{ form.pavadinimas.label }} {{ form.pavadinimas }}</div>
+  <div>{{ form.maksimalus_balas.label }} {{ form.maksimalus_balas }}</div>
+  <div>{{ form.atsiskaitymas.label }} {{ form.atsiskaitymas }}</div>
+  <h3>Klausimai</h3>
+  {% for klausimas in form.klausimai %}
+  <div>{{ klausimas.tekstas.label }} {{ klausimas.tekstas }}</div>
+  <div>{{ klausimas.atsakymas.label }} {{ klausimas.atsakymas }}</div>
+  {% endfor %}
+  <div>{{ form.submit }}</div>
+</form>
+{% endblock %}

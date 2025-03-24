@@ -25,6 +25,9 @@ class Modulis(db.Model):
     studentai = db.relationship('Vartotojas', secondary="studentai_moduliai", back_populates='moduliai')
     studentai_moduliai = db.relationship('StudentasModulis', back_populates='moduliai')
 
+    testai = db.relationship('Testas', back_populates='modulis', foreign_keys='Testas.modulis_id')
+
+
     def __repr__(self):
         return f'<Modulis {self.pavadinimas}>'
 

@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% block content %}
+<h1>{{ testas.pavadinimas }}</h1>
+<form method="POST" action="">
+  {% for klausimas in testas.klausimai %}
+  <div>
+    <label>{{ klausimas.tekstas }}</label>
+    <input type="text" name="{{ klausimas.id }}" required />
+  </div>
+  {% endfor %}
+  <button type="submit">Pateikti</button>
+</form>
+{% endblock %}

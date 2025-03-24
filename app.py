@@ -14,7 +14,7 @@ from models.grupes import Grupe
 from models.kalendorius import Kalendorius
 from models.studento_pasiekimai import StudentoPasiekimai
 from models.studentai_moduliai import StudentasModulis
-from models.uzduotys import Uzduotis
+from models.uzduotis import Uzduotis
 
 # from routes import routes
 from routes import grupes_routes
@@ -24,6 +24,7 @@ from routes.paskaita_routes import init_paskaita_routes
 from routes.atsiskaitymas_routes import init_atsiskaitymas_routes
 from routes.vartotojas_routes import init_vartotojas_routes
 from routes.login_routes import init_login_routes
+from routes.testas_route import init_testas
 
 import services.registracija_prisijungimas_actions
 
@@ -47,6 +48,7 @@ def load_user(user_id):
 init_paskaita_routes(app)
 init_atsiskaitymas_routes(app)
 init_vartotojas_routes(app)
+init_testas(app)
 
 
 login_routes.init_login_routes(app)
