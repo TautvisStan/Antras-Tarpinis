@@ -1,68 +1,135 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import flash, render_template, url_for, redirect, request
+from flask_login import current_user, login_required
 from extensions import db
+from sqlalchemy import select
+
+from models.modulis import Modulis
 from models.paskaita import Paskaita
+from forms.modulisForma import ModulisForma
 from forms.paskaitaForma import PaskaitaForma
-import services.paskaita_actions as pas_act
+import services.modulis_actions as mo_act
 
-def init_paskaita_routes(app):
-    @app.route('/paskaitos')
-    def paskaitos():
-        return render_template('paskaitos.html', paskaitos=pas_act.view_paskaitos())
-
-    @app.route('/paskaita_create', methods=['GET', 'POST'])
-    def paskaita_create():
-        form = PaskaitaForma()
-        if request.method == 'POST' and form.validate_on_submit():
+def init_modulis_routes(app):
+    @app.route('/moduliai')
+    @login_required
+    def moduliai():
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali valdyti modulius', 'error')
+            return redirect(url_for('index'))
+        
+        destytojo_moduliai = db.session.execute(select(Modulis).where(Modulis.destytojas_id == current_user.id)).scalars().all()
+        return render_template('modulis_list.html', moduliai=destytojo_moduliai)
+    
+    @app.route('/moduliai_create', methods=['GET', 'POST'])
+    @login_required
+    def create():
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali kurti modulius', 'error')
+            return redirect(url_for('index'))
+        
+        form = ModulisForma()
+        if form.validate_on_submit():
             try:
-                pavadinimas = form.pavadinimas.data
-                savaites_diena = form.savaites_diena.data
-                laikas_nuo = form.laikas_nuo.data
-                laikas_iki = form.laikas_iki.data
-                modulis_id = form.modulis_id.data.id if form.modulis_id.data else None
-
-                pas_act.sukurti_paskaita(pavadinimas, savaites_diena, laikas_nuo, laikas_iki, modulis_id)
-                flash("Sekmingai sukurta", "success")
-                return redirect(url_for('paskaitos'))
+                paskaita_data_list = [
+                    {
+                        'pavadinimas': paskaita.pavadinimas.data,
+                        'savaites_diena': paskaita.savaites_diena.data,
+                        'laikas_nuo': paskaita.laikas_nuo.data,
+                        'laikas_iki': paskaita.laikas_iki.data
+                    } for paskaita in form.paskaitos
+                ]
+                mo_act.sukurti_moduli(
+                    pavadinimas=form.pavadinimas.data,
+                    aprasymas=form.aprasymas.data,
+                    kreditai=form.kreditai.data,
+                    semestro_informacija=form.semestro_informacija.data,
+                    destytojas_id=current_user.id,
+                    studiju_programa_id=form.studiju_programa.data.id,
+                    egzaminas_data=form.egzaminas_data.data,
+                    paskaita_data_list=paskaita_data_list
+                )
+                flash("Sėkmingai sukurta", "success")
+                return redirect(url_for('moduliai'))
             except Exception as e:
-                flash(f"Klaida kuriant paskaita: {str(e)}", "error")
-        return render_template('paskaita_forma.html', form=form)
+                flash(f"Klaida kuriant modulį: {str(e)}", "error")
+        return render_template("moduliai_forma.html", form=form)
+     
+    @app.route('/moduliai_edit/<int:id>', methods=['GET', 'POST'])
+    @login_required
+    def update(id):
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali redaguoti modulius', 'error')
+            return redirect(url_for('index'))
+        
+        modulis = mo_act.gauti_moduli(id)
+        if not modulis or modulis.destytojas_id != current_user.id:
+            flash('Modulis nerastas arba neturite teisių jį redaguoti', 'error')
+            return redirect(url_for('moduliai'))
+        
+        form = ModulisForma(obj=modulis)
+        if request.method == 'GET':
+            form.paskaitos.entries.clear()
+            for paskaita in modulis.paskaitos:
+                paskaita_form = PaskaitaForma()
+                paskaita_form.pavadinimas.data = paskaita.pavadinimas
+                paskaita_form.savaites_diena.data = paskaita.savaites_diena
+                paskaita_form.laikas_nuo.data = paskaita.laikas_nuo
+                paskaita_form.laikas_iki.data = paskaita.laikas_iki
+                form.paskaitos.append_entry(paskaita_form)
 
-    @app.route('/paskaita_view/<id>')
-    def paskaita_view(id):
-        paskaita = pas_act.gauti_paskaita(id)
-        if paskaita is None:
-            flash("Paskaita nerasta", "error")
-            return redirect(url_for('paskaitos'))
-        return render_template('paskaita_perziura.html', paskaita=paskaita)
-
-    @app.route('/paskaita_delete/<id>', methods=['POST'])
-    def paskaita_delete(id):
-        try:
-            pas_act.salinti_paskaita(id)
-            flash("Sekmingai pasalinta", "success")
-        except Exception as e:
-            flash(f"Klaida salinant paskaita: {str(e)}", "error")
-        return redirect(url_for('paskaitos'))
-
-    @app.route('/paskaita_edit/<id>', methods=['GET', 'POST'])
-    def paskaita_update(id):
-        paskaita = pas_act.gauti_paskaita(id)
-        if paskaita is None:
-            flash("Paskaita nerasta", "error")
-            return redirect(url_for('paskaitos'))
-
-        form = PaskaitaForma(obj=paskaita)
-        if request.method == 'POST' and form.validate_on_submit():
+        if form.validate_on_submit():
             try:
-                pavadinimas = form.pavadinimas.data
-                savaites_diena = form.savaites_diena.data
-                laikas_nuo = form.laikas_nuo.data
-                laikas_iki = form.laikas_iki.data
-                modulis_id = form.modulis_id.data.id if form.modulis_id.data else None
-
-                pas_act.atnaujinti_paskaita(paskaita, pavadinimas, savaites_diena, laikas_nuo, laikas_iki, modulis_id)
-                flash("Sekmingai atnaujinta", "success")
-                return redirect(url_for('paskaitos'))
+                paskaita_data_list = [
+                    {
+                        'pavadinimas': paskaita.pavadinimas.data,
+                        'savaites_diena': paskaita.savaites_diena.data,
+                        'laikas_nuo': paskaita.laikas_nuo.data,
+                        'laikas_iki': paskaita.laikas_iki.data
+                    } for paskaita in form.paskaitos
+                ]
+                mo_act.atnaujinti_moduli(
+                    modulis=modulis,
+                    pavadinimas=form.pavadinimas.data,
+                    aprasymas=form.aprasymas.data,
+                    kreditai=form.kreditai.data,
+                    semestro_informacija=form.semestro_informacija.data,
+                    egzaminas_data=form.egzaminas_data.data,
+                    paskaita_data_list=paskaita_data_list
+                )
+                flash("Sėkmingai atnaujinta", "success")
+                return redirect(url_for('moduliai'))
             except Exception as e:
-                flash(f"Klaida atnaujinant paskaita: {str(e)}", "error")
-        return render_template("paskaita_forma_update.html", form=form, id=id)
+                flash(f"Klaida redaguojant modulį: {str(e)}", "error")
+        return render_template("moduliai_forma_update.html", form=form, id=id)
+    
+    @app.route('/moduliai_delete/<int:id>', methods=['GET', 'POST'])
+    @login_required
+    def delete(id):
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali šalinti modulius', 'error')
+            return redirect(url_for('index'))
+        
+        modulis = mo_act.gauti_moduli(id)
+        if modulis and modulis.destytojas_id == current_user.id:
+            try:
+                mo_act.salinti_moduli(id)
+                flash("Sėkmingai pašalinta", "success")
+            except Exception as e:
+                flash(f"Klaida šalinant modulį: {str(e)}", "error")
+        else:
+            flash("Modulis nerastas arba neturite teisių jį pašalinti", "error")
+        return redirect(url_for('moduliai'))
+    
+    @app.route('/moduliai_view/<int:id>', methods=['GET', 'POST'])
+    @login_required
+    def view(id):
+        if current_user.vaidmuo != 'destytojas':
+            flash('Tik dėstytojai gali peržiūrėti modulius', 'error')
+            return redirect(url_for('index'))
+        
+        modulis = mo_act.gauti_moduli(id)
+        if not modulis or modulis.destytojas_id != current_user.id:
+            flash("Modulis nerastas arba neturite teisių jį peržiūrėti", "error")
+            return redirect(url_for('moduliai'))
+        return render_template('modulio_perziura.html', modulis=modulis)
+    
