@@ -1,9 +1,9 @@
 from extensions import db
 
-studentu_moduliai = db.Table('studentu_moduliai',
-    db.Column('vartotojas_id', db.Integer, db.ForeignKey('vartotojai.id'), primary_key=True),
-    db.Column('modulis_id', db.Integer, db.ForeignKey('moduliai.id'), primary_key=True)
-)
+# studentu_moduliai = db.Table('studentu_moduliai',
+#     db.Column('vartotojas_id', db.Integer, db.ForeignKey('vartotojai.id'), primary_key=True),
+#     db.Column('modulis_id', db.Integer, db.ForeignKey('moduliai.id'), primary_key=True)
+# )
 
 class Modulis(db.Model):
     __tablename__ = 'moduliai'
@@ -22,7 +22,8 @@ class Modulis(db.Model):
     destytojas = db.relationship('Vartotojas', back_populates='destomi_moduliai', foreign_keys=[destytojas_id])
     paskaitos = db.relationship('Paskaita', back_populates='modulis', foreign_keys='Paskaita.modulis_id')
     atsiskaitymai = db.relationship('Atsiskaitymas', back_populates='modulis', foreign_keys='Atsiskaitymas.modulis_id')
-    studentai = db.relationship('Vartotojas', secondary=studentu_moduliai, back_populates='moduliai')
+    studentai = db.relationship('Vartotojas', secondary="studentai_moduliai", back_populates='moduliai')
+    studentai_moduliai = db.relationship('StudentasModulis', back_populates='moduliai')
 
     def __repr__(self):
         return f'<Modulis {self.pavadinimas}>'

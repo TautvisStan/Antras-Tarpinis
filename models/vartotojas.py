@@ -26,7 +26,7 @@ class Vartotojas(db.Model):
     grupe = db.relationship('Grupe', back_populates='studentai', foreign_keys=[grupe_id])
     moduliai = db.relationship('Modulis', secondary='studentai_moduliai', back_populates='studentai')
     destomi_moduliai = db.relationship('Modulis', back_populates='destytojas', foreign_keys='Modulis.destytojas_id')
-    studentai_moduliai = db.relationship('StudentasModulis', back_populates='studentas', foreign_keys='StudentasModulis.studentas_id')
+    studentai_moduliai = db.relationship('StudentasModulis', back_populates='studentai', foreign_keys='StudentasModulis.studentas_id')
 
     
     def __repr__(self):

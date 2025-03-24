@@ -7,6 +7,6 @@ class StudentasModulis(db.Model):
     atsiskaitymas_id = db.Column(db.Integer, db.ForeignKey('atsiskaitymai.id'))
 
 
-    studentas = db.relationship('Vartotojas', back_populates = 'studentai_moduliai')
-    modulis = db.relationship('Modulis', back_populates = 'studentai_moduliai')
+    studentai = db.relationship('Vartotojas', back_populates = 'studentai_moduliai')
+    moduliai = db.relationship('Modulis', back_populates = 'studentai_moduliai')
     atsiskaitymas = db.relationship('Atsiskaitymas', back_populates = 'studentai_moduliai')
