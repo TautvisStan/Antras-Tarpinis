@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from config import Config
 from extensions import db, migrate, login_manager, mail
 from flask_login import LoginManager
-from models import studentai_moduliai
+
 
 # from models import models
 from models.vartotojas import Vartotojas
@@ -12,6 +12,9 @@ from models.atsiskaitymas import Atsiskaitymas
 from models.studiju_programa import StudijuPrograma
 from models.grupes import Grupe
 from models.kalendorius import Kalendorius
+from models.studento_pasiekimai import StudentoPasiekimai
+from models.studentai_moduliai import StudentasModulis
+from models.uzduotys import Uzduotis
 
 # from routes import routes
 from routes import grupes_routes
