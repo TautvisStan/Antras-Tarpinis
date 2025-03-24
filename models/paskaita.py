@@ -14,6 +14,7 @@ class Paskaita(db.Model):
 
 
     modulis = db.relationship('Modulis',back_populates='paskaitos', foreign_keys=[modulis_id])
+    studento_pasiekimai = db.relationship('StudentoPasiekimai', back_populates='paskaita')
 
     def __repr__(self):
         return f'<Paskaita {self.pavadinimas}>'
