@@ -1,12 +1,11 @@
 from models.studentai_moduliai import StudentasModulis
 from extensions import db
 
-def sukurti_studento_modulius(studento_id, pasirinkti_moduliai):
+def sukurti_studento_modulius(studento_id, modulis_id):
     try:
-        for modulis in pasirinkti_moduliai:
-            studentas_modulis = StudentasModulis(studentas_id=studento_id, modulis_id=modulis.id)
-            db.session.add(studentas_modulis)
-            db.session.commit()
+        studentas_modulis = StudentasModulis(studentas_id=studento_id, modulis_id=modulis_id)
+        db.session.add(studentas_modulis)
+        db.session.commit()
     except Exception:
         db.session.rollback()
         raise Exception("Klaida priskiriant modulius studentui.")

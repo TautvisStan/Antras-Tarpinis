@@ -4,7 +4,7 @@ class StudijuPrograma(db.Model):
     __tablename__ = 'studiju_programos'
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     pavadinimas = db.Column(db.String(50), nullable=False)
-    specializacija_id = db.Column(db.Integer, db.ForeignKey('specializacijos.id'))
+
 
 
     grupes = db.relationship('Grupe',back_populates='studiju_programa', foreign_keys='Grupe.studiju_programa_id')

@@ -22,7 +22,7 @@ def init_administratorius_routes(app):
             flash(str(e),"danger")
 
     @app.route('/administratorius/vartotojai')
-    def vartotojai():
+    def admin_vartotojai():
         try:
             vartotojai = ad_act.gauti_vartotojus()
             return render_template ('administratorius_vartotojai.html', vartotojai = vartotojai)
@@ -112,7 +112,7 @@ def init_administratorius_routes(app):
                 flash('Vartotojas nerastas', "warning")
                 return redirect(url_for('atvaizduoti_statistika'))
             
-            istrinti_vartotoja(vartotojas)
+            ad_act.istrinti_vartotoja(vartotojas)
             flash(f'Vartotojas {vartotojas.vardas} {vartotojas.pavarde} buvo pašalintas')
             return redirect(url_for('atvaizduoti_statistika'))
         except Exception as e:
@@ -130,7 +130,7 @@ def init_administratorius_routes(app):
                 flash('Vartotojas nerastas',"warning")
                 return redirect(url_for('atvaizduoti_statistika'))
             
-            uzblokuoti_vartotoja(vartotojas)
+            ad_act.uzblokuoti_vartotoja(vartotojas)
             flash(f'Vartotojas {vartotojas.vardas} {vartotojas.pavarde} buvo užblokuotas')
             return redirect(url_for('atvaizduoti_statistika'))
         except Exception as e:

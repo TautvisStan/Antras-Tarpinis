@@ -6,7 +6,7 @@ from extensions import db
 from sqlalchemy import select
 
 class ModuliuPasirinkimoForma(FlaskForm):
-    moduliai = fields.QuerySelectField('Pasirinkite modulius', query_factory=lambda: db.session.execute(select(Modulis)).scalar().all(), get_label='pavadinimas', multiple=True)
+    moduliai = fields.QuerySelectField('Pasirinkite modulius', query_factory=lambda: db.session.execute(select(Modulis)).scalar().all(), get_label='pavadinimas')
     submit = SubmitField("Patvirtinti")
 
 
