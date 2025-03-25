@@ -20,6 +20,14 @@ block content %}
     form.vaidmuo(class="form-select") }}
   </div>
   <div class="mb-3">
+    {{ form.studiju_programa.label(class="form-label") }}
+    {{ form.studiju_programa(class="form-select") }}
+</div>
+<div class="mb-3">
+    {{ form.fakultetas.label(class="form-label") }}
+    {{ form.fakultetas(class="form-select") }}
+</div>
+  <div class="mb-3">
     {{ form.el_pastas.label(class="form-label") }}
     {{ form.el_pastas(class="form-control") }}
   </div>

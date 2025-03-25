@@ -97,9 +97,10 @@ def gauti_vartotojus():
     except Exception:
         raise Exception("Klaida bandant gauti vartotojus:")
 
-def sukurti_vartotoja(vardas,pavarde,vaidmuo,el_pastas,password_hash):
+def sukurti_vartotoja(vardas,pavarde,vaidmuo,studiju_programa_id, fakultetas_id,el_pastas,password_hash):
     try:
-        vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, vaidmuo=vaidmuo, el_pastas=el_pastas, password_hash=password_hash)
+        vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde, vaidmuo=vaidmuo,studiju_programa_id=studiju_programa_id,
+        fakultetas_id=fakultetas_id, el_pastas=el_pastas, password_hash=password_hash)
         db.session.add(vartotojas)
         db.session.commit()
     except Exception:

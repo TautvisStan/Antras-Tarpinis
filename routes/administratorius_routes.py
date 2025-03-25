@@ -50,12 +50,14 @@ def init_administratorius_routes(app):
                 vardas = form.vardas.data
                 pavarde = form.pavarde.data
                 vaidmuo = form.vaidmuo.data
+                studiju_programa_id = form.studiju_programa.data.id if form.studiju_programa.data else None
+                fakultetas_id = form.fakultetas.data.id if form.fakultetas.data else None
                 el_pastas = form.el_pastas.data
                 password = form.password.data
 
                 password_hash = generate_password_hash(password)
 
-                ad_act.sukurti_vartotoja(vardas,pavarde,vaidmuo,el_pastas,password_hash)
+                ad_act.sukurti_vartotoja(vardas,pavarde,vaidmuo,studiju_programa_id,fakultetas_id,el_pastas,password_hash)
                 flash("Vartotojas sukurtas sėkmingai.","success")
                 return redirect(url_for('vartotojai'))
                 # return redirect('/administratorius/vartotojai')
