@@ -99,13 +99,13 @@
             >{{ error }}</span
           ><br />{% endfor %}
         </div>
+        </div>
         <div>
-          {{ atsiskaitymas.data.label }}<br />
-          {{ atsiskaitymas.data() }}<br />
+          {{ atsiskaitymas.date.label }}<br />
+          {{ atsiskaitymas.date() }}<br />
           {% for error in atsiskaitymas.data.errors %}<span style="color: red"
             >{{ error }}</span
           ><br />{% endfor %}
-        </div>
         <button type="button" onclick="removeAtsiskaitymas(this)">
           Pašalinti
         </button>
@@ -173,7 +173,7 @@
                       </div>
                       <div>
                           <label>Data</label><br>
-                          <input type="datetime-local" name="atsiskaitymai-${entryCount}-data"><br>
+                          <input type="datetime-local" name="atsiskaitymai-${entryCount}-date"><br>
                       </div>
                       <button type="button" onclick="removeAtsiskaitymas(this)">Pašalinti</button>
                       <hr>

@@ -1,3 +1,4 @@
+from models.atsiskaitymas import Atsiskaitymas
 from models.modulis import Modulis
 from models.paskaita import Paskaita
 from extensions import db
@@ -22,7 +23,7 @@ def gauti_moduli(id):
     except Exception as e:
         raise Exception(f"Klaida gaunant modulį: {str(e)}")
 
-def atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_informacija, egzaminas_data, paskaita_data_list):
+def atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_informacija, egzaminas_data, paskaita_data_list, atsiskaitymas_data_list):
     # Atnaujina modulį ir susijusią paskaitą.
     try:
         modulis.pavadinimas = pavadinimas
@@ -34,6 +35,10 @@ def atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_inform
         # Pašaliname senas paskaitas
         for paskaita in modulis.paskaitos:
             db.session.delete(paskaita)
+
+                # Pašaliname senus atsiskaitymus
+        for atsiskaitymas in modulis.atsiskaitymai:
+            db.session.delete(atsiskaitymas)
         
         # Pridedame naujas paskaitas
         for paskaita_data in paskaita_data_list:
@@ -42,9 +47,17 @@ def atnaujinti_moduli(modulis, pavadinimas, aprasymas, kreditai, semestro_inform
                 savaites_diena=paskaita_data['savaites_diena'],
                 laikas_nuo=paskaita_data['laikas_nuo'],
                 laikas_iki=paskaita_data['laikas_iki'],
-                modulis=modulis
+                modulis=modulis,
+                tipas="Paskaita"
             )
             db.session.add(paskaita)
+        for atsiskaitymas_data in atsiskaitymas_data_list:
+            atsiskaitymas = Atsiskaitymas(
+                pavadinimas = atsiskaitymas_data['pavadinimas'],
+                date = atsiskaitymas_data['date'],
+                modulis=modulis,
+            )
+            db.session.add(atsiskaitymas)
         
         db.session.commit()
     except Exception as e:
@@ -64,7 +77,7 @@ def salinti_moduli(id):
         db.session.rollback()
         raise Exception(f"Modulio šalinimo klaida: {str(e)}")
 
-def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa_id, egzaminas_data, paskaita_data,fakultetas_id):
+def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa_id, egzaminas_data, paskaita_data_list, atsiskaitymas_data_list):
     # Sukuria naują modulį ir susijusią paskaitą.
     try:
         modulis = Modulis(
@@ -75,17 +88,27 @@ def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, desty
             destytojas_id=destytojas_id,
             studiju_programa_id=studiju_programa_id,
             egzaminas_data=egzaminas_data,
-            fakultetas_id=fakultetas_id
         )
-        paskaita = Paskaita(
-            pavadinimas=paskaita_data['pavadinimas'],
-            savaites_diena=paskaita_data['savaites_diena'],
-            laikas_nuo=paskaita_data['laikas_nuo'],
-            laikas_iki=paskaita_data['laikas_iki'],
-            modulis=modulis
-        )
+        for paskaita_data in paskaita_data_list:
+            paskaita = Paskaita(
+                pavadinimas=paskaita_data['pavadinimas'],
+                savaites_diena=paskaita_data['savaites_diena'],
+                laikas_nuo=paskaita_data['laikas_nuo'],
+                laikas_iki=paskaita_data['laikas_iki'],
+                modulis=modulis,
+                tipas="Paskaita"
+            )
+            db.session.add(paskaita)
+        for atsiskaitymas_data in atsiskaitymas_data_list:
+            atsiskaitymas = Atsiskaitymas(
+                pavadinimas = atsiskaitymas_data['pavadinimas'],
+                date = atsiskaitymas_data['date'],
+                modulis=modulis,
+            )
+            db.session.add(atsiskaitymas)
+
+            
         db.session.add(modulis)
-        db.session.add(paskaita)
         db.session.commit()
         return modulis
     except Exception as e:

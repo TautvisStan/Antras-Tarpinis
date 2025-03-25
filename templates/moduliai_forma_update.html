@@ -52,14 +52,14 @@
         {{ paskaita.hidden_tag() }}
         <div>
           {{ paskaita.pavadinimas.label }}<br />
-          {{ paskaita.pavadinimas() }}<br />
+          {{ paskaita.pavadinimas()  }}<br />
           {% for error in paskaita.pavadinimas.errors %}<span style="color: red"
             >{{ error }}</span
           ><br />{% endfor %}
         </div>
         <div>
           {{ paskaita.savaites_diena.label }}<br />
-          {{ paskaita.savaites_diena() }}<br />
+          {{ paskaita.savaites_diena()  }}<br />
           {% for error in paskaita.savaites_diena.errors %}<span
             style="color: red"
             >{{ error }}</span
@@ -67,14 +67,14 @@
         </div>
         <div>
           {{ paskaita.laikas_nuo.label }}<br />
-          {{ paskaita.laikas_nuo() }}<br />
+          {{ paskaita.laikas_nuo() }}
           {% for error in paskaita.laikas_nuo.errors %}<span style="color: red"
             >{{ error }}</span
           ><br />{% endfor %}
         </div>
         <div>
           {{ paskaita.laikas_iki.label }}<br />
-          {{ paskaita.laikas_iki() }}<br />
+          {{ paskaita.laikas_iki() }}
           {% for error in paskaita.laikas_iki.errors %}<span style="color: red"
             >{{ error }}</span
           ><br />{% endfor %}
@@ -88,6 +88,7 @@
   
     <h3>Atsiskaitymai</h3>
     <div id="atsiskaitymai">
+      
       {% for atsiskaitymas in form.atsiskaitymai %}
       <div class="atsiskaitymas-entry">
         {{ atsiskaitymas.hidden_tag() }}
@@ -100,8 +101,8 @@
           ><br />{% endfor %}
         </div>
         <div>
-          {{ atsiskaitymas.data.label }}<br />
-          {{ atsiskaitymas.data() }}<br />
+          {{ atsiskaitymas.date.label }}<br />
+          {{ atsiskaitymas.date() }}<br />
           {% for error in atsiskaitymas.data.errors %}<span style="color: red"
             >{{ error }}</span
           ><br />{% endfor %}

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, DateTimeLocalField, SubmitField, TimeField, FieldList, FormField
+from wtforms import RadioField, StringField, IntegerField, DateTimeLocalField, SubmitField, TimeField, FieldList, FormField
 from wtforms.validators import InputRequired
 from wtforms_sqlalchemy.fields import QuerySelectField
 from extensions import db
@@ -14,8 +14,16 @@ class PaskaitaForma(FlaskForm):
     laikas_iki = TimeField("Laikas iki", format='%H:%M', validators=[InputRequired()])
 
 class AtsiskaitymasForma(FlaskForm):
-    pavadinimas = StringField("Atsiskaitymo pavadinimas", [InputRequired()])
-    data = DateTimeLocalField("Data", format='%Y-%m-%dT%H:%M', validators=[InputRequired()])
+    pavadinimas = StringField(
+        "Pavadinimas",
+        # choices=[("Egzaminas", "Egzaminas"), ("Labaratorinis", "Labaratorinis"), ("Kursinis", "Kursinis")],
+        validators=[InputRequired()]
+    )
+    date = DateTimeLocalField("Data", format='%Y-%m-%dT%H:%M', validators=[InputRequired()])
+    # laikas_nuo = DateTimeLocalField("Data nuo", validators=[InputRequired()])
+    # laikas_iki = DateTimeLocalField("Data iki", validators=[InputRequired()])
+    # aprasymas = StringField("Aprasymas", validators=[InputRequired()])
+    submit = SubmitField("Pateikti")
 
 class ModulisForma(FlaskForm):
     pavadinimas = StringField("Pavadinimas", [InputRequired()])
@@ -30,11 +38,11 @@ class ModulisForma(FlaskForm):
                                         validators=[InputRequired()])
     paskaitos = FieldList(FormField(PaskaitaForma), min_entries=1, label="Paskaitos")
     atsiskaitymai = FieldList(FormField(AtsiskaitymasForma), min_entries=0, label="Atsiskaitymai")
-    fakultetas = QuerySelectField('Fakultetas', 
-                                        query_factory=lambda: db.session.execute(select(Fakultetas)).scalars().all(), 
-                                        get_label='pavadinimas', 
-                                        allow_blank=False, 
-                                        validators=[InputRequired()])
+    # fakultetas = QuerySelectField('Fakultetas', 
+    #                                     query_factory=lambda: db.session.execute(select(Fakultetas)).scalars().all(), 
+    #                                     get_label='pavadinimas', 
+    #                                     allow_blank=False, 
+    #                                     validators=[InputRequired()])
 
     submit = SubmitField("Sukurti")
 

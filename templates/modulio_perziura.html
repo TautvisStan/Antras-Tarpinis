@@ -52,7 +52,7 @@
         {% for atsiskaitymas in modulis.atsiskaitymai %}
         <tr>
           <td>{{ atsiskaitymas.pavadinimas }}</td>
-          <td>{{ atsiskaitymas.data.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>{{ atsiskaitymas.date.strftime('%Y-%m-%d %H:%M') }}</td>
         </tr>
         {% endfor %}
       </tbody>
