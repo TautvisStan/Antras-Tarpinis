@@ -11,7 +11,6 @@ class StudijuPrograma(db.Model):
 
     studentai = db.relationship('Vartotojas',back_populates='studiju_programa', foreign_keys='Vartotojas.studiju_programa_id')
     moduliai = db.relationship('Modulis', back_populates='studiju_programa')
-    specializacija = db.relationship('Specializacija', back_populates='stud_programos')
     
     def __repr__(self):
         return f'<StudijuPrograma {self.pavadinimas}>'

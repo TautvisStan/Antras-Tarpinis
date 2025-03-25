@@ -16,7 +16,7 @@ from models.studento_pasiekimai import StudentoPasiekimai
 from models.studentai_moduliai import StudentasModulis
 from models.uzduotis import Uzduotis
 from models.fakultetas import Fakultetas
-from models.specializacija import Specializacija
+
 
 # from routes import routes
 from routes import grupes_routes
