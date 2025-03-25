@@ -2,6 +2,8 @@ from flask import Flask, render_template
 from config import Config
 from extensions import db, migrate, login_manager, mail
 from flask_login import LoginManager
+# import pymysql
+# pymysql.install_as_MySQLdb()  # Svarbu: turi būti prieš SQLAlchemy inicijavimą!
 
 
 # from models import models
@@ -20,7 +22,7 @@ from models.fakultetas import Fakultetas
 
 # from routes import routes
 from routes import grupes_routes
-from routes import login_routes, modulis_routes, studiju_programa_routes, vartotojas_routes, administratorius_routes
+from routes import login_routes, modulis_routes, studiju_programa_routes, administratorius_routes
 from routes.paveiksleliu_routes import inicijuoti_marsrutus
 from routes.paskaita_routes import init_paskaita_routes
 from routes.atsiskaitymas_routes import init_atsiskaitymas_routes
