@@ -198,6 +198,13 @@
             <ul class="nav-links">
                 <li><a href="{{ url_for('index') }}">Pagrindinis</a></li>
                 {% if current_user.is_authenticated %}
+                {% if current_user.profilio_pav != none %}
+                <li><img
+                    src="{{ url_for('static', filename='uploads/' + current_user.profilio_pav) }}"
+                    alt="Profilio Paveikslelis"
+                    style="max-width: 200px"
+                /></li>
+                {% endif %}
                     <a href="{{ url_for('studento_tvarkarastis') }}">Tvarkaraštis</a>
                     <li><a href="{{ url_for('protected') }}">Profilis</a></li>
                     <li><a href="{{ url_for('logout') }}">Atsijungti</a></li>
