@@ -5,6 +5,7 @@ from wtforms_sqlalchemy.fields import QuerySelectField
 from extensions import db
 from models.studiju_programa import StudijuPrograma
 from sqlalchemy import select
+from models.fakultetas import Fakultetas
 
 class PaskaitaForma(FlaskForm):
     pavadinimas = StringField("Paskaitos pavadinimas", [InputRequired()])
@@ -29,6 +30,12 @@ class ModulisForma(FlaskForm):
                                         validators=[InputRequired()])
     paskaitos = FieldList(FormField(PaskaitaForma), min_entries=1, label="Paskaitos")
     atsiskaitymai = FieldList(FormField(AtsiskaitymasForma), min_entries=0, label="Atsiskaitymai")
+    fakultetas = QuerySelectField('Fakultetas', 
+                                        query_factory=lambda: db.session.execute(select(Fakultetas)).scalars().all(), 
+                                        get_label='pavadinimas', 
+                                        allow_blank=False, 
+                                        validators=[InputRequired()])
+
     submit = SubmitField("Sukurti")
 
     # studiju_programa = fields.QuerySelectField('Studijų programa', query_factory=lambda: db.session.execute(select(StudijuPrograma)).scalar().all(), get_label='pavadinimas')

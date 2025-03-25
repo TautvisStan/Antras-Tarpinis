@@ -1,4 +1,5 @@
 from models.studiju_programa import StudijuPrograma
+from models.specializacija import Specializacija
 from extensions import db
 
 def view_studiju_programa():
@@ -34,9 +35,9 @@ def salinti_studiju_programa(id):
         db.session.rollback()
         raise Exception ("Klaida bandant pašalinti studijų programą.")
 
-def sukurti_studiju_programa(pavadinimas):
+def sukurti_studiju_programa(pavadinimas,specializacija_id):
     try:
-        studiju_programa = StudijuPrograma(pavadinimas=pavadinimas)
+        studiju_programa = StudijuPrograma(pavadinimas=pavadinimas,specializacija_id=specializacija_id)
         db.session.add(studiju_programa)
         db.session.commit()
     except Exception:

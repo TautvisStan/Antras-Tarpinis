@@ -2,6 +2,7 @@ from models.modulis import Modulis
 from models.paskaita import Paskaita
 from extensions import db
 from sqlalchemy import select
+from models.fakultetas import Fakultetas
 
 def view_modulis():
     # Grąžina visų modulių sąrašą.
@@ -63,7 +64,7 @@ def salinti_moduli(id):
         db.session.rollback()
         raise Exception(f"Modulio šalinimo klaida: {str(e)}")
 
-def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa_id, egzaminas_data, paskaita_data):
+def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, destytojas_id, studiju_programa_id, egzaminas_data, paskaita_data,fakultetas_id):
     # Sukuria naują modulį ir susijusią paskaitą.
     try:
         modulis = Modulis(
@@ -73,7 +74,8 @@ def sukurti_moduli(pavadinimas, aprasymas, kreditai, semestro_informacija, desty
             semestro_informacija=semestro_informacija,
             destytojas_id=destytojas_id,
             studiju_programa_id=studiju_programa_id,
-            egzaminas_data=egzaminas_data
+            egzaminas_data=egzaminas_data,
+            fakultetas_id=fakultetas_id
         )
         paskaita = Paskaita(
             pavadinimas=paskaita_data['pavadinimas'],
