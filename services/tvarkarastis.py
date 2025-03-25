@@ -60,7 +60,7 @@ def gauti_vartotojo_tvarkarasti(vartotojas):
         
         return {
             'paskaitos': sorted(paskaitos, key=lambda x: (x['data'], x['laikas_nuo'])),
-            'atsiskaitymai': sorted(atsiskaitymai, key=lambda x: x.data),
+            'atsiskaitymai': sorted(atsiskaitymai, key=lambda x: x.date),
             'egzaminai': sorted(egzaminai, key=lambda x: x['data']),
             'sventes': sorted(sventes_list, key=lambda x: x['data'])
         }

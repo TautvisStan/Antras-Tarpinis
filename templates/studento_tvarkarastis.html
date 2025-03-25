@@ -38,7 +38,7 @@
   {% for atsiskaitymas in atsiskaitymai %}
   <tr>
     <td>{{ atsiskaitymas.pavadinimas }}</td>
-    <td>{{ atsiskaitymas.data.strftime('%Y-%m-%d') }}</td>
+    <td>{{ atsiskaitymas.date.strftime('%Y-%m-%d') }}</td>
     <td>{{ atsiskaitymas.data_nuo }}</td>
     <td>{{ atsiskaitymas.data_iki }}</td>
     <td>{{ atsiskaitymas.aprasymas }}</td>
