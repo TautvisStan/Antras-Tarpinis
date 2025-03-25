@@ -16,6 +16,7 @@ class Modulis(db.Model):
 
     studiju_programa_id = db.Column(db.Integer, db.ForeignKey('studiju_programos.id'), nullable=True)
     destytojas_id = db.Column(db.Integer, db.ForeignKey('vartotojai.id'), nullable=True)
+    fakultetas_id = db.Column(db.Integer, db.ForeignKey('fakultetai.id'))
     
     # Ryšiai
     studiju_programa = db.relationship('StudijuPrograma', back_populates='moduliai')
@@ -24,6 +25,7 @@ class Modulis(db.Model):
     atsiskaitymai = db.relationship('Atsiskaitymas', back_populates='modulis', foreign_keys='Atsiskaitymas.modulis_id')
     studentai = db.relationship('Vartotojas', secondary="studentai_moduliai", back_populates='moduliai')
     studentai_moduliai = db.relationship('StudentasModulis', back_populates='moduliai')
+    fakultetas = db.relationship('Fakultetas',back_populates='moduliai')
 
     testai = db.relationship('Testas', back_populates='modulis', foreign_keys='Testas.modulis_id')
 

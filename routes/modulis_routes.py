@@ -46,6 +46,7 @@ def init_modulis_routes(app):
                     destytojas_id=current_user.id,
                     studiju_programa_id=form.studiju_programa.data.id,
                     egzaminas_data=form.egzaminas_data.data,
+                    fakultetas_id = form.fakultetas.data.id,
                     paskaita_data_list=paskaita_data_list
                 )
                 flash("Sėkmingai sukurta", "success")

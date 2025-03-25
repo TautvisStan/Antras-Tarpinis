@@ -20,6 +20,8 @@ class Vartotojas(db.Model):
     aktyvumas = db.Column(db.Boolean, default=True)
     nesekmingi_bandymai = db.Column(db.Integer, default = 0)
     blokavimo_laikas = db.Column(db.DateTime, nullable = True)
+    fakultetas_id = db.Column(db.Integer, db.ForeignKey('fakultetai.id'))
+
 
     # Ryšiai
     studiju_programa = db.relationship('StudijuPrograma', back_populates='studentai', foreign_keys=[studiju_programa_id])
@@ -28,6 +30,7 @@ class Vartotojas(db.Model):
     destomi_moduliai = db.relationship('Modulis', back_populates='destytojas', foreign_keys='Modulis.destytojas_id')
     studentai_moduliai = db.relationship('StudentasModulis', back_populates='studentai', foreign_keys='StudentasModulis.studentas_id')
     studento_pasiekimai = db.relationship('StudentoPasiekimai', back_populates='studentas')
+    fakultetas = db.relationship('Fakultetas',back_populates='studentai')
 
      # Flask-Login reikalavimai
     @property

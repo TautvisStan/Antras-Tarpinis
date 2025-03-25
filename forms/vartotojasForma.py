@@ -11,3 +11,4 @@ class VartotojasForma(FlaskForm):
     el_pastas = StringField("El.paštas", [validators.InputRequired()])
     password = StringField("Slaptažodis", [validators.InputRequired()])
     submit = SubmitField("Sukurti")
+
