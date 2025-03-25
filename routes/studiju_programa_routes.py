@@ -18,7 +18,8 @@ def init_studiju_programa_routes(app):
         else:    
             try:
                 pavadinimas = form.pavadinimas.data
-                sp_act.sukurti_studiju_programa(pavadinimas)
+                specializacija = form.specializacija.data 
+                sp_act.sukurti_studiju_programa(pavadinimas,specializacija.id)
                 flash("Sekmingai sukurta", "success")
                 return app.redirect(url_for('studiju_programos'), 302)
             except Exception as e:

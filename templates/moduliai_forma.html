@@ -39,6 +39,13 @@
       ><br />{% endfor %}
     </div>
     <div>
+      {{ form.fakultetas.label }}<br />
+      {{ form.fakultetas() }}<br />
+      {% for error in form.fakultetas.errors %}
+        <span style="color: red">{{ error }}</span><br />
+      {% endfor %}
+    </div>
+    <div>
       {{ form.studiju_programa.label }}<br />
       {{ form.studiju_programa() }}<br />
       {% for error in form.studiju_programa.errors %}<span style="color: red"

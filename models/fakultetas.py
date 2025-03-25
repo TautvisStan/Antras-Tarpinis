@@ -9,7 +9,7 @@ class Fakultetas(db.Model):
     moduliai = db.relationship('Modulis', back_populates='fakultetas')
     specializacijos = db.relationship('Specializacija', back_populates='fakultetas')
 
-def __repr__(self):
-    return f'<Fakultetas {self.pavadinimas}>'
+    def __repr__(self):
+        return f'<Fakultetas {self.pavadinimas}>'
 
 

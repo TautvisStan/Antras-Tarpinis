@@ -11,5 +11,5 @@ class Specializacija(db.Model):
     stud_programos = db.relationship('StudijuPrograma', back_populates='specializacija')
 
 
-def __repr__(self):
-    return f'<Specializacija {self.pavadinimas}>'
+    def __repr__(self):
+        return f'<Specializacija {self.pavadinimas}>'
