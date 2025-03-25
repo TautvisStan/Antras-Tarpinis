@@ -2,8 +2,8 @@ from flask import Flask, render_template
 from config import Config
 from extensions import db, migrate, login_manager, mail
 from flask_login import LoginManager
-# import pymysql
-# pymysql.install_as_MySQLdb()  # Svarbu: turi būti prieš SQLAlchemy inicijavimą!
+import pymysql
+pymysql.install_as_MySQLdb()  # Svarbu: turi būti prieš SQLAlchemy inicijavimą!
 
 
 # from models import models

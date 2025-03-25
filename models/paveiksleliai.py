@@ -5,9 +5,9 @@ from werkzeug.utils import secure_filename
 class PaveiksleliuValdymas:
     @staticmethod
     def ikelti_paveikslelius(files, vartotojo_id):
-        """
-        Įkelia paveikslėlius ir grąžina nuorodų sąrašą.
-        """
+
+        # Įkelia paveikslėlius ir grąžina nuorodų sąrašą.
+
         nuorodos = []
         for file in files:
             if file and PaveiksleliuValdymas._leidziamas_failo_formatas(file.filename):
@@ -15,6 +15,7 @@ class PaveiksleliuValdymas:
                 filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
                 nuorodos.append(f"/uploads/{filename}")
+                
         return nuorodos
 
     @staticmethod
