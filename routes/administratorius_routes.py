@@ -55,6 +55,14 @@ def init_administratorius_routes(app):
                 el_pastas = form.el_pastas.data
                 password = form.password.data
 
+                if vaidmuo == "Studentas" and not studiju_programa_id:
+                    flash("Studentui būtina priskirti studijų programą", "danger")
+                    return render_template("vartotojas_forma.html", form=form)
+                
+                if vaidmuo == "Dėstytojas" and not fakultetas_id:
+                    flash("Dėstytojui būtina priskirti fakultetą", "danger")
+                    return render_template("vartotojas_forma.html", form=form)
+
                 password_hash = generate_password_hash(password)
 
                 ad_act.sukurti_vartotoja(vardas,pavarde,vaidmuo,studiju_programa_id,fakultetas_id,el_pastas,password_hash)
@@ -81,7 +89,19 @@ def init_administratorius_routes(app):
                     vardas = form.vardas.data
                     pavarde = form.pavarde.data
                     vaidmuo = form.vaidmuo.data
-                    ad_act.redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo)
+                    studiju_programa_id = form.studiju_programa.data.id if form.studiju_programa.data else None
+                    fakultetas_id = form.fakultetas.data.id if form.fakultetas.data else None
+
+                    if vaidmuo == 'Studentas' and not studiju_programa_id:
+                        flash("Studentui būtina priskirti studijų programą","danger")
+                        return render_template ('vartotojas_forma_redaguoti.html', form=form, id=id) 
+                    
+                    
+                    if vaidmuo == 'Dėstytojas' and not fakultetas_id:
+                        flash("Dėstytojui būtina priskirti fakultetą","danger")
+                        return render_template ('vartotojas_forma_redaguoti.html', form=form, id=id) 
+                    
+                    ad_act.redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo,studiju_programa_id,fakultetas_id)
                     flash("Vartotojas sėkmingai atnaujintas", "success")
                     return redirect(url_for('vartotojai'))
                 except Exception as e:

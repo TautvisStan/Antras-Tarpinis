@@ -19,6 +19,15 @@ block content %}
     {{ form.vaidmuo.label(class="form-label") }} {{
     form.vaidmuo(class="form-select") }}
   </div>
+  <div class="mb-3">
+    {{ form.studiju_programa.label(class="form-label") }}
+    {{ form.studiju_programa(class="form-select") }}
+  </div>
+  
+  <div class="mb-3">
+    {{ form.fakultetas.label(class="form-label") }}
+    {{ form.fakultetas(class="form-select") }}
+  </div>
 
   <div class="d-flex gap-2">
     <button type="submit" class="btn btn-primary">Atnaujinti</button>

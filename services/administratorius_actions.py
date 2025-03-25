@@ -114,11 +114,13 @@ def gauti_vartotoja(id):
     except Exception:
         raise Exception("Klaida bandant gauti vartotoją:")
 
-def redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo):
+def redaguoti_vartotoja(vartotojas,vardas,pavarde,vaidmuo,studiju_programa_id = None, fakultetas_id = None):
     try:
         vartotojas.vardas = vardas
         vartotojas.pavarde = pavarde
         vartotojas.vaidmuo = vaidmuo
+        vartotojas.studiju_programa_id = studiju_programa_id
+        vartotojas.fakultetas_id = fakultetas_id
         db.session.commit()
     except Exception:
         db.session.rollback()
