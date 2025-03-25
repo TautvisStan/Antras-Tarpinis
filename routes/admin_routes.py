@@ -11,6 +11,8 @@ from forms.vartotojasForma import VartotojasForma
 from services.registracija_prisijungimas_actions import gauti_slapt_hash
 import services.issaugoti_paveiksleli as iss_pav
 from datetime import datetime
+from sqlalchemy import text
+import services.modulis_actions as mo_act
 
 # Administratoriaus teisių tikrinimo dekoratorius
 def admin_required(f):
@@ -192,20 +194,70 @@ def init_admin_routes(app):
         return redirect(url_for('admin_destytoju_patvirtinimas'))
     
     # Modulių valdymo maršrutai
-    @app.route('/admin/moduliai')
+    @app.route('/admin/moduliai', methods=['GET', 'POST'])
     @flask_login.login_required
     @admin_required
     def admin_moduliai():
-        # Tai būtų pradinis šablonas, kurį reikėtų išplėsti su tikrais duomenimis
-        return render_template('admin_moduliai.html', moduliai=[])
+        modulis = mo_act.gauti_moduli(id)
+        if not modulis:
+            flash("Modulis nerastas", "danger")
+            return redirect(url_for('admin_moduliai'))
+         
+        if request.method == 'POST':
+            destytojas_id = request.form.get('destytojas_id')
+            studiju_programa_id = request.form.get('studiju_programa_id')
+            try:
+                mo_act.atnaujinti_moduli(
+                    modulis, 
+                    modulis.pavadinimas,  
+                    modulis.aprasymas, 
+                    modulis.kreditai, 
+                    modulis.semestro_informacija, 
+                    modulis.egzaminas_data, 
+                    modulis.paskaitos  
+                )
+                
+                if destytojas_id:
+                    modulis.destytojas_id = destytojas_id
+                
+                if studiju_programa_id:
+                    modulis.studiju_programa_id = studiju_programa_id
+
+                db.session.commit()
+                flash("Modulis sėkmingai atnaujintas", "success")
+                return redirect(url_for('admin_moduliai'))
+            
+            except Exception as e:
+                flash(f"Klaida atnaujinant moduli: {str(e)}", "danger")
+
+
+        destytojai = db.session.execute(text("SELECT * FROM vartotojai WHERE vaidmuo = 'Dėstytojas'")).fetchall()
+        programos = db.session.execute(text("SELECT * FROM studiju_programos")).fetchall()
+            
+        
+        return render_template('admin_moduliai.html', modulis=modulis, destytojai=destytojai, programos=programos)
     
     # Studijų programų valdymo maršrutai
     @app.route('/admin/studiju-programos')
     @flask_login.login_required
     @admin_required
     def admin_studiju_programos():
-        # Tai būtų pradinis šablonas, kurį reikėtų išplėsti su tikrais duomenimis
-        return render_template('admin_studiju_programos.html', programos=[])
+        programos = db.session.execute(text("SELECT * FROM studiju_programos")).fetchall()
+        if request.method == 'POST':
+            programa_id = request.form.get('programa_id')
+            modulis_id = request.form.get('modulis_id')
+
+            if modulis_id:
+                db.session.execute(
+                db.update(Modulis)
+                .where(Modulis.id == modulis_id)
+                .values(studiju_programa_id=programa_id)
+            )
+            db.session.commit()
+            return redirect(url_for('admin_studiju_programos'))
+        
+        moduliai = db.session.execute(text("SELECT * FROM moduliai")).fetchall()    
+        return render_template('admin_studiju_programos.html', programos=programos, moduliai=moduliai)
     
     # Grupių valdymo maršrutai
     @app.route('/admin/grupes')

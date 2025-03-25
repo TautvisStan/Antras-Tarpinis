@@ -29,6 +29,7 @@ from routes.atsiskaitymas_routes import init_atsiskaitymas_routes
 from routes.vartotojas_routes import init_vartotojas_routes
 from routes.login_routes import init_login_routes
 from routes.testas_route import init_testas
+from routes.studentas_routes import init_studentas_routes
 
 import services.registracija_prisijungimas_actions
 
@@ -53,6 +54,7 @@ init_paskaita_routes(app)
 init_atsiskaitymas_routes(app)
 init_vartotojas_routes(app)
 init_testas(app)
+init_studentas_routes(app)
 
 
 login_routes.init_login_routes(app)
