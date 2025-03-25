@@ -25,7 +25,8 @@ from routes import grupes_routes
 from routes import login_routes, modulis_routes, studiju_programa_routes, administratorius_routes
 from routes.paveiksleliu_routes import inicijuoti_marsrutus
 from routes.paskaita_routes import init_paskaita_routes
-from routes.atsiskaitymas_routes import init_atsiskaitymas_routes
+# from routes.atsiskaitymas_routes import init_atsiskaitymas_routes
+from routes.studentai_moduliai_routes import init_studento_moduliu_routes
 from routes.vartotojas_routes import init_vartotojas_routes
 from routes.login_routes import init_login_routes
 from routes.testas_route import init_testas
@@ -51,11 +52,12 @@ def load_user(user_id):
 
 # Importuojame maršrutus
 init_paskaita_routes(app)
-init_atsiskaitymas_routes(app)
+# init_atsiskaitymas_routes(app)
 init_vartotojas_routes(app)
 init_testas(app)
 init_studentas_routes(app)
 
+init_studento_moduliu_routes(app)
 
 login_routes.init_login_routes(app)
 modulis_routes.init_modulis_routes(app)
