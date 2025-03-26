@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block title %}Profilio informacija{% endblock %} {%
+block content %}
+<h2>Studento profilis</h2>
+
+<p><strong>Vardas:</strong> {{ studentas.vardas }}</p>
+<p><strong>Pavardė:</strong> {{ studentas.pavarde }}</p>
+<p><strong>El. paštas:</strong> {{ studentas.el_pastas }}</p>
+
+<p>
+  <strong>Grupė:</strong> {{ grupe.pavadinimas if grupe else 'Nenurodyta' }}
+</p>
+<p>
+  <strong>Studijų programa:</strong> {{ studiju_programa.pavadinimas if
+  studiju_programa else 'Nenurodyta' }}
+</p>
+
+<p>
+  <strong>Fakultetas:</strong> {{ fakultetas.pavadinimas if fakultetas else
+  'Nenurodyta' }}
+</p>
+
+<h3>Priskirti moduliai</h3>
+<ul>
+  {% for modulis in moduliai %}
+  <li>{{ modulis.pavadinimas }}</li>
+  {% else %}
+  <li>Modulių nėra</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,196 @@
+{% extends "base.html" %} {% block title %}Sukurti modulį{% endblock %} {% block
+  content %}
+  <h1>Sukurti naują modulį</h1>
+  <form method="POST" id="modulisForm">
+    {{ form.hidden_tag() }}
+    <div>
+      {{ form.pavadinimas.label }}<br />
+      {{ form.pavadinimas() }}<br />
+      {% for error in form.pavadinimas.errors %}<span style="color: red"
+        >{{ error }}</span
+      ><br />{% endfor %}
+    </div>
+    <div>
+      {{ form.aprasymas.label }}<br />
+      {{ form.aprasymas() }}<br />
+      {% for error in form.aprasymas.errors %}<span style="color: red"
+        >{{ error }}</span
+      ><br />{% endfor %}
+    </div>
+    <div>
+      {{ form.kreditai.label }}<br />
+      {{ form.kreditai() }}<br />
+      {% for error in form.kreditai.errors %}<span style="color: red"
+        >{{ error }}</span
+      ><br />{% endfor %}
+    </div>
+    <div>
+      {{ form.semestro_informacija.label }}<br />
+      {{ form.semestro_informacija() }}<br />
+      {% for error in form.semestro_informacija.errors %}<span style="color: red"
+        >{{ error }}</span
+      ><br />{% endfor %}
+    </div>
+    <div>
+      {{ form.egzaminas_data.label }}<br />
+      {{ form.egzaminas_data() }}<br />
+      {% for error in form.egzaminas_data.errors %}<span style="color: red"
+        >{{ error }}</span
+      ><br />{% endfor %}
+    </div>
+    <div>
+      {{ form.fakultetas.label }}<br />
+      {{ form.fakultetas() }}<br />
+      {% for error in form.fakultetas.errors %}
+        <span style="color: red">{{ error }}</span><br />
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.studiju_programa.label }}<br />
+      {{ form.studiju_programa() }}<br />
+      {% for error in form.studiju_programa.errors %}<span style="color: red"
+        >{{ error }}</span
+      ><br />{% endfor %}
+    </div>
+    <h3>Paskaitos</h3>
+    <div id="paskaitos">
+      {% for paskaita in form.paskaitos %}
+      <div class="paskaita-entry">
+        {{ paskaita.hidden_tag() }}
+        <div>
+          {{ paskaita.pavadinimas.label }}<br />
+          {{ paskaita.pavadinimas() }}<br />
+          {% for error in paskaita.pavadinimas.errors %}<span style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        </div>
+        <div>
+          {{ paskaita.savaites_diena.label }}<br />
+          {{ paskaita.savaites_diena() }}<br />
+          {% for error in paskaita.savaites_diena.errors %}<span
+            style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        </div>
+        <div>
+          {{ paskaita.laikas_nuo.label }}<br />
+          {{ paskaita.laikas_nuo() }}<br />
+          {% for error in paskaita.laikas_nuo.errors %}<span style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        </div>
+        <div>
+          {{ paskaita.laikas_iki.label }}<br />
+          {{ paskaita.laikas_iki() }}<br />
+          {% for error in paskaita.laikas_iki.errors %}<span style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        </div>
+        <button type="button" onclick="removePaskaita(this)">Pašalinti</button>
+        <hr />
+      </div>
+      {% endfor %}
+    </div>
+    <button type="button" onclick="addPaskaita()">Pridėti paskaitą</button>
+  
+    <h3>Atsiskaitymai</h3>
+    <div id="atsiskaitymai">
+      {% for atsiskaitymas in form.atsiskaitymai %}
+      <div class="atsiskaitymas-entry">
+        {{ atsiskaitymas.hidden_tag() }}
+        <div>
+          {{ atsiskaitymas.pavadinimas.label }}<br />
+          {{ atsiskaitymas.pavadinimas() }}<br />
+          {% for error in atsiskaitymas.pavadinimas.errors %}<span
+            style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        </div>
+        </div>
+        <div>
+          {{ atsiskaitymas.date.label }}<br />
+          {{ atsiskaitymas.date() }}<br />
+          {% for error in atsiskaitymas.data.errors %}<span style="color: red"
+            >{{ error }}</span
+          ><br />{% endfor %}
+        <button type="button" onclick="removeAtsiskaitymas(this)">
+          Pašalinti
+        </button>
+        <hr />
+      </div>
+      {% endfor %}
+    </div>
+    <button type="button" onclick="addAtsiskaitymas()">
+      Pridėti atsiskaitymą
+    </button>
+  
+    <div>{{ form.submit() }}</div>
+  </form>
+  <p><a href="{{ url_for('moduliai') }}">Grįžti į sąrašą</a></p>
+  
+  <script>
+    function addPaskaita() {
+      const paskaitosDiv = document.getElementById("paskaitos");
+      const entryCount =
+        paskaitosDiv.getElementsByClassName("paskaita-entry").length;
+      const newEntry = `
+                  <div class="paskaita-entry">
+                      <input type="hidden" name="paskaitos-${entryCount}-csrf_token" value="${
+        document.querySelector("[name=csrf_token]").value
+      }">
+                      <div>
+                          <label>Paskaitos pavadinimas</label><br>
+                          <input type="text" name="paskaitos-${entryCount}-pavadinimas"><br>
+                      </div>
+                      <div>
+                          <label>Savaitės diena (1-7)</label><br>
+                          <input type="number" name="paskaitos-${entryCount}-savaites_diena" min="1" max="7"><br>
+                      </div>
+                      <div>
+                          <label>Laikas nuo</label><br>
+                          <input type="time" name="paskaitos-${entryCount}-laikas_nuo"><br>
+                      </div>
+                      <div>
+                          <label>Laikas iki</label><br>
+                          <input type="time" name="paskaitos-${entryCount}-laikas_iki"><br>
+                      </div>
+                      <button type="button" onclick="removePaskaita(this)">Pašalinti</button>
+                      <hr>
+                  </div>`;
+      paskaitosDiv.insertAdjacentHTML("beforeend", newEntry);
+    }
+  
+    function removePaskaita(button) {
+      button.parentElement.remove();
+    }
+  
+    function addAtsiskaitymas() {
+      const atsiskaitymaiDiv = document.getElementById("atsiskaitymai");
+      const entryCount = atsiskaitymaiDiv.getElementsByClassName(
+        "atsiskaitymas-entry"
+      ).length;
+      const newEntry = `
+                  <div class="atsiskaitymas-entry">
+                      <input type="hidden" name="atsiskaitymai-${entryCount}-csrf_token" value="${
+        document.querySelector("[name=csrf_token]").value
+      }">
+                      <div>
+                          <label>Atsiskaitymo pavadinimas</label><br>
+                          <input type="text" name="atsiskaitymai-${entryCount}-pavadinimas"><br>
+                      </div>
+                      <div>
+                          <label>Data</label><br>
+                          <input type="datetime-local" name="atsiskaitymai-${entryCount}-date"><br>
+                      </div>
+                      <button type="button" onclick="removeAtsiskaitymas(this)">Pašalinti</button>
+                      <hr>
+                  </div>`;
+      atsiskaitymaiDiv.insertAdjacentHTML("beforeend", newEntry);
+    }
+  
+    function removeAtsiskaitymas(button) {
+      button.parentElement.remove();
+    }
+  </script>
+  {% endblock %}
+  

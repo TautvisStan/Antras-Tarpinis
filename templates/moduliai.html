@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Peržiūrėti modulius{% endblock %}
+
+{% block content %}
+    <div class="header-container">
+        <h2>Moduliai</h2>
+        <a href="{{ url_for('create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Sukurti modulį
+        </a>
+    </div>
+
+
+    <table class="moduliai-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Pavadinimas</th>
+                <th>Aprasymas</th>
+                <th>Kreditai</th>
+                <th>Semestro informacija</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for modulis in moduliai %}
+            <tr>
+                <td>{{ modulis.id }}</td>
+                <td>{{ modulis.pavadinimas }}</td>
+                <td>{{ modulis.aprasymas }}</td>
+                <td>{{ modulis.kreditai }}</td>
+                <td>{{ modulis.semestro_informacija }}</td>
+                <td>
+                    <a href="{{ url_for('update', id=modulis.id) }}" class="action-icon">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{{ url_for('delete', id=modulis.id) }}" class="action-icon danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

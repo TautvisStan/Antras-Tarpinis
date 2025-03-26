@@ -1,0 +1,77 @@
+<!-- <p>
+    Welcome! Thanks for signing up. Please follow this link to activate your
+    account:
+  </p>
+  <p><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+  <br />
+  <p>Cheers!</p>
+   -->
+   <!DOCTYPE html>
+   <html>
+   <head>
+       <meta charset="UTF-8">
+       <title>Patvirtinkite savo el. paštą</title>
+       <style>
+           body {
+               font-family: Arial, sans-serif;
+               line-height: 1.6;
+               margin: 0;
+               padding: 20px;
+               color: #333;
+           }
+           .container {
+               max-width: 600px;
+               margin: 0 auto;
+               background-color: #f9f9f9;
+               border-radius: 8px;
+               padding: 20px;
+               border: 1px solid #ddd;
+           }
+           .header {
+               text-align: center;
+               padding: 20px 0;
+               border-bottom: 1px solid #eee;
+           }
+           .content {
+               padding: 20px 0;
+           }
+           .button {
+               display: inline-block;
+               background-color: #2196F3;
+               color: white;
+               text-decoration: none;
+               padding: 10px 20px;
+               border-radius: 4px;
+               margin: 20px 0;
+           }
+           .footer {
+               text-align: center;
+               font-size: 12px;
+               color: #777;
+               border-top: 1px solid #eee;
+               padding-top: 20px;
+           }
+       </style>
+   </head>
+   <body>
+       <div class="container">
+           <div class="header">
+               <h2>Patvirtinkite savo el. paštą</h2>
+           </div>
+           <div class="content">
+               <p>Sveiki,</p>
+               <p>Dėkojame už registraciją Code Academy sistemoje. Prašome patvirtinti savo el. pašto adresą spausdami žemiau esančią nuorodą:</p>
+               <p style="text-align: center;">
+                   <a href="{{ confirm_url }}" class="button">Patvirtinti el. paštą</a>
+               </p>
+               <p>Arba galite nukopijuoti ir įklijuoti šią nuorodą į naršyklės adreso juostą:</p>
+               <p style="word-break: break-all; background-color: #eee; padding: 10px; border-radius: 4px;">{{ confirm_url }}</p>
+               <p>Ši nuoroda galioja 24 valandas.</p>
+               <p>Jei jūs neregistravotės, prašome ignoruoti šį laišką.</p>
+           </div>
+           <div class="footer">
+               <p>&copy; {{ current_year }} Code Academy. Visos teisės saugomos.</p>
+           </div>
+       </div>
+   </body>
+   </html>

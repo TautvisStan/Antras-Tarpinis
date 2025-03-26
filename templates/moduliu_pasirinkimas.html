@@ -1,0 +1,47 @@
+{% extends "base.html" %} {% block title %}Modulių sąrašas{% endblock %} {%
+    block content %}
+    <h1>Modulių sąrašas</h1>
+    {% if moduliai %}
+    <table>
+      <thead>
+        <tr>
+          <th>Pavadinimas</th>
+          <th>Aprašymas</th>
+          <th>Kreditai</th>
+          <th>Semestras</th>
+          <th>Egzamino data</th>
+          <th>Paskaitų skaičius</th>
+          <th>Atsiskaitymų skaičius</th>
+          <th>Veiksmai</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for modulis in moduliai %}
+        <tr>
+          <td>{{ modulis.pavadinimas }}</td>
+          <td>{{ modulis.aprasymas }}</td>
+          <td>{{ modulis.kreditai }}</td>
+          <td>{{ modulis.semestro_informacija }}</td>
+          <td>{{ modulis.egzaminas_data.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>        {% for paskaita in modulis.paskaitos %}
+            
+              {{ paskaita.pavadinimas }}:
+             {{ paskaita.laikas_nuo }}-{{ paskaita.laikas_iki }}
+            {% endfor %}</td>
+          <td>{% for atsiskaitymas in modulis.atsiskaitymai %}
+            
+              {{ atsiskaitymas.pavadinimas }}:
+              {{ atsiskaitymas.date.strftime('%Y-%m-%d %H:%M') }}</td>
+
+            {% endfor %}</td>
+          <td>
+            <a href="{{ url_for('moduliai_pasirinkti_id', id=modulis.id) }}">Pasirinkti</a> 
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Nėra modulių.</p>
+    {% endif %} {% endblock %}
+    

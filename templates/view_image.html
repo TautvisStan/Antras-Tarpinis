@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block pavadinimas %}Perziureti Paveiksleli - {{
+    vartotojas.vartotojo_vardas }} {{ vartotojas.pavarde }}{% endblock %} {% block
+    antraste %}{{ vartotojas.vartotojo_vardas }} {{ vartotojas.pavarde }} Profilio
+    Paveikslelis{% endblock %} {% block turinys %}
+    <img
+      src="{{ url_for('static', filename='uploads/' + vartotojas.profilio_paveikslelis) }}"
+      alt="Visas Profilio Paveikslelis"
+      style="max-width: 100%"
+    />
+    <p>
+      Ikelta: {{ vartotojas.ikelimo_data.strftime('%Y-%m-%d %H:%M:%S') if
+      vartotojas.ikelimo_data else 'Dar neikelta' }}
+    </p>
+    <br />
+    <a href="{{ url_for('profilis') }}">Grizti i Profili</a>
+    {% endblock %}
+    

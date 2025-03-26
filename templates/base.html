@@ -1,25 +1,52 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Employee Management{% endblock %}</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <title>{% block title %}Code Academy{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+   
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <!-- Navigation Menu -->
+    <!-- Navigacija -->
     <nav>
         <div class="nav-container">
-            <h1>Employee Management</h1>
+            <h1>Code Academy</h1>
             <ul class="nav-links">
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('index') }}">View Data</a></li>
+                <li><a href="{{ url_for('index') }}">Pagrindinis</a></li>
+                {% if current_user.is_authenticated %}
+                {% if current_user.profilio_pav != none %}
+                <li><img
+                    src="{{ url_for('static', filename='uploads/' + current_user.profilio_pav) }}"
+                    alt="Profilio Paveikslelis"
+                    style="max-width: 200px"
+                /></li>
+                {% endif %}
+                    <a href="{{ url_for('studento_tvarkarastis') }}">Tvarkaraštis</a>
+                    <li><a href="{{ url_for('protected') }}">Profilis</a></li>
+                    <li><a href="{{ url_for('logout') }}">Atsijungti</a></li>
+                    {% if current_user.vaidmuo == 'admin' %}
+                        <a href="{{ url_for('kalendorius') }}">Kalendorius</a>
+                    {% endif %}
+                    {% if current_user.vaidmuo == 'destytojas' %}
+                        <a href="{{ url_for('moduliai') }}">Moduliai</a>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Prisijungti</a></li>
+                    <li><a href="{{ url_for('register') }}">Registruotis</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
 
+    <!-- Flash žinutės -->
     <div class="flash-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -27,6 +54,12 @@
                     <div class="alert alert-{{ category }} flash-message">
                         {% if category == "success" %}
                             <i class="fas fa-check-circle"></i>
+                        {% elif category == "danger" %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% elif category == "warning" %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                        {% elif category == "info" %}
+                            <i class="fas fa-info-circle"></i>
                         {% endif %}
                         {{ message }}
                     </div>
@@ -35,9 +68,12 @@
         {% endwith %}
     </div>
 
+    <!-- Pagrindinis turinys -->
     <div class="container">
         {% block content %}{% endblock %}
     </div>
 
+    <!-- JavaScript -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>

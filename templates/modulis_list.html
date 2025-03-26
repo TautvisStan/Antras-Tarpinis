@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block title %}Modulių sąrašas{% endblock %} {%
+    block content %}
+    <h1>Modulių sąrašas</h1>
+    <p><a href="{{ url_for('create') }}">Sukurti naują modulį</a></p>
+    {% if moduliai %}
+    <table>
+      <thead>
+        <tr>
+          <th>Pavadinimas</th>
+          <th>Aprašymas</th>
+          <th>Kreditai</th>
+          <th>Semestras</th>
+          <th>Egzamino data</th>
+          <th>Paskaitų skaičius</th>
+          <th>Atsiskaitymų skaičius</th>
+          <th>Veiksmai</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for modulis in moduliai %}
+        <tr>
+          <td>{{ modulis.pavadinimas }}</td>
+          <td>{{ modulis.aprasymas }}</td>
+          <td>{{ modulis.kreditai }}</td>
+          <td>{{ modulis.semestro_informacija }}</td>
+          <td>{{ modulis.egzaminas_data.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>{{ modulis.paskaitos|length }}</td>
+          <td>{{ modulis.atsiskaitymai|length }}</td>
+          <td>
+            <a href="{{ url_for('view', id=modulis.id) }}">Peržiūrėti</a> |
+            <a href="{{ url_for('update', id=modulis.id) }}">Redaguoti</a> |
+            <a
+              href="{{ url_for('delete', id=modulis.id) }}"
+              onclick="return confirm('Ar tikrai norite pašalinti?')"
+              >Pašalinti</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Nėra modulių.</p>
+    {% endif %} {% endblock %}
+    

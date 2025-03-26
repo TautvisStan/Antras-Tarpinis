@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}401 - Neautorizuota prieiga{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+    <div style="font-size: 64px; color: #f44336; margin: 20px 0;">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h1>401 - Neautorizuota prieiga</h1>
+    <p class="lead">Jūs neturite teisių pasiekti šį puslapį.</p>
+    <p>Prašome prisijungti, kad galėtumėte pasiekti šį turinį.</p>
+    <div style="margin-top: 30px;">
+        <a href="{{ url_for('login') }}" class="btn">Prisijungti</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-left: 10px;">Grįžti į pagrindinį</a>
+    </div>
+</div>
+{% endblock %}

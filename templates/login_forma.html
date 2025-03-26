@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+
+{% block title %}Prisijungimas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h3 class="card-title">Prisijungimas</h3>
+    
+    <form method="POST" action="{{ url_for('login') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.el_pastas.label(class="form-label") }}
+            {{ form.el_pastas(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.slaptazodis.label(class="form-label") }}
+            {{ form.slaptazodis(class="form-control") }}
+        </div>
+        <div class="buttons-container">
+            {{ form.submit(class="btn-primary") }}
+            <a href="{{ url_for('index') }}" class="btn-secondary">Grįžti</a>
+        </div>
+    </form>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <p>Neturite paskyros? <a href="{{ url_for('register') }}">Užsiregistruokite</a></p>
+    </div>
+</div>
+{% endblock %}

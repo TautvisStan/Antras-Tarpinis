@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block content %}
+<h1>Kalendoriaus valdymas</h1>
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-{{ message.category }}">{{ message }}</div>
+{% endfor %}
+
+<h2>Pridėti šventę</h2>
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <div>
+    {{ form.data.label }}<br />
+    {{ form.data() }}
+  </div>
+  <div>
+    {{ form.aprasas.label }}<br />
+    {{ form.aprasas() }}
+  </div>
+  <div>{{ form.submit() }}</div>
+</form>
+
+<h2>Esamos šventės</h2>
+<table>
+  <tr>
+    <th>Data</th>
+    <th>Aprašas</th>
+  </tr>
+  {% for svente in sventes %}
+  <tr>
+    <td>{{ svente.data.strftime('%Y-%m-%d') }}</td>
+    <td>{{ svente.aprasas if svente.aprasas else "Išeiginė diena" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,61 @@
+
+{%extends "base.html" %}
+
+{% block title %}Peržiūrėti vartotoją{% endblock %}
+
+{% block content %}
+<h2 class="text-center">Vartotojo informacija</h2>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+
+            <h3 class="card-title">{{ vartotojas.vardas }} {{ vartotojas.pavarde }}</h3>
+            <p><strong>El. paštas:</strong> {{ vartotojas.el_pastas }}</p>
+            {% if vartotojas.el_pat %}
+                <p><strong>El. paštas patvirtintas:</strong> Taip</p>
+            {% else %}
+                <p><strong>El. paštas patvirtintas:</strong> Ne</p>
+            {% endif %}
+            
+            {% if vartotojas.el_pat_data %}
+                <p><strong>Patvirtinimo data:</strong> {{ vartotojas.el_pat_data.strftime('%Y-%m-%d') }}</p>
+            {% endif %}
+            
+            <p><strong>Vaidmuo:</strong> {{ vartotojas.vaidmuo }}</p>
+            
+            {% if vartotojas.studiju_programa %}
+                <p><strong>Studijų programa:</strong> {{ vartotojas.studiju_programa.pavadinimas }}</p>
+            {% endif %}
+            
+            {% if vartotojas.grupe %}
+                <p><strong>Grupė:</strong> {{ vartotojas.grupe.pavadinimas }}</p>
+            {% else %}
+                <p><strong>Grupė:</strong> Nepriskirta</p>
+            {% endif %}
+
+            <p><strong>Aktyvumas:</strong> {{ "Aktyvus" if vartotojas.aktyvumas else "Neaktyvus" }}</p>
+
+            {% if vartotojas.dest_pat is not none %}
+                <p><strong>Dėstytojo patvirtinimas:</strong> {{ "Patvirtinta" if vartotojas.dest_pat else "Nepatvirtinta" }}</p>
+            {% endif %}
+            
+            {% if vartotojas.dest_pat_data %}
+                <p><strong>Dėstytojo patvirtinimo data:</strong> {{ vartotojas.dest_pat_data.strftime('%Y-%m-%d') }}</p>
+            {% endif %}
+            
+            {% if vartotojas.ikelimo_data %}
+                <p><strong>Paskutinė profilio nuotraukos įkėlimo data:</strong> {{ vartotojas.ikelimo_data.strftime('%Y-%m-%d') }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="d-flex gap-2 mt-3">
+    <a href="{{ url_for('vartotojai') }}" class="btn btn-secondary">Grįžti</a>
+    <a href="{{ url_for('redaguoti_vartotoja', id=vartotojas.id) }}" class="btn btn-warning">Redaguoti</a>
+    <form method="POST" action="{{ url_for('panaikinti_vartotoja', id=vartotojas.id) }}">
+        <button type="submit" class="btn btn-danger">Pašalinti</button>
+    </form>
+</div>
+{% endblock %}

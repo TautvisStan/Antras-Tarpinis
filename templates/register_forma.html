@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Registracija - Code Academy{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h3 class="card-title">Registracija</h3>
+    
+    <form method="POST" action="{{ url_for('register') }}", enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.vardas.label(class="form-label") }}
+            {{ form.vardas(class="form-control") }}
+            {% if form.vardas.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.vardas.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.pavarde.label(class="form-label") }}
+            {{ form.pavarde(class="form-control") }}
+            {% if form.pavarde.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.pavarde.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.el_pastas.label(class="form-label") }}
+            {{ form.el_pastas(class="form-control") }}
+            {% if form.el_pastas.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.el_pastas.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.slaptazodis.label(class="form-label") }}
+            {{ form.slaptazodis(class="form-control") }}
+            {% if form.slaptazodis.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.slaptazodis.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <small style="display: block; margin-top: 5px; color: #666;">Slaptažodis turi būti bent 8 simbolių ilgio, turėti bent vieną didžiąją, mažąją raidę ir skaičių.</small>
+        </div>
+        <div class="form-group">
+            {{ form.vaidmuo.label(class="form-label") }}
+            {{ form.vaidmuo(class="form-control") }}
+            {% if form.vaidmuo.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.vaidmuo.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.profilio_pav.label(class="form-label") }}
+            {{ form.profilio_pav(class="form-control") }}
+            {% if form.profilio_pav.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.profilio_pav.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.studiju_programa.label(class="form-label") }}
+            {{ form.studiju_programa(class="form-control") }}
+            {% if form.studiju_programa.errors %}
+                <div class="alert alert-danger" style="padding: 8px; margin-top: 5px; font-size: 14px;">
+                    {% for error in form.studiju_programa.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="buttons-container">
+            {{ form.submit(class="btn-primary") }}
+            <a href="{{ url_for('index') }}" class="btn-secondary">Grįžti</a>
+        </div>
+    </form>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <p>Jau turite paskyrą? <a href="{{ url_for('login') }}">Prisijunkite</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Peržiūrėti grupes{% endblock %}
+
+{% block content %}
+    <div class="header-container">
+        <h2>Grupes</h2>
+        <a href="{{ url_for('gr_create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Sukurti grupę
+        </a>
+    </div>
+
+
+    <table class="grupes-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Pavadinimas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gr in grupes %}
+            <tr>
+                <td>{{ gr.id }}</td>
+                <td>{{ gr.pavadinimas }}</td>
+                <td>
+                    <a href="{{ url_for('gr_update', id=gr.id) }}" class="action-icon">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{{ url_for('gr_delete', id=gr.id) }}" class="action-icon danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex gap-2 mt-3">
+        <a href="{{ url_for('grupes') }}" class="btn btn-secondary">Grįžti</a>
+        </form>
+    </div>
+{% endblock %}
