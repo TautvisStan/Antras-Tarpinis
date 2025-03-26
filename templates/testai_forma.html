@@ -4,7 +4,6 @@
   {{ form.hidden_tag() }}
   <div>{{ form.pavadinimas.label }} {{ form.pavadinimas }}</div>
   <div>{{ form.maksimalus_balas.label }} {{ form.maksimalus_balas }}</div>
-  <div>{{ form.atsiskaitymas.label }} {{ form.atsiskaitymas }}</div>
   <h3>Klausimai</h3>
   {% for klausimas in form.klausimai %}
   <div>{{ klausimas.tekstas.label }} {{ klausimas.tekstas }}</div>

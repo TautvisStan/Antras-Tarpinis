@@ -11,7 +11,7 @@ def init_testas(app):
     @app.route('/testai/naujas/<int:modulis_id>', methods=['GET', 'POST'])
     @login_required
     def testai_create(modulis_id):
-        if current_user.vaidmuo != 'destytojas':
+        if current_user.vaidmuo != 'Dėstytojas':
             flash('Tik dėstytojai gali kurti testus', 'error')
             return redirect(url_for('moduliai'))
         
@@ -38,7 +38,7 @@ def init_testas(app):
     @app.route('/testai/sprendimas/<int:testo_id>', methods=['GET', 'POST'])
     @login_required
     def testai_solve(testo_id):
-        if current_user.vaidmuo != 'studentas':
+        if current_user.vaidmuo != 'Studentas':
             flash('Tik studentai gali spręsti testus', 'error')
             return redirect(url_for('index'))
         
@@ -56,7 +56,7 @@ def init_testas(app):
     @app.route('/mano_pazymiai')
     @login_required
     def mano_pazymiai():
-        if current_user.vaidmuo != 'studentas':
+        if current_user.vaidmuo != 'Studentas':
             flash('Tik studentai gali matyti savo pažymius', 'error')
             return redirect(url_for('index'))
         

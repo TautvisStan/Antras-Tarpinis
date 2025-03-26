@@ -123,7 +123,7 @@ def init_admin_routes(app):
     @admin_required
     def admin_istrinti_vartotoja(id):
         try:
-            admin_actions.istrinti_vartotoja(id)
+            admin_actions.pasalinti_vartotoja(id)
             flash("Vartotojas sėkmingai ištrintas", "success")
         except Exception as e:
             flash(f"Klaida trinant vartotoją: {str(e)}", "danger")
@@ -198,7 +198,7 @@ def init_admin_routes(app):
     @flask_login.login_required
     @admin_required
     def admin_moduliai():
-        modulis = mo_act.gauti_moduli(id)
+        modulis = mo_act.view_modulis()
         if not modulis:
             flash("Modulis nerastas", "danger")
             return redirect(url_for('admin_moduliai'))

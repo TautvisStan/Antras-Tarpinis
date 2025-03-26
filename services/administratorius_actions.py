@@ -130,13 +130,15 @@ def pasalinti_vartotoja(id):
     try:
         vartotojas = db.session.get(Vartotojas, id)
         if vartotojas:
+            for item in vartotojas.studentai_moduliai:
+                db.session.delete(item)
             db.session.delete(vartotojas)
             db.session.commit()
         else:
             raise Exception("Vartotojas nerastas.")
-    except Exception:
+    except Exception as e:
         db.session.rollback()
-        raise Exception("Klaida bandant ištrinti vartotoją.")
+        raise Exception("Klaida šalinant vartotoją")
 
 
 def istrinti_vartotoja(vartotojas):
