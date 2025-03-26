@@ -8,7 +8,7 @@ from models.testas import Testas
 import services.testas_actions as testas_act
 
 def init_testas(app):
-    @app.route('/testai/naujas/<int:modulis_id>', methods=['GET', 'POST'])
+    @app.route('/testai_forma/<int:modulis_id>', methods=['GET', 'POST'])
     @login_required
     def testai_create(modulis_id):
         if current_user.vaidmuo != 'destytojas':
@@ -35,7 +35,7 @@ def init_testas(app):
                 flash(f"Klaida kuriant testą: {str(e)}", "error")
         return render_template("testai_forma.html", form=form, modulis_id=modulis_id)
 
-    @app.route('/testai/sprendimas/<int:testo_id>', methods=['GET', 'POST'])
+    @app.route('/testai_sprendimas/<int:testo_id>', methods=['GET', 'POST'])
     @login_required
     def testai_solve(testo_id):
         if current_user.vaidmuo != 'studentas':

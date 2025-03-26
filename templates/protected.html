@@ -125,7 +125,7 @@
     <div class="actions-section">
         <h3 class="section-title">Studento veiksmai</h3>
         <div class="action-cards">
-            <a href="#" class="action-card">
+            <a href="{{ url_for('moduliai') }}" class="action-card">
                 <div class="action-icon"><i class="fas fa-book"></i></div>
                 <div class="action-title">Mano moduliai</div>
             </a>
@@ -135,12 +135,12 @@
                 <div class="action-title">Užduotys</div>
             </a>
             
-            <a href="#" class="action-card">
+            <a href="{{url_for('mano_pazymiai')}}" class="action-card">
                 <div class="action-icon"><i class="fas fa-chart-line"></i></div>
                 <div class="action-title">Mano pažangos</div>
             </a>
             
-            <a href="#" class="action-card">
+            <a href="{{ url_for('studento_tvarkarastis') }}" class="action-card"> 
                 <div class="action-icon"><i class="fas fa-calendar-alt"></i></div>
                 <div class="action-title">Tvarkaraštis</div>
             </a>

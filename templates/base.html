@@ -29,7 +29,6 @@
                     style="max-width: 200px"
                 /></li>
                 {% endif %}
-                    <a href="{{ url_for('studento_tvarkarastis') }}">Tvarkaraštis</a>
                     <li><a href="{{ url_for('protected') }}">Profilis</a></li>
                     <li><a href="{{ url_for('logout') }}">Atsijungti</a></li>
                     {% if current_user.vaidmuo == 'admin' %}
