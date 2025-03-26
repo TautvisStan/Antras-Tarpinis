@@ -38,11 +38,11 @@ class ModulisForma(FlaskForm):
                                         validators=[InputRequired()])
     paskaitos = FieldList(FormField(PaskaitaForma), min_entries=1, label="Paskaitos")
     atsiskaitymai = FieldList(FormField(AtsiskaitymasForma), min_entries=0, label="Atsiskaitymai")
-    # fakultetas = QuerySelectField('Fakultetas', 
-    #                                     query_factory=lambda: db.session.execute(select(Fakultetas)).scalars().all(), 
-    #                                     get_label='pavadinimas', 
-    #                                     allow_blank=False, 
-    #                                     validators=[InputRequired()])
+    fakultetas = QuerySelectField('Fakultetas', 
+                                        query_factory=lambda: db.session.execute(select(Fakultetas)).scalars().all(), 
+                                        get_label='pavadinimas', 
+                                        allow_blank=False, 
+                                        validators=[InputRequired()])
 
     submit = SubmitField("Sukurti")
 
